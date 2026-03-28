@@ -1,13 +1,3 @@
-#ifndef _CLASS_INV_H_
-#define _CLASS_INV_H_
-
-#include <math.h>
-#include <gmp.h>
-#include "ff_poly.h"
-#include "bipoly.h"
-#include "qform.h"
-#include "iqclass.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -15,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,6 +15,16 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _CLASS_INV_H_
+#define _CLASS_INV_H_
+
+#include <math.h>
+#include <gmp.h>
+#include "ff_poly.h"
+#include "bipoly.h"
+#include "qform.h"
+#include "iqclass.h"
 
 #define INV_J			0
 #define INV_F			1							// Weber-f
@@ -186,8 +185,6 @@ static inline int inv_degree (int *p1, int *p2, int inv)
 // Certain invariants require that D not have 2 in it's conductor, but this doesn't apply to every invariant with even level so we handle it separately
 static inline int inv_odd_conductor (int inv)
 {	switch (inv) { case INV_F: case INV_U: case INV_U2: case INV_U8: case INV_W3W3E1: case INV_W3E2: case INV_W3W7E1: case INV_W7E2: return 1; } return 0; }
-
-
 // returns 12/gcd(12,N-1) for N prime
 static inline int inv_s(int N)
 {
@@ -233,8 +230,6 @@ static inline int inv_double_eta_enum(int inv) // only true for double eta invar
 	if ( N < 22 ) return 1;
 	return 0;
 }
-
-
 static inline int inv_enum(int inv)
 {
 	// we don't yet support enumeration for INV_U do to anti-symmetry, but we could
@@ -383,8 +378,6 @@ static inline int inv_good_invariant (int inv)
 	}
 	return 0;
 }
-
-
 static inline int inv_class_invariant (int inv)
 {
 	if ( ! inv_good_invariant(inv) ) return 0;
@@ -473,8 +466,6 @@ static inline int inv_good_discriminant (long D, int inv)	// assumes D is a disc
 	}
 	return 0;
 }
-
-
 static inline int inv_good_discriminant_for_modpoly (long D, int inv)
 {
 	register int i;
@@ -573,8 +564,6 @@ void mpz_j_from_u (mpz_t J, mpz_t U, mpz_t P);
 void mpz_j_from_atkin (mpz_t J, mpz_t A, mpz_t P, int inv);
 void mpz_j_from_single_eta (mpz_t J, mpz_t A, mpz_t P, int inv);
 void mpz_j_from_double_eta (mpz_t J, mpz_t A, mpz_t P, int inv);
-
-
 static inline void ff_inv_j_from_gamma2 (ff_t *j, ff_t *g2)
 	{ register ff_t x;   _ff_square(x,*g2);  ff_mult(*j,*g2,x); }
 	

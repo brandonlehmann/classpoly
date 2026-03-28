@@ -1,10 +1,26 @@
+/*
+    Copyright 2017-2019 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <assert.h>
 #include <stdio.h>
 #include "mm.h"
 #include "ffpoly.h"
 #include "mmpoly.h"
-
-
 // computes o(x)=f(x)*g(x) where deg(f)=deg(g)=d+1 with f and g monic (coeff of x^d implicit, not examined in input and not set in output)
 static inline void mm_poly_mul_m_d_d (mm_t o[], mm_t f[], mm_t g[], int d, mm_t R, mm_t p, mm_t pinv)
 {
@@ -21,8 +37,6 @@ static inline void mm_poly_mul_m_d_do (mm_t o[], mm_t f[], mm_t g[], int d, mm_t
     o[d-1] = mm_redc (mm2_conv(f+1,g,d-1)+(mm2_t)R*f[0],p,pinv);
     for ( register int i = d-2 ; i >= 0 ; i-- ) o[i] = mm_conv(f, g, i+1, p, pinv);
 }
-
-
 // computes f(x) = \prod_{i=0}^{n-1} (x-r[i]) without setting the (implicit) leading monic coefficient
 void mm_poly_from_roots (mm_t o[], mm_t r[], int d, mm_t R, mm_t p, mm_t pinv)
 {
@@ -69,8 +83,6 @@ void mm_poly_from_roots (mm_t o[], mm_t r[], int d, mm_t R, mm_t p, mm_t pinv)
     if ( m == n ) mm_poly_mul_m_d_d (o,f,g,m,R,p,pinv);
     else mm_poly_mul_m_d_do (o,f,g,m,R,p,pinv);
 }
-
-
 // given f(x) and g(x) with deg(f) >= deg(g) > 0 replaces f(x) with a linear combination of f and g with degree less than deg(f)
 // if deg(g) < deg(f) the result will have degree at most deg(f)-2 -- typical case is deg(f)=deg(g)+1 with output of degree deg(g)-1.
 static inline int mm_poly_red (mm_t f[], int df, mm_t g[], int dg, mm_t p, mm_t pinv)
@@ -137,8 +149,6 @@ static inline int mm_poly_gcd_tiny (mm_t o[], mm_t f[], int df, mm_t g[], int dg
     }
     return -1;
 }
-
-
 // given f,g with deg(f) >= deg(g), destructively computes f = gcd(f,g) destroying g in the process.
 // returns deg(f) (returns -1 if df and dg are both 0)
 static inline int mm_poly_gcd_red (mm_t f[], int df, mm_t g[], int dg, mm_t p, mm_t pinv)
@@ -152,8 +162,6 @@ static inline int mm_poly_gcd_red (mm_t f[], int df, mm_t g[], int dg, mm_t p, m
     if ( df < 0 ) { memcpy(f,g,(dg+1)*sizeof(g[0])); df = dg; }
     return df;
 }
-
-
 // computes o=gcd(f,g), one of f and g must be nonzero -- optimized for the case df=dg+1
 int mm_poly_gcd (mm_t o[], mm_t f[], int df, mm_t g[], int dg, mm_t R, mm_t R2, mm_t R3, mm_t p, mm_t pinv)
 {
@@ -187,8 +195,6 @@ int mm_poly_gcd (mm_t o[], mm_t f[], int df, mm_t g[], int dg, mm_t R, mm_t R2, 
     memmove (o,s,(df+1)*sizeof(s[0]));
     return df;
 }
-
-
 // 2M + 1A +1R
 static inline void mm_poly_res_1_1 (mm_t o[2],  mm_t f[2], mm_t g[2],  mm_t R, mm_t p, mm_t pinv)
     { o[0] = mm_det_2r(f[1],f[0],g[1],g[0],p,pinv); o[1] = R; }
@@ -324,8 +330,6 @@ static inline void mm_poly_res_tiny (mm_t o[2], mm_t f[], int df, mm_t g[], int 
                           case 1: mm_poly_res_4_1 (o,f,g,R,p,pinv); return; case 2: mm_poly_res_4_2 (o,f,g,R,p,pinv); return; case 3: mm_poly_res_4_3 (o,f,g,R,p,pinv); return; case 4: mm_poly_res_4_4 (o,f,g,R,p,pinv); return; }
     }
 }
-
-
 // given deg(f)=d+1 and deg(g)=d > 1, destructively computes res(f,g) = o[0]/o[1] provided that the degree sequence is normal down to the gcd
 // retuerns zero if this is not the case, in which case the caller will need to revert to the general method (note that f and g will be trashed)
 static inline int mm_poly_res_normal (mm_t o[], mm_t f[], mm_t g[], int d, mm_t R, mm_t p, mm_t pinv)
@@ -382,8 +386,6 @@ void _mm_poly_res (mm_t o[2], mm_t f[], int df, mm_t g[], int dg, mm_t R, mm_t p
     o[0] = mm_mul(o[0],mm_exp_ui(f[0],dg,R,p,pinv),p,pinv);
     if ( s < 0 ) o[0] = mm_neg(o[0],p);
 }
-
-
 // given deg(f)=d+1 and deg(g)=d > 1, destructively computes res(f,g) = o[0]/o[1] provided that the degree sequence is normal down to the gcd
 // retuerns zero if this is not the case, in which case the caller will need to revert to the general method (note that f and g will be trashed)
 static inline int mm_poly_res_legendre_normal (mm_t f[], mm_t g[], int d, mm_t R, mm_t p, mm_t pinv)

@@ -1,3 +1,21 @@
+/*
+    Copyright 2010-2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -10,18 +28,11 @@
 #include "crt.h"
 #include "cstd.h"
 
-/*
-    Copyright 2010-2012 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
-
 char _crt_dir_str[1024];
 
 #define CRT_FILE_FORMAT_STRING      "%s/CRT_%lu_%lu_%d.crt"
 
 static unsigned long items[CRT_MAX_COUNT+1];        // shared, avoid allocating this on the stack
-
-
 int crt_mpz_mod_to_Q (mpz_t num,  mpz_t den, mpz_t C, mpz_t M, mpz_t w[5])
 {
     __mpz_struct *a0, *a1, *b0, *b1, *B, *q, *t;
@@ -46,8 +57,6 @@ int crt_mpz_mod_to_Q (mpz_t num,  mpz_t den, mpz_t C, mpz_t M, mpz_t w[5])
         mpz_mul (t, q, b1);  mpz_sub (t, b0, t); mpz_set (b0, b1);  mpz_set (b1, t);    // b0,b1 = b1,b0-q*b1
     }
 }
-
-
 int crt_file_create (crt_file_t fp, unsigned long id1, unsigned long id2, int offset, int count)
 {
     char buf[2048];
@@ -303,8 +312,6 @@ void crt_tree_clear (crt_tree_t t)
     free(t->B);
     mpz_clear(t->M0);  mpz_clear(t->M1);  mpz_clear (t->MM);
 }
-
-
 void crt_tree_eval (mpz_t C, unsigned long c[], crt_tree_t t)
 {
     register int i, j, k;
@@ -357,8 +364,6 @@ void crt_tree_uneval (unsigned long c[], mpz_t C, crt_tree_t t)
     for ( i-- ; i>=0 ; i-- ) for ( j = 0 ; j < t->lens[i] ; j++ ) mpz_mod(t->X[i][j],t->X[i+1][j/2],t->M[i][j]);
     for ( i = j = 0 ; i < t->lens[0] ; i++ ) for ( k = 0 ; k < t->cnts[i] ; j++, k++ ) c[j] = mpz_fdiv_ui(t->X[0][i],t->m[j]);
 }
-
-
 // overlap is not permitted, returns 1 if C is stable (i.e. there is an integer |X| <= M1 such that X = C mod M and X = C1 mod M1)
 int crt_mpz_ui (mpz_t C, mpz_t M, mpz_t C1, mpz_t M1, unsigned long c2, unsigned long m2)
 {
@@ -457,8 +462,6 @@ void _ecrt_init (ecrt_context_t ecrt, int n, int k, mpz_t P, mpz_t MP, int jobs,
     ecrt->delta = nbits+1;
     ecrt->j = -1;
 }
-
-
 // Agorithm 2.3 of Hilbert CRT paper.
 void ecrt_init (ecrt_context_t ecrt, unsigned long m[], int n, int k, mpz_t P, int jobs, int jobid, char *prefix)
 {
@@ -807,4 +810,3 @@ void xcrt_reduce (xcrt_context_t xcrt)
     }
 }
 */
-

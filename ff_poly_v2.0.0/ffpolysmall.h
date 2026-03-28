@@ -1,10 +1,23 @@
-#ifndef _FFPOLY_SMALL_
-#define _FFPOLY_SMALL_
-
 /*
     Copyright 2009-2017 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FFPOLY_SMALL_
+#define _FFPOLY_SMALL_
 
 // Heavily optimized inlines for arithmetic operations on low-degree polynomials over Fp.
 // This code takes a long time to compile but the speed up at run-time makes it well worth the wait...
@@ -144,8 +157,6 @@ static inline void ff_poly_disc_4 (ff_t D[1], ff_t f[4])
     _ff_sum_2_mults (t7,t0,t2,t3,t16); _ff_x2(t6); _ff_mult(t5,t6,t7);                                  // t5 = 16*f0*(f2^2*(f2^2-8*f0^2)+16*f0^2)
     _ff_add(D[0],t4,t5);        // D = f1^2*(4*f2*(36*f0-f2^2)-27*f1^2) + 16*f0*(f2^2*(f2^2-8*f0)+16*f0^2)
 }
-
-
 // f must be monic
 static inline int ff_poly_disc_legendre_2 (ff_t f[2])
 {
@@ -174,8 +185,6 @@ static inline int ff_poly_disc_legendre_4 (ff_t f[4])
     ff_poly_disc_4 (&D, f);
     return ( _ff_zero(D) ? 0 : ( ff_residue(D) ? 1 : -1 ) );
 }
-
-
 // used for debugging
 static inline void poly_print(ff_t f[], int d)
 {
@@ -496,8 +505,6 @@ static inline void ff_poly_mgcd_linear_3_3 (ff_t h[2], ff_t f[5], ff_t g[3])    
     _ff_mult(t,t2,s0); _ff_sum_2_mults(h[0],t,s2,t0,t2);
     // total 7M+7A (5 redc)
 }
-
-
 static inline void ff_poly_mgcd_linear_4_3 (ff_t h[2], ff_t f[4], ff_t g[3])            // f monic deg 4, g monic deg 3, f and g are not modified, h may overlap either
 {
     register ff_t s0, s1, s2, t0, t1, t2, t3, t;
@@ -514,8 +521,6 @@ static inline void ff_poly_mgcd_linear_4_3 (ff_t h[2], ff_t f[4], ff_t g[3])    
     _ff_mult(t,t2,s0); _ff_sum_2_mults(h[0],t,s2,t0,t2);
     // total 10M+10A  (8 redc)
 }
-
-
 static inline void ff_poly_mgcd_linear_6_3 (ff_t h[2], ff_t f[6], ff_t g[3])            // f monic deg 6, g monic deg 3, f and g are not modified, h may overlap either
 {
     register ff_t s0, s1, s2, t0, t1, t2, t, u;
@@ -536,8 +541,6 @@ static inline void ff_poly_mgcd_linear_6_3 (ff_t h[2], ff_t f[6], ff_t g[3])    
     _ff_mult(t,t2,s0); _ff_sum_2_mults(h[0],t,s2,t0,t2);
     // total (3d-2)M  (using d+4 redc's)
 }
-
-
 static inline void ff_poly_mgcd_linear_8_3 (ff_t h[2], ff_t f[8], ff_t g[3])            // f monic deg 8, g monic deg 3, f and g are not modified, h may overlap either
 {
     register ff_t s0, s1, s2, t0, t1, t2, t, u;
@@ -562,8 +565,6 @@ static inline void ff_poly_mgcd_linear_8_3 (ff_t h[2], ff_t f[8], ff_t g[3])    
     _ff_mult(t,t2,s0); _ff_sum_2_mults(h[0],t,s2,t0,t2);
     // total (3d-2)M  (using d+4 redc's)
 }
-
-
 static inline void ff_poly_mgcd_linear_12_3 (ff_t h[2], ff_t f[12], ff_t g[3])          // f monic deg 8, g monic deg 3, f and g are not modified, h may overlap either
 {
     register ff_t s0, s1, s2, t0, t1, t2, t, u;
@@ -596,8 +597,6 @@ static inline void ff_poly_mgcd_linear_12_3 (ff_t h[2], ff_t f[12], ff_t g[3])  
     _ff_mult(t,t2,s0); _ff_sum_2_mults(h[0],t,s2,t0,t2);
     // total (3d-2)M  (using d+4 redc's)
 }
-
-
 static inline void ff_poly_mgcd_linear_14_3 (ff_t h[2], ff_t f[14], ff_t g[3])          // f monic deg 8, g monic deg 3, f and g are not modified, h may overlap either
 {
     register ff_t s0, s1, s2, t0, t1, t2, t, u;
@@ -634,8 +633,6 @@ static inline void ff_poly_mgcd_linear_14_3 (ff_t h[2], ff_t f[14], ff_t g[3])  
     _ff_mult(t,t2,s0); _ff_sum_2_mults(h[0],t,s2,t0,t2);
     // total (3d-2)M  (using d+4 redc's)
 }
-
-
 static inline void ff_poly_mgcd_linear_n_3 (ff_t h[2], ff_t *f, int d_f, ff_t g[3])     // f monic deg d_f >= 3, g monic deg 3, f and g are not modified, h may overlap either
 {
     register int i;
@@ -1137,8 +1134,6 @@ static inline void ff_poly_mgcd_linear_m_4 (ff_t h[2], ff_t *f, int d_f, ff_t g[
 
     ff_poly_gcd_linear_3_2_reg(h,t0,t1,t2,t3,s0,s1,s2);
 }
-
-
 static inline void ff_poly_mgcd_linear_n_4 (ff_t h[2], ff_t *f, int d_f, ff_t g[4])             // f monic deg >= 4, g monic deg 4
 {
     register int i;
@@ -1167,8 +1162,6 @@ static inline void ff_poly_mgcd_linear_n_4 (ff_t h[2], ff_t *f, int d_f, ff_t g[
 
     ff_poly_gcd_linear_3_2_reg(h,t0,t1,t2,t3,s0,s1,s2);
 }
-
-
 static inline void ff_poly_mgcd_linear_m_5 (ff_t h[2], ff_t *f, int d_f, ff_t g[5])             // f monic deg 5 to 8, g monic deg 5
 {
     register ff_t s0, s1, s2, s3, s4, t0, t1, t2, t3, t4, w1, w2, w3, t;
@@ -1217,8 +1210,6 @@ static inline void ff_poly_mgcd_linear_m_5 (ff_t h[2], ff_t *f, int d_f, ff_t g[
 
     ff_poly_gcd_linear_4_3_reg(h,t0,t1,t2,t3,t4,s0,s1,s2,s3);
 }
-
-
 static inline void ff_poly_mgcd_linear_7_5 (ff_t h[2], ff_t f[7], ff_t g[5])                    // f monic deg 7, g monic deg 5
 {
     register ff_t s0, s1, s2, s3, s4, t0, t1, t2, t3, t4, w1, w2,w3;
@@ -1404,8 +1395,6 @@ static inline void ff_poly_mgcd_linear_12_7 (ff_t h[2], ff_t f[12], ff_t g[7])  
 
     ff_poly_gcd_linear_6_5_reg(h,t0,t1,t2,t3,t4,t5,t6,s0,s1,s2,s3,s4,s5);
 }
-
-
 static inline void ff_poly_mgcd_linear_m_7 (ff_t h[2], ff_t *f, int d_f, ff_t g[7])             // f monic deg 7 to 12, g monic deg 7
 {
     register ff_t s0, s1, s2, s3, s4, s5, s6, t0, t1, t2, t3, t4, t5, t6, w1, w2, w3, w4, w5, t;
@@ -1945,8 +1934,6 @@ static inline void ff_poly_mod_d5 (ff_t *f, int d_f, ff_t *g)
     _ff_sum_2_mults_arr(t0,f+5,g); _ff_subfrom(f[1],t0);
     _ff_mult(t0,f[5],g[0]); _ff_subfrom(f[0],t0);
 }
-
-
 static inline void ff_poly_mod_d6 (ff_t *f, int d_f, ff_t *g)
 {
     register int i;
@@ -1972,8 +1959,6 @@ static inline void ff_poly_mod_d6 (ff_t *f, int d_f, ff_t *g)
     _ff_sum_2_mults_arr(t0,f+6,g); _ff_subfrom(f[1],t0);
     _ff_mult(t0,f[6],g[0]); _ff_subfrom(f[0],t0);
 }
-
-
 // computes xf^2 mod g where g=x^n - g[n-2]x^{n-2} - ... - g[0] (note signs!)  and f has degree n-1 (n must be > 0)
 static inline void ff_poly_square_mult_x_mod_small (ff_t o[], ff_t f[], ff_t g[], int n) 
 {
@@ -2010,8 +1995,6 @@ static inline void ff_poly_dbl_root_linfac_d3 (ff_t g[2], ff_t f[3])
     _ff_triple(t1,f[1]);  _ff_square(t2,f[2]); _ff_subfrom(t2,t1); _ff_add(g[1],t2,t2);
     _ff_triple(t1,f[0]); _ff_triple(t2,t1); _ff_mult(t1,f[1],f[2]); _ff_sub(g[0],t1,t2);
 }
-
-
 /*
     The naming conventions for the inlines below refer to the number of coefficients, not the degree.
     For all the functions below, the output array may equal either input array.
@@ -2020,8 +2003,6 @@ static inline void ff_poly_dbl_root_linfac_d3 (ff_t g[2], ff_t f[3])
     This code was tuned on an Athlon AMD 64 processor, YMMV.
     Loop unwinding is well worthwhile - typically 20% improvement or better.
 */
-
-
 // 1A
 static inline void ff_poly_add_1_2 (ff_t o[], ff_t f[], ff_t g[])
     { _ff_add(o[0],f[0],g[0]); _ff_set(o[1],g[1]); }
@@ -2225,8 +2206,6 @@ static inline void ff_poly_square_4 (ff_t o[], ff_t f[])
     _ff_square(o[0],f[0]); _ff_square(o[6],f[3]);
     _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3);
 }
-
-
 // squares a cubic mod a depressed quartic of the form x^4-g2x^2-g1x-g0 (note signs!)
 // 18M +13A
 static inline void ff_poly_square_mod_4 (ff_t o[4], ff_t f[4], ff_t g[3])
@@ -2276,8 +2255,6 @@ static inline void ff_poly_square_mult_x_mod_4 (ff_t o[4], ff_t f[4], ff_t g[3])
     _ff_mult(o[0],t4,g[0]);                                                 // o[0] = t4g0
     _ff_set(o[1],t1);  _ff_set(o[2],t2);  _ff_set(o[3],t3);
 }
-
-
 // 16M + 9A
 static inline void ff_poly_mult_4_4 (ff_t o[], ff_t f[], ff_t g[])
 {
@@ -2291,8 +2268,6 @@ static inline void ff_poly_mult_4_4 (ff_t o[], ff_t f[], ff_t g[])
     _ff_mult(o[0],f[0],g[0]); _ff_mult(o[6],f[3],g[3]);
     _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3);
 }
-
-
 // 13M+28A
 static inline void ff_poly_mult_4_5 (ff_t o[], ff_t f[], ff_t g[])
 {
@@ -2493,8 +2468,6 @@ static inline void ff_poly_mult_mod_6 (ff_t o[6], ff_t f1[6], ff_t f2[6], ff_t g
     _ff_sum_2_mults(o[0],f1[0],t6,g[0],f2[0]);
     _ff_set(o[1],t1);  _ff_set(o[2],t2);  _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5);
 }
-
-
 // 36M + 26A
 static inline void ff_poly_mult_6_6 (ff_t o[], ff_t f[], ff_t g[])
 {
@@ -2512,8 +2485,6 @@ static inline void ff_poly_mult_6_6 (ff_t o[], ff_t f[], ff_t g[])
     _ff_mult(o[0],f[0],g[0]); _ff_mult(o[10],f[5],g[5]);
     _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5);
 }
-
-
 // 42M + 31A
 static inline void ff_poly_mult_6_7 (ff_t o[], ff_t f[], ff_t g[])
 {
@@ -2532,8 +2503,6 @@ static inline void ff_poly_mult_6_7 (ff_t o[], ff_t f[], ff_t g[])
     _ff_mult(o[0],f[0],g[0]); _ff_mult(o[11],f[5],g[6]);
     _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6);
 }
-
-
 // 47M + 36A
 static inline void ff_poly_square_7 (ff_t o[], ff_t f[])
 {
@@ -2621,8 +2590,6 @@ static inline void ff_poly_mult_mod_7 (ff_t o[7], ff_t f1[7], ff_t f2[7], ff_t g
     _ff_sum_2_mults(o[0],f1[0],t7,g[0],f2[0]);
     _ff_set(o[1],t1);  _ff_set(o[2],t2);  _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6);
 }
-
-
 // 49M + 36A
 static inline void ff_poly_mult_7_7 (ff_t o[], ff_t f[], ff_t g[])
 {
@@ -2663,8 +2630,6 @@ static inline void ff_poly_mult_7_8 (ff_t o[], ff_t f[], ff_t g[])
     _ff_mult(o[0],f[0],g[0]); _ff_mult(o[13],f[6],g[7]);
     _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6); _ff_set(o[7],t7);
 }
-
-
 // 63M + 50A
 static inline void ff_poly_square_8 (ff_t o[], ff_t f[])
 {
@@ -2760,8 +2725,6 @@ static inline void ff_poly_mult_mod_8 (ff_t o[8], ff_t f1[8], ff_t f2[8], ff_t g
     _ff_sum_2_mults(o[0],f1[0],t8,g[0],f2[0]);
     _ff_set(o[1],t1);  _ff_set(o[2],t2);  _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6); _ff_set(o[7],t7);
 }
-
-
 // 64M + 48A
 static inline void ff_poly_mult_8_8 (ff_t o[], ff_t f[], ff_t g[])
 {
@@ -2957,8 +2920,6 @@ static inline void ff_poly_mult_mod_9 (ff_t o[9], ff_t f1[9], ff_t f2[9], ff_t g
     _ff_sum_2_mults(o[0],f1[0],t9,g[0],f2[0]);
     _ff_set(o[1],t1);  _ff_set(o[2],t2);  _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6); _ff_set(o[7],t7); _ff_set(o[8],t8);
 }
-
-
 static inline void ff_poly_square_10 (ff_t o[], ff_t f[])
 {
     register ff_t t1, t2, t3, t4, t5, t6, t7, t8, t9;
@@ -3630,8 +3591,6 @@ static inline void ff_poly_mult_mod_14 (ff_t o[14], ff_t f1[14], ff_t f2[14], ff
     _ff_sum_2_mults(o[0],f1[0],t14,g[0],f2[0]);
    _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6); _ff_set(o[7],t7); _ff_set(o[8],t8); _ff_set(o[9],t9); _ff_set(o[10],t10); _ff_set(o[11],t11); _ff_set(o[12],t12); _ff_set(o[13],t13);
 }
-
-
 static inline void ff_poly_square_15 (ff_t o[], ff_t f[])
 {
     register ff_t t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14;
@@ -3821,8 +3780,6 @@ static inline void ff_poly_square_16 (ff_t o[], ff_t f[])
     _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6); _ff_set(o[7],t7); _ff_set(o[8],t8);
     _ff_set(o[9],t9); _ff_set(o[10],t10); _ff_set(o[11],t11); _ff_set(o[12],t12); _ff_set(o[13],t13); _ff_set(o[14],t14);  _ff_set(o[15],t15);
 }
-
-
 static inline void ff_poly_square_mod_16 (ff_t o[16], ff_t f[16], ff_t g[15])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24,t25,t26,t27,t28,t29,t30;
@@ -4109,8 +4066,6 @@ static inline void ff_poly_mult_mod_17 (ff_t o[17], ff_t f1[17], ff_t f2[17], ff
    _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6); _ff_set(o[7],t7); _ff_set(o[8],t8); _ff_set(o[9],t9); _ff_set(o[10],t10); _ff_set(o[11],t11); _ff_set(o[12],t12); _ff_set(o[13],t13); _ff_set(o[14],t14); _ff_set(o[15],t15); _ff_set(o[16],t16);
 }
 
-
-
 static inline void ff_poly_square_18 (ff_t o[], ff_t f[])
 {
     register ff_t t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17;
@@ -4282,8 +4237,6 @@ static inline void ff_poly_mult_mod_18 (ff_t o[18], ff_t f1[18], ff_t f2[18], ff
     _ff_sum_2_mults(o[0],f1[0],t18,g[0],f2[0]);
    _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6); _ff_set(o[7],t7); _ff_set(o[8],t8); _ff_set(o[9],t9); _ff_set(o[10],t10); _ff_set(o[11],t11); _ff_set(o[12],t12); _ff_set(o[13],t13); _ff_set(o[14],t14); _ff_set(o[15],t15); _ff_set(o[16],t16); _ff_set(o[17],t17);
 }
-
-
 static inline void ff_poly_square_19 (ff_t o[], ff_t f[])
 {
     register ff_t t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18;
@@ -4327,8 +4280,6 @@ static inline void ff_poly_square_19 (ff_t o[], ff_t f[])
     _ff_set(o[1],t1); _ff_set(o[2],t2); _ff_set(o[3],t3); _ff_set(o[4],t4); _ff_set(o[5],t5); _ff_set(o[6],t6); _ff_set(o[7],t7); _ff_set(o[8],t8);  _ff_set(o[9],t9); _ff_set(o[10],t10);
     _ff_set(o[11],t11); _ff_set(o[12],t12); _ff_set(o[13],t13); _ff_set(o[14],t14);  _ff_set(o[15],t15); _ff_set(o[16],t16); _ff_set(o[17],t17); _ff_set(o[18],t18);
 }
-
-
 // computes f^2 mod g  for f degree 18 and g(x) = x^19-g17x^17-g16x^16-...-g1x-g0 (note signs!)
 static inline void ff_poly_square_mod_19 (ff_t o[19], ff_t f[19], ff_t g[18])
 {

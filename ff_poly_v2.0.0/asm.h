@@ -1,12 +1,23 @@
-#ifndef _ASM_INCLUDE_
-#define _ASM_INCLUDE_
-
-
 /*
     Copyright 2011-2014 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _ASM_INCLUDE_
+#define _ASM_INCLUDE_
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -84,8 +95,6 @@ extern "C" {
 #else
 #error "asm.h: unsupported architecture (need x86_64 or aarch64)"
 #endif
-
-
 #define _asm_mult_3_2_1(z2,z1,z0,x1,x0,y0)  { register unsigned long __u; \
                                        _asm_mult_1_1 (__u,z0,x0,y0); \
                                        _asm_mult_1_1 (z2,z1,x1,y0); \
@@ -120,8 +129,6 @@ static inline void _asm_mult_3_2_2r (unsigned long z2, unsigned long z1, unsigne
     z1 = R0;
     z2 = x[1]*y[1]+R1;
 }
-
-
 // This function assumes that x[1] < 2^31.  For no obvious reason, this is slower than multiplying?!
 static inline void _asm_square_3_2 (unsigned long z[3], unsigned long x[2])
 {

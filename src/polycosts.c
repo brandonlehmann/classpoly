@@ -1,5 +1,3 @@
-#include "polycosts.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -7,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,6 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "polycosts.h"
 
 /*
 Data generated on a 3.0 GHz AMD Phenom II on Jan 6, 2010  testenum 32 bit run.  only first 22 primes tested, subsequent entries are taken from one_root table + 16*ell^2
@@ -45,8 +44,6 @@ int poly_root_enum_costs_48[POLY_COST_PRIMES] = {
 813, 990, 3994, 6507, 14202, 19217, 30632, 37754, 54224, 86363, 107154, 169767, 222017, 269960, 321811, 403253, 496819, 530092,
 633780, 709328,  748629, 869253, 958298, 1097886, 1293031, 1399853, 1452357, 1561605, 1618270, 1732413, 2173221, 
 };
-
-
 /*
 Data generated on a 3.0 GHz AMD Phenom II on Jan 6, 2010
 4*1166630815943=1830576^2 - 2^2*(-328878692999),  p has 40.1 bits (but these really don't depend on p in any significant way
@@ -313,8 +310,6 @@ int poly_gcd_cycle_costs_s12[(POLY_COST_PRIMES-1)*(POLY_COST_PRIMES-1)] = {
 54990, 59438, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 62545, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 };
-
-
 /*
 Data generated on a 3.0 GHz AMD Phenom II on Jan 6, 2010
 4*1166630815943=1830576^2 - 2^2*(-328878692999),  p has 40.1 bits (but these really don't depend on p in any significant way

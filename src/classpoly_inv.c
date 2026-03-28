@@ -1,13 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "ff_poly.h"
-#include "phi_poly.h"
-#include "class_inv.h"
-#include "classpoly.h"
-#include "classpoly_crt.h"
-#include "classpoly_inv.h"
-#include "cstd.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -15,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +16,15 @@
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include "ff_poly.h"
+#include "phi_poly.h"
+#include "class_inv.h"
+#include "classpoly.h"
+#include "classpoly_crt.h"
+#include "classpoly_inv.h"
+#include "cstd.h"
 
 int classpoly_inv_setup (classpoly_inv_t Hinv, classpoly_t H, int inv, classpoly_crt_t crt)
 {

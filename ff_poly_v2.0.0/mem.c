@@ -1,14 +1,27 @@
+/*
+    Copyright (c) 2019-2020 Andrew R. Booker and Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <memory.h>
 #include <sys/mman.h>
-
-/*
-    Copyright (c) 2019-2020 Andrew R. Booker and Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 static size_t _shared_bytes;
 static size_t _shared_allocs;
@@ -29,8 +42,6 @@ static void mem_printf (const char *format, ...) {}
 static void mem_printf (const char *format, ...)
     { va_list args;  va_start(args, format);  vprintf(format, args);  va_end(args); }
 #endif
-
-
 // Use this for memory written by parent to be shared on a readonly basis with forked children (under cygwin we need this to avoid copying in fork)
 void *shared_malloc(size_t bytes)
 {
@@ -132,4 +143,3 @@ void *shared_realloc_private (void *old_private_ptr, size_t old_bytes, size_t ne
     mem_printf ("shared_blocks=%lu, shared_bytes=%lu (%.1f MB)\n", _shared_allocs-_shared_frees, _shared_bytes, (double)_shared_bytes/(1<<20));
     return new_ptr;
 }
-

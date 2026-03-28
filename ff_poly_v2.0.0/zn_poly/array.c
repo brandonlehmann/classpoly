@@ -1,28 +1,22 @@
 /*
-   array.c:  simple operations on arrays mod m
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "zn_poly_internal.h"
-
-
 int
 zn_array_cmp (const ulong* op1, const ulong* op2, size_t n)
 {
@@ -32,24 +26,18 @@ zn_array_cmp (const ulong* op1, const ulong* op2, size_t n)
 
    return 0;
 }
-
-
 void
 zn_array_copy (ulong* res, const ulong* op, size_t n)
 {
    for (; n > 0; n--)
       *res++ = *op++;
 }
-
-
 void
 zn_array_neg (ulong* res, const ulong* op, size_t n, const zn_mod_t mod)
 {
    for (; n > 0; n--)
       *res++ = zn_mod_neg (*op++, mod);
 }
-
-
 
 void
 zn_array_scalar_mul_or_copy (ulong* res, const ulong* op, size_t n,
@@ -60,8 +48,6 @@ zn_array_scalar_mul_or_copy (ulong* res, const ulong* op, size_t n,
    else if (res != op)
       zn_array_copy (res, op, n);
 }
-
-
 
 /*
    Same as zn_array_scalar_mul, but:
@@ -81,8 +67,6 @@ _zn_array_scalar_mul_redc_v1 (ulong* res, const ulong* op, size_t n, ulong x,
    for (; n; n--, op++, res++)
       *res = zn_mod_reduce_redc ((*op) * x, mod);
 }
-
-
 /*
    Same as zn_array_scalar_mul, but:
       * always uses REDC reduction (requires modulus is odd);
@@ -105,8 +89,6 @@ _zn_array_scalar_mul_redc_v2 (ulong* res, const ulong* op, size_t n, ulong x,
       *res = zn_mod_reduce_wide_redc_slim (hi, lo, mod);
    }
 }
-
-
 /*
    Same as zn_array_scalar_mul, but:
       * always uses REDC reduction (requires modulus is odd).
@@ -127,8 +109,6 @@ _zn_array_scalar_mul_redc_v3 (ulong* res, const ulong* op, size_t n, ulong x,
       *res = zn_mod_reduce_wide_redc (hi, lo, mod);
    }
 }
-
-
 /*
    Same as zn_array_scalar_mul, but always uses REDC reduction (requires that
    modulus is odd).
@@ -151,8 +131,6 @@ _zn_array_scalar_mul_redc (ulong* res, const ulong* op, size_t n, ulong x,
    else
       _zn_array_scalar_mul_redc_v3 (res, op, n, x, mod);
 }
-
-
 /*
    Same as zn_array_scalar_mul, but:
       * always uses plain reduction;
@@ -170,8 +148,6 @@ _zn_array_scalar_mul_plain_v1 (ulong* res, const ulong* op, size_t n, ulong x,
    for (; n; n--, op++, res++)
       *res = zn_mod_reduce ((*op) * x, mod);
 }
-
-
 /*
    Same as zn_array_scalar_mul, but:
       * always uses plain reduction.
@@ -191,8 +167,6 @@ _zn_array_scalar_mul_plain_v2 (ulong* res, const ulong* op, size_t n, ulong x,
       *res = zn_mod_reduce_wide (hi, lo, mod);
    }
 }
-
-
 /*
    Same as zn_array_scalar_mul, but always uses plain reduction.
    
@@ -211,8 +185,6 @@ _zn_array_scalar_mul_plain (ulong* res, const ulong* op, size_t n, ulong x,
    else
       _zn_array_scalar_mul_plain_v2 (res, op, n, x, mod);
 }
-
-
 void
 _zn_array_scalar_mul (ulong* res, const ulong* op, size_t n, ulong x,
                       int redc, const zn_mod_t mod)
@@ -222,8 +194,6 @@ _zn_array_scalar_mul (ulong* res, const ulong* op, size_t n, ulong x,
    else
       _zn_array_scalar_mul_plain (res, op, n, x, mod);
 }
-
-
 void zn_array_scalar_mul (ulong* res, const ulong* op, size_t n, ulong x,
                           const zn_mod_t mod)
 {
@@ -244,8 +214,6 @@ void zn_array_scalar_mul (ulong* res, const ulong* op, size_t n, ulong x,
    }
 }
 
-
-
 void
 zn_array_sub (ulong* res, const ulong* op1, const ulong* op2, size_t n,
               const zn_mod_t mod)
@@ -257,8 +225,6 @@ zn_array_sub (ulong* res, const ulong* op1, const ulong* op2, size_t n,
       for (; n; n--)
          *res++ = zn_mod_sub (*op1++, *op2++, mod);
 }
-
-
 ulong*
 zn_skip_array_signed_add (ulong* res, ptrdiff_t s, size_t n,
                           const ulong* op1, int neg1,
@@ -320,6 +286,4 @@ zn_skip_array_signed_add (ulong* res, ptrdiff_t s, size_t n,
    
    return res;
 }
-
-
 // end of file ****************************************************************

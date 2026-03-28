@@ -1,28 +1,22 @@
 /*
-   pack.c:  bit-packing/unpacking for Kronecker substitution routines
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "zn_poly_internal.h"
-
-
 /*
    Same as zn_array_pack(), but requires b <= ULONG_BITS.
 */
@@ -86,8 +80,6 @@ zn_array_pack1 (mp_limb_t* res, const ulong* op, size_t n, ptrdiff_t s,
 #error Not nails-safe yet
 #endif
 }
-
-
 
 void
 zn_array_pack (mp_limb_t* res, const ulong* op, size_t n, ptrdiff_t s,
@@ -168,8 +160,6 @@ zn_array_pack (mp_limb_t* res, const ulong* op, size_t n, ptrdiff_t s,
 #error Not nails-safe yet
 #endif
 }
-
-
 
 /*
    Same as zn_array_unpack(), but requires b <= ULONG_BITS
@@ -253,8 +243,6 @@ zn_array_unpack1 (ulong* res, const mp_limb_t* op, size_t n, unsigned b,
 #error Not nails-safe yet
 #endif
 }
-
-
 
 /*
    Same as zn_array_unpack(), but requires ULONG_BITS < b <= 2 * ULONG_BITS
@@ -354,8 +342,6 @@ zn_array_unpack2 (ulong* res, const mp_limb_t* op, size_t n, unsigned b,
 #endif
 }
 
-
-
 /*
    Same as zn_array_unpack(), but requires 2 * ULONG_BITS < b < 3 * ULONG_BITS
    (i.e. writes three words per coefficient)
@@ -436,8 +422,6 @@ zn_array_unpack3 (ulong* res, const mp_limb_t* op, size_t n, unsigned b,
 #error Not nails-safe yet
 #endif
 }
-
-
 void
 zn_array_unpack (ulong* res, const mp_limb_t* op, size_t n, unsigned b,
                  unsigned k)
@@ -451,7 +435,5 @@ zn_array_unpack (ulong* res, const mp_limb_t* op, size_t n, unsigned b,
    else    // b < 3 * ULONG_BITS
       zn_array_unpack3 (res, op, n, b, k);
 }
-
-
 
 // end of file ****************************************************************

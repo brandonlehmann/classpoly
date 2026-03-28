@@ -1,10 +1,23 @@
-#ifndef _FFPOLYMULTIPOINT_INCLUDE_
-#define _FFPOLYMULTIPOINT_INCLUDE_
-
 /*
     Copyright 2007-2016 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FFPOLYMULTIPOINT_INCLUDE_
+#define _FFPOLYMULTIPOINT_INCLUDE_
 
 #include "ff.h"
 #include "ffpoly.h"
@@ -80,8 +93,6 @@ static inline void ffpi_interpolate(ff_t f[], ff_t y[], int n, ffpi_ctx_t ctx)
 // computes f(X) of degree less than n such that f(x_i)=y_i, overlap is ok
 void ff_poly_interpolate_r (ff_t f[], int *d, ff_t x[], ff_t y[], int n);
 void ff_poly_interpolate (ff_t f[], int *d, ff_t x[], ff_t y[], int n);
-
-
 
 #ifdef __cplusplus
 }

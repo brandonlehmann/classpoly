@@ -1,10 +1,23 @@
-#ifndef _FFF_INCLUDE_
-#define _FFF_INCLUDE_
-
 /*
     Copyright 2016-2017 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FFF_INCLUDE_
+#define _FFF_INCLUDE_
 
 #include <gmp.h>
 #include "ff_poly/ff.h"

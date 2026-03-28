@@ -1,10 +1,23 @@
-#ifndef _FF2K_INCLUDE_
-#define _FF2K_INCLUDE_
-
 /*
     Copyright 2011-2020 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FF2K_INCLUDE_
+#define _FF2K_INCLUDE_
 
 #include <gmp.h>
 #include <stdio.h>
@@ -265,8 +278,6 @@ static inline char *ff2k_sprint (char buf[], ff2k_t x, int conway)
         
 static inline void ff2k_print (ff2k_t x, int conway)
     { char buf[2*FF2K_MAXK+3]; printf("%s",ff2k_sprint(buf,x,conway)); }
-
-
 // The root counting code below is based on Zinoviev's "On the solutions of equations of degree" RR-2829, 1996, inria-00073862
 // https://hal.inria.fr/inria-00073862
 // returns number of disinct roots of x^2+bx+c
@@ -396,8 +407,6 @@ static inline int ff2k_Rmatrix (unsigned R[], ff2k_t a, ff2k_t b)
 
 int ff2k_poly_count_distinct_roots_d3_linearize (ff2k_t L[5], ff2k_t f[4]);
 int ff2k_poly_count_distinct_roots_d4_linearize (ff2k_t L[5], ff2k_t f[5]);
-
-
 #ifdef __cplusplus
 }
 #endif

@@ -1,13 +1,26 @@
+/*
+    Copyright 2007-2014 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _TABLE_INCLUDE_
 #define _TABLE_INCLUDE_
 
 #include <stdlib.h>
 #include <stdint.h>
-
-/*
-    Copyright 2007-2014 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 #ifdef __cplusplus
 extern "C" {
@@ -120,8 +133,6 @@ static inline int htab_lookup (htab_t *T, uint32_t data[TABLE_MAX_MATCHES], uint
 }
 static inline int table_lookup (uint32_t data[TABLE_MAX_MATCHES], uint32_t key)
     { return htab_lookup (&table_common_T, data, key); }
-
-
 // does a combined insert/lookup, returning a list of data for any previously inserted entries with the same key value
 static inline int htab_insert_matches (htab_t *T, uint32_t data[TABLE_MAX_MATCHES], uint32_t datum, uint32_t key)
 {

@@ -1,12 +1,25 @@
+/*
+    Copyright 2009-2017 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _FFMONTGOMERY64_INCLUDE_
 #define _FFMONTGOMERY64_INCLUDE_
 
 #include <stdint.h>
-
-/*
-    Copyright 2009-2017 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 #ifdef __cplusplus
 extern "C" {
@@ -166,8 +179,6 @@ static inline uint64_t ff_montgomery1_sum_4_mults_d1 (uint64_t x0, uint64_t x1, 
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 // computes x0x3+x1x2+x2x1+x3x0 = 2x0x3+2x1x2,  assumes _ff_p is less than 62 bits
 static inline uint64_t ff_montgomery1_sum_4_mults_s4 (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3)
 {
@@ -1864,8 +1875,6 @@ static inline uint64_t ff_montgomery1_sum_18_mults_s18 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_19_mults (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18,
                                                     uint64_t y0, uint64_t y1, uint64_t y2, uint64_t y3, uint64_t y4, uint64_t y5, uint64_t y6, uint64_t y7, uint64_t y8, uint64_t y9,
@@ -2981,8 +2990,6 @@ static inline uint64_t ff_montgomery1_sum_24_mults_d8 (uint64_t x0, uint64_t x1,
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_24_mults_s24 (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                        uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19, uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23)
 {
@@ -3026,8 +3033,6 @@ static inline uint64_t ff_montgomery1_sum_24_mults_s24 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_25_mults (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19, uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24,
                                                     uint64_t y0, uint64_t y1, uint64_t y2, uint64_t y3, uint64_t y4, uint64_t y5, uint64_t y6, uint64_t y7, uint64_t y8, uint64_t y9,
@@ -3271,8 +3276,6 @@ static inline uint64_t ff_montgomery1_sum_25_mults_s25 (uint64_t x0, uint64_t x1
     return a1;
 }
 
-
-
 static inline uint64_t ff_montgomery1_sum_26_mults (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19, uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25,
                                                     uint64_t y0, uint64_t y1, uint64_t y2, uint64_t y3, uint64_t y4, uint64_t y5, uint64_t y6, uint64_t y7, uint64_t y8, uint64_t y9,
@@ -3452,8 +3455,6 @@ static inline uint64_t ff_montgomery1_sum_26_mults_s26 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_27_mults (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19, uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26,
                                                     uint64_t y0, uint64_t y1, uint64_t y2, uint64_t y3, uint64_t y4, uint64_t y5, uint64_t y6, uint64_t y7, uint64_t y8, uint64_t y9,
@@ -3715,8 +3716,6 @@ static inline uint64_t ff_montgomery1_sum_27_mults_s27 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_28_mults (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19,
                                                     uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27,
@@ -3990,8 +3989,6 @@ static inline uint64_t ff_montgomery1_sum_28_mults_s28 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_29_mults (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19,
                                                     uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27, uint64_t x28,
@@ -4556,8 +4553,6 @@ static inline uint64_t ff_montgomery1_sum_31_mults (uint64_t x0, uint64_t x1, ui
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_31_mults_d10 (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19,
                                                     uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27, uint64_t x28, uint64_t x29, uint64_t x30,
@@ -4781,8 +4776,6 @@ static inline uint64_t ff_montgomery1_sum_31_mults_s31 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_32_mults (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19,
                                                     uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27, uint64_t x28, uint64_t x29, uint64_t x30, uint64_t x31,
@@ -4858,8 +4851,6 @@ static inline uint64_t ff_montgomery1_sum_32_mults (uint64_t x0, uint64_t x1, ui
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_32_mults_d10 (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19,
                                                     uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27, uint64_t x28, uint64_t x29, uint64_t x30, uint64_t x31,
@@ -4945,8 +4936,6 @@ static inline uint64_t ff_montgomery1_sum_32_mults_d10 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_33_mults (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19,
                                                     uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27, uint64_t x28, uint64_t x29, uint64_t x30, uint64_t x31, uint64_t x32,
@@ -5024,8 +5013,6 @@ static inline uint64_t ff_montgomery1_sum_33_mults (uint64_t x0, uint64_t x1, ui
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_33_mults_d10 (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19,
                                                     uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27, uint64_t x28, uint64_t x29, uint64_t x30, uint64_t x31, uint64_t x32,
@@ -5113,8 +5100,6 @@ static inline uint64_t ff_montgomery1_sum_33_mults_d10 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_33_mults_d11 (uint64_t x0, uint64_t x1, uint64_t x2,uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9,
                                                     uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19,
                                                     uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27, uint64_t x28, uint64_t x29, uint64_t x30, uint64_t x31, uint64_t x32,
@@ -7839,8 +7824,6 @@ static inline uint64_t ff_montgomery1_sum_42_mults_d14 (uint64_t x0, uint64_t x1
     _redc(a1,a0,b1,b0);
     return a1;
 }
-
-
 static inline uint64_t ff_montgomery1_sum_43_mults (uint64_t x0, uint64_t x1, uint64_t x2, uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6, uint64_t x7, uint64_t x8, uint64_t x9, 
                                                          uint64_t x10, uint64_t x11, uint64_t x12, uint64_t x13, uint64_t x14, uint64_t x15, uint64_t x16, uint64_t x17, uint64_t x18, uint64_t x19, 
                                                          uint64_t x20, uint64_t x21, uint64_t x22, uint64_t x23, uint64_t x24, uint64_t x25, uint64_t x26, uint64_t x27, uint64_t x28, uint64_t x29, 

@@ -1,3 +1,21 @@
+/*
+    Copyright 2007-2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,11 +24,6 @@
 #include "table.h"
 
 htab_t table_common_T;                          // table_* functions share this, not thread safe
-
-/*
-    Copyright 2007-2012 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 /*
     We allocate three sections of memory:
@@ -52,8 +65,6 @@ void htab_free (htab_t *T)
     free (T->htab_list); T->htab_list = 0;
     T->htab_bits = 0;
 }
-
-
 void htab_init (htab_t *T, int bits)
 {
     if ( bits > T->htab_bits ) {

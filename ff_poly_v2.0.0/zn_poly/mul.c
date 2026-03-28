@@ -1,28 +1,22 @@
 /*
-   mul.c:  polynomial multiplication
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "zn_poly_internal.h"
-
-
 ulong
 _zn_array_mul_fudge (size_t n1, size_t n2, int sqr, const zn_mod_t mod)
 {
@@ -53,8 +47,6 @@ _zn_array_mul_fudge (size_t n1, size_t n2, int sqr, const zn_mod_t mod)
    // return whatever fudge is used by the fft multiplication code
    return zn_array_mul_fft_fudge (n1, n2, sqr, mod);
 }
-
-
 void
 _zn_array_mul (ulong* res,
                const ulong* op1, size_t n1,
@@ -117,8 +109,6 @@ _zn_array_mul (ulong* res,
       }
    }
 }
-
-
 void
 zn_array_mul (ulong* res,
               const ulong* op1, size_t n1,
@@ -127,6 +117,4 @@ zn_array_mul (ulong* res,
 {
    _zn_array_mul (res, op1, n1, op2, n2, 0, mod);
 }
-
-
 // end of file ****************************************************************

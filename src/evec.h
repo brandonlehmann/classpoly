@@ -1,8 +1,3 @@
-#ifndef _EVEC_INCLUDE_
-#define _EVEC_INCLUDE_
-
-#include "cstd.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -10,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _EVEC_INCLUDE_
+#define _EVEC_INCLUDE_
+
+#include "cstd.h"
 
 /*
     This module contains inlines for fast operations on polycyclic presentations.
@@ -72,8 +71,6 @@ static inline void evec_print_ell (long e[], long ell[], int k)
 // r is an array of concatenated evecs in which the ith evec has length i (starting with i=0)
 // returns a pointer to the ith evec, at offset  binom(i,2)
 static inline long *evec_ri (long r[], int i) { return r+((i*(i-1))>>1); }
-
-
 // given relative orders n[i], computes m[i] = prod_{j<=i} n[i] for i from 1 to k
 // m[i] is the order of the subgroup spanned by the first i generators
 static inline void evec_n_to_m (long m[], long n[], int k)
@@ -275,8 +272,6 @@ static inline int evec_inc_subgroup (long e[], long n[], int d0, int d1, long h)
     if ( e[d1]==n[d1] ) { e[d1] = 0; return 0; }
     return 1;
 }
-
-
 static inline void evec_print_relation (long n[], long r[], int i)
 {
     register long *e;
@@ -287,8 +282,6 @@ static inline void evec_print_relation (long n[], long r[], int i)
     for ( j = 0 ; j < i ; j++ ) if ( e[j] ) printf ("a[%d]^%ld ", j, e[j]);
     puts ("");
 }
-
-
 // given polycyclic presentation (n,r,k) and a prime power q=p^e that is a multiple of the order of the p-Sylow subgroup,
 // computes a polycyclic presentation (sn,sr,sk) for the p-Sylow with basis (a_g[0],...,a_g[sk-1]) and returns sk
 int evec_sylow_presentation (int g[], long sn[], long sr[], int k, long n[], long r[], long q);

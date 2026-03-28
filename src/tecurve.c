@@ -1,11 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "ff_poly.h"
-#include "ecurve.h"
-#include "tecurve.h"
-#include "bigX1.h"
-#include "cstd.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -13,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,6 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include "ff_poly.h"
+#include "ecurve.h"
+#include "tecurve.h"
+#include "bigX1.h"
+#include "cstd.h"
 
 #define TECURVE_MAX_TT_N		30
 
@@ -37,8 +36,6 @@ static int genus0_N[TECURVE_MAX_N+1] = { 0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0
         and divisible by 3 if N%3 is nonzero and t3>FILTER_3TOR_1, or not divisible by 3 if N%3 is nonzero and t3=FILTER_3TOR_1.
 	(if t3==0 then 3-torsion is ignored).
 */
-
-
 double tecurve_odd_density (long p, int N, int t3)
 {
 	double r1, r2, r3;
@@ -80,8 +77,6 @@ double tecurve_odd_density (long p, int N, int t3)
 //printf("p=%d, p mod N=%d p mod 3 =%d, N=%d, t3=%d, r1=%f, r3=%f, r1*r3=%f\n", p, p%N, p%3, N, t3, r1, r3, r1*r3);
 	return r1*r3;
 }
-
-
 /*
 	Returns density of curves with order divisible by N and also 2^k, with t3 as above.
 */
@@ -228,8 +223,6 @@ static inline void tecurve_shift_AB_from_b246 (ff_t x1[1], ff_t y1[1], ff_t x0, 
 	register ff_t t0,t1;
 	_ff_mult(t0,c_12,x0); _ff_addto(t0,b2); _ff_add(t1,t0,t0); _ff_add(x1[0],t0,t1); _ff_mult(y1[0],c_108,y0);
 }
-
-
 int tecurve_genus0_curves (ff_t A[], ff_t B[], ff_t *tt_x, ff_t *tor_x, ff_t *x, ff_t *y, int n, int N);
 int tecurve_get_X1_points (ff_t x[], ff_t y[], int n, int N);
 int tecurve_map_X1_points (ff_t r[], ff_t s[], ff_t x[], ff_t y[], int n, int N);
@@ -276,8 +269,6 @@ int tecurve_random_curves_x (ff_t f1[], ff_t x[], ff_t y[], int n, int N, int s2
 	}
 	return n;
 }
-
-
 int tecurve_genus0_curves (ff_t A[], ff_t B[], ff_t *tt_x, ff_t *tor_x, ff_t *x, ff_t *y, int n, int N)
 {
 	ff_t inv[TECURVE_MAX_CURVES], den[TECURVE_MAX_CURVES];
@@ -1286,8 +1277,6 @@ int tecurve_map_X1_points (ff_t r[], ff_t s[], ff_t x[], ff_t y[], int n, int N)
 	}
 	return n;
 }
-
-
 int tecurve_get_tt_points (ff_t tt_x[], ff_t r[], ff_t s[], int n, int N)
 {
 	ff_t den[TECURVE_MAX_CURVES], inv[TECURVE_MAX_CURVES];

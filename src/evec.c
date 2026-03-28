@@ -1,8 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "evec.h"
-#include "cstd.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -10,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include "evec.h"
+#include "cstd.h"
 
 // given polycyclic presentation (n,r,k) and a prime power q=p^e that is a multiple of the order of the p-Sylow subgroup,
 // computes a polycyclic presentation (sn,sr,sk) for the p-Sylow with basis (a_g[0],...,a_g[sk-1]) and returns sk
@@ -86,8 +85,6 @@ static inline void print_matrix (long B[], int rows, int cols)
     register int bi, bj;
     for ( bi = 0 ; bi < rows ; bi++ ) { for ( bj = 0 ; bj < cols ; bj++ ) printf ("%ld ", B[bi*cols+bj]); puts (""); }
 }
-
-
 // given a pcp (n,r,k) for a p-group, computes a basis with generators b_i = prod_j a_j^B[i,j] of order o[i],
 // where B is an k'-by-k matrix stored in a linear array of length k^2 (k' <= k is the rank, but we initially need space for a k by k matrix)
 // returns the number of generators, which is equal to the p-rank

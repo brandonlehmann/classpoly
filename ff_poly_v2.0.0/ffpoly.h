@@ -1,10 +1,23 @@
-#ifndef _FFPOLY_INCLUDE
-#define _FFPOLY_INCLUDE
-
 /*
     Copyright 2007-2017 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FFPOLY_INCLUDE
+#define _FFPOLY_INCLUDE
 
 #include <assert.h>
 #include <gmp.h>
@@ -68,8 +81,6 @@ static inline ff_t *ff_poly_copy (ff_t b[], int *pd_b, ff_t a[], int d_a)
     
 static inline ff_t *ff_poly_zpad (ff_t f[], int dold, int dnew)
     { memset (f+dold+1, 0, (dnew-dold)*sizeof(ff_t)); return f; }
-
-
 // finds a rational point (x0:y0:1) on conic c0*x^2+c1*x*y+c2*x*y+c3*y^2+c4*y*z+c5*z^2 (lex monomial order)
 void ff_poly_conic_rational_point (ff_t *x0, ff_t *y0, ff_t c[6]);
 
@@ -286,8 +297,6 @@ static inline void ff_poly_triple (ff_t b[], int *d_b, ff_t a[], int d_a)
     for ( int i = 0 ; i <= d_a ; i++ ) { _ff_add(t0,a[i],a[i]); _ff_add(b[i],a[i],t0); }
     if ( d_b ) *d_b = d_a;
 }
-
-
 // overlap ok
 static inline void ff_poly_scalar_mult (ff_t c[], int *d_c, ff_t a, ff_t b[], int d_b)
 {
@@ -485,8 +494,6 @@ static inline void ff_poly_depressed_cubic_resolvent (ff_t t[1], ff_t g[3], ff_t
     ff_poly_depress_cubic (t,g);
     // total 5M+9A
 }
-
-
 static inline int ff_poly_roots_d1 (ff_t r[1], ff_t f[2])               // f needn't be monic
 {
     register ff_t t1;
@@ -557,8 +564,6 @@ static inline int ff_poly_roots_d4 (ff_t r[4], ff_t f[5])           // f must be
     for ( i = 0 ; i < k ; i++ ) _ff_subfrom(r[i],t);
     return k;
 }
-
-
 // f must be monic
 static inline void ff_poly_remove_root_d2 (ff_t g[], ff_t f[], ff_t r[1])
 {
@@ -723,8 +728,6 @@ static inline void ff_poly_matrix_scale (ff_t G[], ff_t F[], int r, int d, ff_t 
     register int i,j;
     for ( i = 0 ; i < r ; i++ ) for ( j = 0 ; j < r ; j++ ) ff_poly_scale(G+(i*r+j)*(d+1),F+(i*r+j)*(d+1),d,a);
 }
-
-
 void ff_poly_from_roots_small (ff_t f[], ff_t r[], int d);      // d cannot exceed 64
 
 // naive implementation: d(d-1)/2 mults. Both ff_poly_from_roots_small and ff_poly_from_roots_big are much faster
@@ -767,8 +770,6 @@ static inline void ff_poly_mod_xn (ff_t f[], int *pd_f, int n)
     if ( *pd_f < n ) return;
     *pd_f = ff_poly_degree(f,n-1);
 }
-
-
 // replace f(x) with f(x)-x
 static inline void ff_poly_sub_x_from (ff_t f[], int *pd_f)
 {
@@ -777,8 +778,6 @@ static inline void ff_poly_sub_x_from (ff_t f[], int *pd_f)
     _ff_set_neg_one (f[1]);  *pd_f = 1;
     if ( *pd_f < 0 ) _ff_set_zero(f[0]);
 }
-
-
 static inline int ff_poly_random (ff_t f[], int d)
     { register int i;  for ( i = 0 ; i <= d ; i++ ) _ff_random(f[i]); return ff_poly_degree(f,d); }
     

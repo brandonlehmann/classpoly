@@ -1,3 +1,21 @@
+/*
+    Copyright 2008-2017 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,11 +26,6 @@
 #include "ffpolybig.h"
 #include "ffpolymultipoint.h"
 #include "cstd.h"
-
-/*
-    Copyright 2008-2017 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 // compute c[i]=1/delta(i,d)=1/prod_{j=0..d, j!=i}(i-j)
 // uses 6d+O(1) mults
@@ -204,8 +217,6 @@ void ff_poly_matrix_multipoint_product_scale (ff_t y[], ff_t f[], int r, int d, 
     }
     free (g); free (h); free (w);
 }
-
-
 // Given f(x) and n computes the product f(0)f(1)...f(n-1) using Bostan-Gaudry-Schost O(M(sqrt(n))) algorithm
 void ff_poly_multipoint_product (ff_t y[1], ff_t f[], int d, long n)
 {
@@ -290,8 +301,6 @@ void ff_poly_multipoint_product (ff_t y[1], ff_t f[], int d, long n)
     _ff_multby(y[0],t);
     return;
 }
-
-
 // Given r-by-r matrix f(x) of polynomials of degree <= d computes f(0)f(1)...f(n-1) using Bostan-Gaudry-Schost O(M(sqrt(n))) algorithm
 void ff_poly_matrix_multipoint_product (ff_t y[], ff_t f[], int r, int d, long n)
 {
@@ -358,8 +367,6 @@ void ff_poly_matrix_multipoint_product (ff_t y[], ff_t f[], int r, int d, long n
     free(v);
     return;
 }
-
-
 // TODO: save modulus ctx in product tree to speed up repeated interpolations at the same points (should give a 2x speedup)
 
 void ffpt_create_ctx (ffpt_ctx_t ctx, ff_t *r, int n)
@@ -450,8 +457,6 @@ void ff_poly_multipoint_eval (ff_t y[], ff_t f[], int d, ff_t x[], int n)
     if ( d <= 40 && n <= 2 ) { ff_poly_multipoint_eval_small (y,f,d,x,n); return; }
     ff_poly_multipoint_eval_big (y,f,d,x,n);
 }
-
-
 void ffpi_alloc_ctx (ffpi_ctx_t ctx, int n)
 {
     int *cntp;
@@ -602,4 +607,3 @@ void ff_poly_interpolate (ff_t f[], int *d, ff_t x[], ff_t y[], int n)
     ffpi_free_ctx (ctx);
     if ( d ) *d = ff_poly_degree(f,n-1);
 }
-

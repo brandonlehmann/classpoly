@@ -1,3 +1,21 @@
+/*
+    Copyright 2007-2017 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,11 +24,6 @@
 #include "ffpoly.h"
 #include "ffpolysmall.h"
 #include "cstd.h"
-
-/*
-    Copyright 2007-2017 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 /*
     This module contains performance-oriented code for operations on polynomials of low degree,
@@ -220,8 +233,6 @@ void ff_poly_mod_small (ff_t *h, int *d_h, ff_t *f, int d_f, ff_t *g, int d_g)
     ff_poly_copy (h, d_h, fp, d_g-1);
     if ( d_h ) *d_h = ff_poly_degree(h,d_g-1);
 }
-
-
 // computes f^2 mod g where g=x^n - g[n-2]x^{n-2} - ... - g[0] (note signs!)  and f has degree n-1 (n must be > 0)
 // assumes n > 20
 void ff_poly_square_mod_small_big  (ff_t o[], ff_t f[], ff_t g[], int n) 
@@ -368,8 +379,6 @@ void ff_poly_gcd_x3axb (ff_t h[4], int *d_h, ff_t f[4], ff_t g[4], int d_g)
     // worst case 13M+7A and some copies
     return; 
 }
-
-
 int ff_poly_dbl_root_d3 (ff_t r[1], ff_t f[3])
 {
     ff_t g[2];
@@ -432,8 +441,6 @@ int _ff_poly_roots_d4_mod3 (ff_t r[4], ff_t f[5])
     }
     return 0;
 }
-
-
 /*
     Finds the roots of a monic depreseed cubic x^3+ax+b over F_p.  Does not verify that poly is monic and depressed (in fact does not look at f[3] or f[2] -- this is important!).
     If roots is NULL only the # of roots is determined, which can be significantly quicker (e.g. when D is not a QR)
@@ -847,8 +854,6 @@ void ff_poly_compose_mod_6 (ff_t g[6], ff_t h1[6], ff_t h2[6], ff_t f[5])
     for ( int i = 3 ; i > 0 ; i-- ) {  ff_poly_mult_mod_6 (w,w,h2,f);  _ff_addto(w[0],h1[i]); }
     _ff_set(t0,h1[0]); ff_poly_mult_mod_6 (g,w,h2,f); _ff_addto(g[0],t0);
 }
-
-
 // 432M + 366A
 void ff_poly_compose_mod_7 (ff_t g[7], ff_t h1[7], ff_t h2[7], ff_t f[6])
 {
@@ -985,8 +990,6 @@ void ff_poly_compose_mod_19 (ff_t g[19], ff_t h1[19], ff_t h2[19], ff_t f[18])
     for ( int i = 16 ; i > 0 ; i-- ) {  ff_poly_mult_mod_19 (w,w,h2,f);  _ff_addto(w[0],h1[i]); }
     _ff_set(t0,h1[0]); ff_poly_mult_mod_19 (g,w,h2,f); _ff_addto(g[0],t0);
 }
-
-
 // 13718M + 13015A
 void ff_poly_compose_mod_20 (ff_t g[20], ff_t h1[20], ff_t h2[20], ff_t f[19])
 {
@@ -1090,8 +1093,6 @@ void ff_poly_exp_mod_2 (ff_t g[2], ff_t h[2], unsigned long n, ff_t f[2])
         if ( j ) ff_poly_mult_mod_2f (g,g,x[j],f);
     }
 }
-
-
 // Computes (x+a)^n modulo x^2-f0 (note the sign).  Assumes n < 2^63
 void ff_poly_xpan_mod_d2 (ff_t g[2], ff_t a, unsigned long n, ff_t f[1])
 {
@@ -1171,8 +1172,6 @@ void ff_poly_xpan_mod_d3 (ff_t g[3], ff_t a, unsigned long n, ff_t f[2])
         m >>= 1;
     }
 }
-
-
 // Computes g = h^n mod f, where f is of the form x^4-f2x^2-f1x-f0 and g is degree 3 (possibly with zero leading coefficients),  h and g may overlap
 // standard right-to-left binary exp  with a 2-bit window here
 void ff_poly_exp_mod_4 (ff_t g[4], ff_t h[4], unsigned long n, ff_t f[3])
@@ -1196,8 +1195,6 @@ void ff_poly_exp_mod_4 (ff_t g[4], ff_t h[4], unsigned long n, ff_t f[3])
         if ( j ) ff_poly_mult_mod_4 (g,g,x[j],f);
     }
 }
-
-
 void ff_poly_xn_mod_d4 (ff_t g[4], unsigned long n, ff_t f[3])
 {
     register unsigned long m;
@@ -1223,8 +1220,6 @@ void ff_poly_xn_mod_d4 (ff_t g[4], unsigned long n, ff_t f[3])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d4 (ff_t g[4], ff_t a, unsigned long n, ff_t f[3])
 {
     register ff_t t1,t2,t3;
@@ -1251,8 +1246,6 @@ void ff_poly_xpan_mod_d4 (ff_t g[4], ff_t a, unsigned long n, ff_t f[3])
         ff_poly_square_mod_4 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d5 (ff_t g[5], unsigned long n, ff_t f[4])
 {
     register unsigned long m;
@@ -1280,8 +1273,6 @@ void ff_poly_xn_mod_d5 (ff_t g[5], unsigned long n, ff_t f[4])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d5 (ff_t g[5], ff_t a, unsigned long n, ff_t f[4])
 {
     register ff_t t1,t2,t3,t4;
@@ -1309,8 +1300,6 @@ void ff_poly_xpan_mod_d5 (ff_t g[5], ff_t a, unsigned long n, ff_t f[4])
         ff_poly_square_mod_5 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d6 (ff_t g[6], unsigned long n, ff_t f[5])
 {
     register unsigned long m;
@@ -1338,8 +1327,6 @@ void ff_poly_xn_mod_d6 (ff_t g[6], unsigned long n, ff_t f[5])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d6 (ff_t g[6], ff_t a, unsigned long n, ff_t f[5])
 {
     register ff_t t1,t2,t3,t4,t5;
@@ -1368,8 +1355,6 @@ void ff_poly_xpan_mod_d6 (ff_t g[6], ff_t a, unsigned long n, ff_t f[5])
         ff_poly_square_mod_6 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d7 (ff_t g[7], unsigned long n, ff_t f[6])
 {
     register unsigned long m;
@@ -1397,8 +1382,6 @@ void ff_poly_xn_mod_d7 (ff_t g[7], unsigned long n, ff_t f[6])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d7 (ff_t g[7], ff_t a, unsigned long n, ff_t f[6])
 {
     register ff_t t1,t2,t3,t4,t5,t6;
@@ -1428,8 +1411,6 @@ void ff_poly_xpan_mod_d7 (ff_t g[7], ff_t a, unsigned long n, ff_t f[6])
         ff_poly_square_mod_7 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d8 (ff_t g[8], unsigned long n, ff_t f[7])
 {
     register unsigned long m;
@@ -1453,8 +1434,6 @@ void ff_poly_xn_mod_d8 (ff_t g[8], unsigned long n, ff_t f[7])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d8 (ff_t g[8], ff_t a, unsigned long n, ff_t f[7])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7;
@@ -1485,8 +1464,6 @@ void ff_poly_xpan_mod_d8 (ff_t g[8], ff_t a, unsigned long n, ff_t f[7])
         ff_poly_square_mod_8 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d10 (ff_t g[10], unsigned long n, ff_t f[9])
 {
     register unsigned long m;
@@ -1510,8 +1487,6 @@ void ff_poly_xn_mod_d10 (ff_t g[10], unsigned long n, ff_t f[9])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d10 (ff_t g[10], ff_t a, unsigned long n, ff_t f[9])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7,t8,t9;
@@ -1544,8 +1519,6 @@ void ff_poly_xpan_mod_d10 (ff_t g[10], ff_t a, unsigned long n, ff_t f[9])
         ff_poly_square_mod_10 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d11 (ff_t g[11], unsigned long n, ff_t f[10])
 {
     register unsigned long m;
@@ -1569,8 +1542,6 @@ void ff_poly_xn_mod_d11 (ff_t g[11], unsigned long n, ff_t f[10])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d11 (ff_t g[11], ff_t a, unsigned long n, ff_t f[10])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7,t8,t9,t10;
@@ -1604,8 +1575,6 @@ void ff_poly_xpan_mod_d11 (ff_t g[11], ff_t a, unsigned long n, ff_t f[10])
         ff_poly_square_mod_11 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d12 (ff_t g[12], unsigned long n, ff_t f[11])
 {
     register unsigned long m;
@@ -1664,8 +1633,6 @@ void ff_poly_xpan_mod_d12 (ff_t g[12], ff_t a, unsigned long n, ff_t f[11])
         ff_poly_square_mod_12 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d13 (ff_t g[13], unsigned long n, ff_t f[12])
 {
     register unsigned long m;
@@ -1689,8 +1656,6 @@ void ff_poly_xn_mod_d13 (ff_t g[13], unsigned long n, ff_t f[12])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d13 (ff_t g[13], ff_t a, unsigned long n, ff_t f[12])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12;
@@ -1726,8 +1691,6 @@ void ff_poly_xpan_mod_d13 (ff_t g[13], ff_t a, unsigned long n, ff_t f[12])
         ff_poly_square_mod_13 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d15 (ff_t g[15], unsigned long n, ff_t f[14])
 {
     register unsigned long m;
@@ -1751,8 +1714,6 @@ void ff_poly_xn_mod_d15 (ff_t g[15], unsigned long n, ff_t f[14])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d15 (ff_t g[15], ff_t a, unsigned long n, ff_t f[14])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14;
@@ -1790,8 +1751,6 @@ void ff_poly_xpan_mod_d15 (ff_t g[15], ff_t a, unsigned long n, ff_t f[14])
         ff_poly_square_mod_15 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d17 (ff_t g[17], unsigned long n, ff_t f[16])
 {
     register unsigned long m;
@@ -1817,8 +1776,6 @@ void ff_poly_xn_mod_d17 (ff_t g[17], unsigned long n, ff_t f[16])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d17 (ff_t g[17], ff_t a, unsigned long n, ff_t f[16])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16;
@@ -1858,8 +1815,6 @@ void ff_poly_xpan_mod_d17 (ff_t g[17], ff_t a, unsigned long n, ff_t f[16])
         ff_poly_square_mod_17 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d19 (ff_t g[19], unsigned long n, ff_t f[18])
 {
     register unsigned long m;
@@ -1885,8 +1840,6 @@ void ff_poly_xn_mod_d19 (ff_t g[19], unsigned long n, ff_t f[18])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d19 (ff_t g[19], ff_t a, unsigned long n, ff_t f[18])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18;
@@ -1928,8 +1881,6 @@ void ff_poly_xpan_mod_d19 (ff_t g[19], ff_t a, unsigned long n, ff_t f[18])
         ff_poly_square_mod_19 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d23 (ff_t g[23], unsigned long n, ff_t f[22])
 {
     register unsigned long m;
@@ -1955,8 +1906,6 @@ void ff_poly_xn_mod_d23 (ff_t g[23], unsigned long n, ff_t f[22])
         m >>= 1;
     }
 }
-
-
 void ff_poly_xpan_mod_d23 (ff_t g[23], ff_t a, unsigned long n, ff_t f[22])
 {
     register ff_t t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22;
@@ -2002,8 +1951,6 @@ void ff_poly_xpan_mod_d23 (ff_t g[23], ff_t a, unsigned long n, ff_t f[22])
         ff_poly_square_mod_23 (g,g,f);
     }
 }
-
-
 void ff_poly_xn_mod_d29 (ff_t g[29], unsigned long n, ff_t f[28])
 {
     register unsigned long m;

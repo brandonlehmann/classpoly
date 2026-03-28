@@ -1,12 +1,25 @@
+/*
+    Copyright 2007-2012 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "ffpolyfromroots.h"
 #include "cstd.h"
-
-/*
-    Copyright 2007-2012 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 void ff_poly_from_roots_64 (ff_t o[64], ff_t r[64])
 {
@@ -78,8 +91,6 @@ void ff_poly_from_roots_64 (ff_t o[64], ff_t r[64])
     _ff_sum_2_mults_arr(o[1],f,g);
     _ff_mult(o[0],f[0],g[0]);
 }
-
-
 void ff_poly_from_roots_tiny (ff_t o[], ff_t r[], int d)
 {
     switch (d) {

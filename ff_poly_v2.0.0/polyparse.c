@@ -1,3 +1,21 @@
+/*
+    Copyright 2011-2017 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,11 +23,6 @@
 #include <ctype.h>
 #include "polyparse.h"
 #include "cstd.h"
-
-/*
-    Copyright 2011-2017 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 #define UI_POLY_BUFSIZE             65536       // maximum length of a polynomial expression with coefficients that fit in an unsigned long (this needs to fit on the stack!)
 
@@ -352,8 +365,6 @@ done:
     free(buf);  mpq_clear (c);
     return d;
 }
-
-
 int poly_parse (void *f, int maxd, char *expr, void (*setzero)(void *f, int i), int (*addto)(void *f, int i, mpq_t c, void *arg), int (*iszero)(void *f, int i), void *arg)
 {
     mpq_t c;
@@ -625,8 +636,6 @@ done:
     free (buf); mpq_clear(c);
     return d;
 }
-
-
 int nf_poly_parse_plane_curve (void *f, int deg, void *g, int *dg, int maxn, char *expr, void (*setzero)(void *f, int i), int (*addto)(void *f, int i, mpq_t c, void *arg), int (*iszero)(void *f, int i), void *arg)
 {
     mpq_t *c;
@@ -743,8 +752,6 @@ done:
     free(buf);
     return r;
 }
-
-
 void _ui_coeff_setzero (void *f, int i) { ((unsigned long*)f)[i] = 0; }
 int _ui_mod_p_coeff_addto (void *f, int i, mpq_t c, void *arg)
 {
@@ -807,8 +814,6 @@ void ui_poly_print (unsigned long f[], int d_f)
     ui_poly_sprint (buf, f, d_f);
     puts (buf);
 }
-
-
 int ui_poly_sprint (char *s, unsigned long f[], int d_f)
 {
     char *t;
@@ -908,8 +913,6 @@ void i_poly_print_coeffs (long f[], int df)
     puts (buf);
     free (buf);
 }
-
-
 void i_poly_print_plane_curve (long f[], int d)
 {
     char buf[UI_POLY_BUFSIZE];

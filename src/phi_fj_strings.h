@@ -1,6 +1,3 @@
-#ifndef _INCLUDE_PHI_FJ_STRINGS_INCLUDE_
-#define _INCLUDE_PHI_FJ_STRINGS_INCLUDE_
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -8,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,6 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _INCLUDE_PHI_FJ_STRINGS_INCLUDE_
+#define _INCLUDE_PHI_FJ_STRINGS_INCLUDE_
 
 #define PHI_ATKIN_MAX_FDEG			399
 #define PHI_ATKIN_MAX_JDEG			24
@@ -418,8 +417,6 @@ bipoly_str_t Phi_a71_str[PHI_A71_TERMS] = {
 { { 71, 1 }, "-1" },
 { { 72, 0 }, "1" },
 };
-
-
 #define PHI_A47_TERMS		98
 #define PHI_A47_FDEGREE	48
 #define PHI_A47_JDEGREE	2
@@ -524,8 +521,6 @@ bipoly_str_t Phi_a47_str[PHI_A47_TERMS] = {
 { { 47 , 1 }, "-1"},
 { { 48 , 0 }, "1"},
 };
-
-
 #define PHI_A59_TERMS		122
 #define PHI_A59_FDEGREE	60
 #define PHI_A59_JDEGREE	2
@@ -654,8 +649,6 @@ bipoly_str_t Phi_a59_str[PHI_A59_TERMS] = {
 { { 59 , 1 }, "-1"},
 { { 60, 0 }, "1" },
 };
-
-
 #define PHI_A41_TERMS		86
 #define PHI_A41_FDEGREE	42
 #define PHI_A41_JDEGREE	2

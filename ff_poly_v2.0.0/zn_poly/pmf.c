@@ -1,28 +1,22 @@
 /*
-   pmf.c:  polynomials modulo a fermat polynomial
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "zn_poly_internal.h"
-
-
 #if DEBUG
 
 /* ============================================================================
@@ -33,8 +27,6 @@
 
 #include <stdio.h>
 #include "support.h"
-
-
 void
 pmf_rand (pmf_t res, ulong M, const zn_mod_t mod)
 {
@@ -44,8 +36,6 @@ pmf_rand (pmf_t res, ulong M, const zn_mod_t mod)
    for (i = 1; i <= M; i++)
       res[i] = random_ulong (mod->m);
 }
-
-
 /*
    res := op, with bias set to zero.
 
@@ -79,8 +69,6 @@ pmf_normalise (pmf_t res, pmf_t op, ulong M, const zn_mod_t mod)
          res[i] = op[i + M - b];
    }
 }
-
-
 int
 pmf_cmp (const pmf_t op1, const pmf_t op2, ulong M, const zn_mod_t mod)
 {
@@ -116,8 +104,6 @@ pmf_cmp (const pmf_t op1, const pmf_t op2, ulong M, const zn_mod_t mod)
    
    return 0;
 }
-
-
 void
 pmf_print (const pmf_t op, ulong M, const zn_mod_t mod)
 {
@@ -133,8 +119,6 @@ pmf_print (const pmf_t op, ulong M, const zn_mod_t mod)
    
    ZNP_FASTFREE (buf);
 }
-
-
 void
 pmfvec_print (const pmfvec_t op)
 {
@@ -147,8 +131,6 @@ pmfvec_print (const pmfvec_t op)
       printf ("\n");
    }
 }
-
-
 void
 pmfvec_print_trunc (const pmfvec_t op, ulong n)
 {
@@ -164,15 +146,11 @@ pmfvec_print_trunc (const pmfvec_t op, ulong n)
 
 #endif
 
-
-
 /* ============================================================================
 
      inplace array butterflies
 
 ============================================================================ */
-
-
 /*
    op1 := op2 + op1
    op2 := op2 - op1
@@ -244,8 +222,6 @@ zn_array_bfly_inplace (ulong* op1, ulong* op2, ulong n, const zn_mod_t mod)
       }
    }
 }
-
-
 /*
    op1 := op1 + op2
    where op1 and op2 are arrays of length n.
@@ -299,8 +275,6 @@ zn_array_add_inplace (ulong* op1, const ulong* op2, ulong n,
       }
    }
 }
-
-
 
 /*
    op1 := op1 - op2
@@ -356,23 +330,17 @@ zn_array_sub_inplace (ulong* op1, const ulong* op2, ulong n,
    }
 }
 
-
-
 /* ============================================================================
 
      inplace pmf_t butterflies
 
 ============================================================================ */
-
-
 /*
    In the following routines, we work with the "relative bias" between the
    two inputs, i.e. b = difference between bias of op1 and op2. This allows
    us to avoid unnecessary normalisation steps; we just add and subtract
    directly into the correct memory locations.
 */
-
-
 void
 pmf_bfly (pmf_t op1, pmf_t op2, ulong M, const zn_mod_t mod)
 {
@@ -399,8 +367,6 @@ pmf_bfly (pmf_t op1, pmf_t op2, ulong M, const zn_mod_t mod)
       zn_array_bfly_inplace (op1 + 1 + b, op2 + 1, M - b, mod);
    }
 }
-
-
 void
 pmf_add (pmf_t op1, const pmf_t op2, ulong M, const zn_mod_t mod)
 {
@@ -427,8 +393,6 @@ pmf_add (pmf_t op1, const pmf_t op2, ulong M, const zn_mod_t mod)
       zn_array_add_inplace (op1 + 1 + b, op2 + 1, M - b, mod);
    }
 }
-
-
 void
 pmf_sub (pmf_t op1, const pmf_t op2, ulong M, const zn_mod_t mod)
 {
@@ -456,15 +420,11 @@ pmf_sub (pmf_t op1, const pmf_t op2, ulong M, const zn_mod_t mod)
    }
 }
 
-
-
 /* ============================================================================
 
      pmfvec stuff
 
 ============================================================================ */
-
-
 void
 pmfvec_init (pmfvec_t res, unsigned lgK, ptrdiff_t skip, unsigned lgM,
              const zn_mod_t mod)
@@ -479,8 +439,6 @@ pmfvec_init (pmfvec_t res, unsigned lgK, ptrdiff_t skip, unsigned lgM,
    res->mod = mod;
    res->data = (ulong*) malloc (sizeof (ulong) * skip * res->K);
 }
-
-
 void
 pmfvec_init_nuss (pmfvec_t res, unsigned lgL, const zn_mod_t mod)
 {
@@ -488,15 +446,11 @@ pmfvec_init_nuss (pmfvec_t res, unsigned lgL, const zn_mod_t mod)
    nuss_params (&lgK, &lgM, lgL);
    pmfvec_init (res, lgK, (1UL << lgM) + 1, lgM, mod);
 }
-
-
 void
 pmfvec_clear (pmfvec_t op)
 {
    free (op->data);
 }
-
-
 void
 pmfvec_set (pmfvec_t res, const pmfvec_t op)
 {
@@ -506,8 +460,6 @@ pmfvec_set (pmfvec_t res, const pmfvec_t op)
    for (i = 0; i < op->K; i++)
       pmf_set (res->data + i * res->skip, op->data + i * op->skip, op->M);
 }
-
-
 void
 pmfvec_scalar_mul (pmfvec_t op, ulong n, ulong x)
 {
@@ -518,8 +470,6 @@ pmfvec_scalar_mul (pmfvec_t op, ulong n, ulong x)
    for (i = 0; i < n; i++, ptr += op->skip)
       pmf_scalar_mul (ptr, op->M, x, op->mod);
 }
-
-
 ulong
 pmfvec_mul_fudge (unsigned lgM, int sqr, const zn_mod_t mod)
 {
@@ -531,8 +481,6 @@ pmfvec_mul_fudge (unsigned lgM, int sqr, const zn_mod_t mod)
    else
       return _zn_array_mul_fudge (1UL << lgM, 1UL << lgM, sqr, mod);
 }
-
-
 void
 pmfvec_mul (pmfvec_t res, const pmfvec_t op1, const pmfvec_t op2, ulong n,
             int special_first_two)
@@ -635,15 +583,11 @@ pmfvec_mul (pmfvec_t res, const pmfvec_t op1, const pmfvec_t op2, ulong n,
    }
 }
 
-
-
 void
 pmfvec_reverse (pmfvec_t op, ulong n)
 {
    op->data += op->skip * (n - 1);
    op->skip = -op->skip;
 }
-
-
 
 // end of file ****************************************************************

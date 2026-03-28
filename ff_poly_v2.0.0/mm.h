@@ -1,3 +1,21 @@
+/*
+    Copyright 2017-2019 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _MONTGOMERY64_INCLUDE_
 #define _MONTGOMERY64_INCLUDE_
 
@@ -5,11 +23,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
-
-/*
-    Copyright 2017-2019 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,8 +50,6 @@ typedef uint64_t mm2_t;
 #endif
 
 // all 64-bit inputs are assumed to be in [0,p-1], where p is an odd integer (p need not be prime) less than 2^(MM_BITS-1)
-
-
 // computes -1/p mod 2^MM_BITS
 static inline mm_t mm_pinv (mm_t p)
 {
@@ -140,8 +151,6 @@ static inline mm_t mm_from_posint (int n, mm_t R, mm_t p)
 
 static inline mm_t mm_from_int (int n, mm_t R, mm_t p) 
     { return n < 0 ? mm_neg(mm_from_posint(-n, R, p),p) : mm_from_posint(n, R, p); }
-
-
 // computes xR = xR^2/R mod p (the Montgomery representation of the integer x)
 static inline mm_t mm_from_ui (uint64_t x, mm_t R2, mm_t p, mm_t pinv)
 {
@@ -338,8 +347,6 @@ static inline mm_t *mm_poly_make_monic (mm_t o[], mm_t f[], int d, mm_t R, mm_t 
     mm_smul (o,mm_inv(f[d],R2,R3,p,pinv),f,d,p,pinv); f[d] = R;
     return o;
 }
-
-
 // o(x) = f(x+a)
 static inline mm_t *mm_poly_translate (mm_t o[], mm_t f[], int d, mm_t a, mm_t R, mm_t p, mm_t pinv)
 {   
@@ -507,8 +514,6 @@ static inline void mm_poly_sqr_mul_x_mod_md (mm_t o[], mm_t f[], mm_t g[], int d
     o[d-1] = mm_redc (mm2_uconv(f,d-1) + mm2_conv(t+1,g,d-1), p, pinv);
     for ( register int i = d-2 ; i >= 0 ; i-- ) o[i] = mm_redc (mm2_uconv(f, i) + mm2_conv(t, g, i+1), p, pinv);
 }
-
-
 // register versions of dot, conv, uconv for small fixed n
 
 static inline mm_t mm_dot_2r (mm_t x0, mm_t x1, mm_t y0, mm_t y1, mm_t p, mm_t pinv)
@@ -574,8 +579,6 @@ static inline mm_t mm_poly_disc_3 (mm_t f[4], mm_t p, mm_t pinv)
     register mm_t t1 = mm_sqr(f[1],p,pinv), t2 = mm_sqr(f[2],p,pinv), t3 = mm_mul(f[0],f[3],p,pinv), t4 = mm_mul(f[0],f[2],p,pinv), t5 = mm_mul(f[1],f[3],p,pinv);
     return mm_redc ((mm2_t)t1*(4*(p-t5)) + 27*(mm2_t)t3*(p-t3) + 18*(mm2_t)t4*t5 + (mm2_t)t2*(t1+4*(p-t4)),p,pinv); // avoids overflow for p < 2^61
 }
-
-
 // computes bottom two coefficients of f(x-f2/3),given precomputed value 1/3 in Montgomery rep (assumes p != 3)
 // without precomputation cost increases by about 4 clock cycles using mul_ui with third = ((3-(p%3))*p+1)/3
 static inline mm_t mm_poly_depress_m_3 (mm_t g[2], mm_t f[3], mm_t third, mm_t R, mm_t p, mm_t pinv)
@@ -713,8 +716,6 @@ int mm_invsqrt (mm_t *z, mm_t x, mm_t a[], mm_t ainv[], int e, mm_t R, mm_t p, m
 
 static inline int mm_sqrt (mm_t *z, mm_t x, mm_t a[], mm_t ainv[], int e, mm_t R, mm_t p, mm_t pinv)
     { if ( ! mm_invsqrt(z,x,a,ainv,e,R,p,pinv,0) ) return 0;  *z = mm_mul (*z,x,p,pinv); return 1; }
-
-
 #ifdef __cplusplus
 }
 #endif

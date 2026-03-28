@@ -1,13 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <gmp.h>
-#include "ff_poly.h"
-#include "ff_poly/ffpolysmall.h"
-#include "class_inv.h"
-#include "bipoly.h"
-#include "phi_poly.h"
-#include "phi_fj_strings.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -15,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,6 +15,16 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <gmp.h>
+#include "ff_poly.h"
+#include "ff_poly/ffpolysmall.h"
+#include "class_inv.h"
+#include "bipoly.h"
+#include "phi_poly.h"
+#include "phi_fj_strings.h"
 
 #define PHI_FJ_CACHESIZE		2
 
@@ -94,8 +93,6 @@ int inv_pick_invariant (long D)
 	}
 	return best_inv;
 }
-
-
 // note we assume here we have already got the right invariant
 static inline void inv_reduce_phi_fj (int inv, int srt)
 {
@@ -126,8 +123,6 @@ static inline void inv_reduce_phi_fji (int inv, int srt)
 	}
 	if ( srt != phi_fji_srt ) { bipoly_sort_ff (phi_fji, phi_fj_terms, srt);  phi_fji_srt = srt; }
 }
-
-
 void _ff_inv_from_j (ff_t *x, ff_t *j, int inv)
 {
 	switch ( inv ) {
@@ -344,8 +339,6 @@ void ff_inv_u_from_j (ff_t *u, ff_t *j)
 	if ( i == n ) { printf ("Unable to determine u from j=%ld over F_%ld, numroots=%d\n", _ff_get_ui(*j), _ff_p, n); abort (); }
 //printf ("Converted j=%ld to lambda=%ld, u=%ld\n", _ff_get_ui(*j), _ff_get_ui(r[i]), _ff_get_ui(*u));
 }
-
-
 void _inv_free_phi_fj (int i)
 {
 	struct phi_fj_cache_entry *x;
@@ -357,8 +350,6 @@ void _inv_free_phi_fj (int i)
 	if ( x->phi_fji ) { free (x->phi_fji); x->phi_fji = 0; }
 	x->phi_fj_inv = 0;  x->phi_fj_terms = x->phi_fj_fdeg = x->phi_fj_jdeg = 0;
 }
-
-
 void _inv_load_phi_fj (int inv)
 {
 	char filename[2048];
@@ -449,8 +440,6 @@ static inline int ff_inv_root (ff_t *x, ff_t *w, int inv)
 	default: _ff_set(*x,*w); return 1;
 	}
 }
-
-
 // for testing purposes
 int ff_inv_count_for_j (ff_t j, int inv)
 {
@@ -461,8 +450,6 @@ int ff_inv_count_for_j (ff_t j, int inv)
 	bipoly_eval_ff (f, phi_fj_fdeg, phi_fj, phi_fj_terms, 1, j);
 	return ff_poly_distinct_roots(r,f,phi_fj_fdeg);
 }
-
-
 void ff_inv_single_eta_from_j (ff_t *w, ff_t *j, int inv)
 {
 	ff_t f[PHI_SINGLE_ETA_MAX_FDEG+1];
@@ -699,8 +686,6 @@ void ff_inv_j_from_double_eta (ff_t *j, ff_t *w, int inv)
 	if ( ! k ) { err_printf ("No roots of Phi_fj(X,a) for w=%ld\n", _ff_get_ui(*w)); abort (); } 
 	_ff_set(*j,r[0]);
 }
-
-
 int ff_inv_j_from_2double_eta (ff_t *j, ff_t *w1, ff_t *w2, int inv)
 {
 	ff_t f[PHI_DOUBLE_ETA_MAX_JDEG+1], g[PHI_DOUBLE_ETA_MAX_JDEG+1], h[PHI_DOUBLE_ETA_MAX_JDEG+1];
@@ -718,8 +703,6 @@ int ff_inv_j_from_2double_eta (ff_t *j, ff_t *w1, ff_t *w2, int inv)
 	if ( j ) ff_poly_roots_d1 (j, h);
 	return 1;
 }
-
-
 void ff_inv_2j_from_atkin (ff_t j[2], ff_t *a, int inv)
 {
 	ff_t f[PHI_ATKIN_MAX_JDEG+1];

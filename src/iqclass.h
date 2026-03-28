@@ -1,10 +1,3 @@
-#ifndef _IQCLASS_INCLUDE_
-#define _IQCLASS_INCLUDE_
-
-#include <gmp.h>
-#include "mpzutil.h"
-#include "cstd.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -12,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,6 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _IQCLASS_INCLUDE_
+#define _IQCLASS_INCLUDE_
+
+#include <gmp.h>
+#include "mpzutil.h"
+#include "cstd.h"
 
 #define IQ_MAX_GENS         16                                  // maximum number of generators for class group (this should be plenty for small h)
 #define IQ_MAX_RLEN         ((IQ_MAX_GENS*(IQ_MAX_GENS+1))/2)   // maximum length of power relations in polycyclic presentation for the class group
@@ -74,8 +73,6 @@ static inline int discriminant_factor_conductor (unsigned long p[], unsigned lon
     for ( i = j = 0 ; i < k ; i++ ) if ( h[i] ) { p[j] = p[i]; h[j] = h[i]; j++; }
     return j;
 }
-
-
 // Tests whether D is the discriminant of an imaginary quadratic number field (D is negative!)
 // Returns 0 if not, and otherwise the value v such that D/v^2 is a fundamental discriminant
 #define discriminant_test   discriminant_conductor

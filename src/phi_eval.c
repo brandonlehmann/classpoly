@@ -1,7 +1,3 @@
-#include "ff_poly.h"
-#include "phi_poly.h"
-#include "phi_eval.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -9,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,6 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "ff_poly.h"
+#include "phi_poly.h"
+#include "phi_eval.h"
 
 void phi_eval_ff (ff_t f[], ff_t phi[], int m, ff_t J)
 {
@@ -105,8 +104,6 @@ void phi_eval_ff (ff_t f[], ff_t phi[], int m, ff_t J)
 	}
 	if ( phi_sparse_factor(phi) > 1 ) _phi_s_eval_ff(f,phi,m,J); else _phi_eval_ff(f,phi,m,J);
 }
-
-
 /*
 	Returns f(x)=b^(m+1) * phi_m (x,a/b) as a poly in x of degree m+1 with coefficients in the current finite field.
 

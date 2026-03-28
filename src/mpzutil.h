@@ -1,10 +1,23 @@
-#ifndef _MPZUTIL_INCLUDE_
-#define _MPZUTIL_INCLUDE_
-
 /*
     Copyright 2007-2014 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _MPZUTIL_INCLUDE_
+#define _MPZUTIL_INCLUDE_
 
 // This module is a grab-bag of stuff, a lot of which has nothing to do with
 // GMP's multi-precision integer arithmetic (mpz).  This module should be split up and refined
@@ -77,8 +90,6 @@ extern "C" {
 #define MPZ_MAX_PELL_SOLUTIONS      50
 
 int mpz_pell_solver (mpz_t x[MPZ_MAX_PELL_SOLUTIONS], mpz_t y[MPZ_MAX_PELL_SOLUTIONS], long d, long m, int h);
-
-
 static inline int mod (int n, int m) { n %= m;  return ( n<0 ? (m + n) : n ); }
 static inline int modl (long n, long m) { n %= m;  return ( n<0 ? (m + n) : n ); }
 

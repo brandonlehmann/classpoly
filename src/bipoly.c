@@ -1,13 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <memory.h>
-#include <string.h>
-#include <gmp.h>
-#include "ff_poly.h"
-#include "bipoly.h"
-#include "cstd.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -15,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +16,15 @@
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <memory.h>
+#include <string.h>
+#include <gmp.h>
+#include "ff_poly.h"
+#include "bipoly.h"
+#include "cstd.h"
 
 static inline int max (int a, int b) { return ( a > b ? a : b ); }
 
@@ -88,8 +86,6 @@ int bipoly_roots (ff_t r[], bipoly_t phi, int v, ff_t z)
 	ff_poly_monic (phi->phi_z, 0, phi->phi_z, phi->phi_z_d);
 	return ff_poly_roots (r, phi->phi_z, phi->phi_z_d);
 }
-
-
 #define issign(c)		((c)=='+'||(c)=='-')
 #define isnumeric(c)	(isdigit(c)||issign(c))
 #define iscaret(c)		((c)=='^')
@@ -289,8 +285,6 @@ void bipoly_sort_mpz (bipoly_mpz_t phi[], int t, int v)
 		qsort (phi, t, sizeof(phi[0]), _qsort_bipoly_mpz_cmp_v1);
 	}
 }
-
-
 /*
 	Sort in increasing order on sorted variable, and then in decreasing order on the other variable (so we can apply Horner's method)
 */
@@ -334,8 +328,6 @@ void bipoly_reduce_ff (bipoly_ff_t phi[], bipoly_mpz_t PHI[], int t)
 	for ( i = 0 ; i < t ; i++ )
 		{ _ff_set_mpz(phi[i].c,PHI[i].c); phi[i].e[0] = PHI[i].e[0]; phi[i].e[1] = PHI[i].e[1];  /*gmp_printf ("Reduced X^%dY^%d coefficient from %Zd to %ld\n", phi[i].e[0], phi[i].e[1], PHI[i].c, _ff_get_ui(phi[i].c));*/ }
 }
-
-
 void bipoly_print_ff (bipoly_ff_t phi[], int m, char v1, char v2)
 {
 	ff_t c;
@@ -391,8 +383,6 @@ int bipoly_eval_ff (ff_t f[], int n, bipoly_ff_t phi[], int m, int v, ff_t x)
 	}
 	return n;
 }
-
-
 int bipoly_eval_mod_mpz (mpz_t f[], int n, bipoly_mpz_t phi[], int m, int v, mpz_t x, mpz_t P)
 {
 	static mpz_t y; 

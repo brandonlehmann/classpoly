@@ -1,3 +1,21 @@
+/*
+    Copyright 2007-2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,15 +32,8 @@
 #include "ntutil.h"
 #include "cstd.h"
 
-/*
-    Copyright 2007-2012 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
-
 // This module is a grab-bag of stuff, much of which has nothing to do with
 // large integer arithmetic (mpz).  This module should be split up and refined...
-
-
 #define _abs(a)                 ((a)<0?-(a):(a))
 
 #define expr_valid_op(op)       ((op) == 'E' || (op) == 'e' || (op) == '^' || (op) == '*' || (op) == '+' || (op) == '-')
@@ -190,8 +201,6 @@ int ui_is_prime (unsigned long p)
     if ( h[0] > 1 ) return 0;
     return 1;
 }
-
-
 // returns the least p for which the p-adic valuation of a and b differ
 unsigned long ui_pdiff (unsigned long a, unsigned long b)
 {
@@ -221,8 +230,6 @@ unsigned long ui_pdiff (unsigned long a, unsigned long b)
     if ( w && p > q[0] ) p = q[0];
     return p;
 }
-
-
 // note that o and a can overlap
 void mpz_parallel_invert (mpz_t o[], mpz_t a[], unsigned n, mpz_t p)
 {
@@ -362,8 +369,6 @@ printf ("CRT comp used %ld bytes mpz space, could have used just %ld bytes\n", b
 */
 //printf ("crt_coeff outputs "); for ( j = 0 ; j < n ; j++ ) printf ("%ld ", a[j]); puts("");
 }
-
-
 #define MPZ_PM_CACHE_SIZE       100
 
 static struct {
@@ -375,8 +380,6 @@ static struct {
     int n;
 } _mpz_pm_cache[MPZ_PM_CACHE_SIZE];
 unsigned long _mpz_pm_cache_count;
-
-
 #define MPZ_TIER_SIZE       256
 
 // multiplies o by the product of all primes in (p,maxp] up to maxbits and updates p to last prime used or > maxp if all used.  return number of primes multiplied.
@@ -508,8 +511,6 @@ void mpz_power_primorial (mpz_t o, unsigned long L)
     mpz_clear (p);  mpz_clear (q);  mpz_clear (t);
     return;
 }
-
-
 int mpz_remove_small_primes (mpz_t o, mpz_t n, unsigned long exps[], unsigned long maxprimes)
 {
     static int init;
@@ -560,8 +561,6 @@ unsigned long mpz_nearprime (mpz_t n, unsigned long L)
     if ( ! mpz_probab_prime_p (t, 5) ) return 0;
     return mpz_get_ui (x);
 }
-
-
 int mpz_remove_small_squares (mpz_t o, mpz_t n)
 {
     static int init;
@@ -583,8 +582,6 @@ int mpz_remove_small_squares (mpz_t o, mpz_t n)
     mpz_set (o, m);
     return 1;
 }
-
-
 // replaces divisors p^n of n by p for primes p <= MPZ_MAX_GCD_PRIME
 int mpz_flatten_small (mpz_t o, mpz_t n)
 {
@@ -607,8 +604,6 @@ int mpz_flatten_small (mpz_t o, mpz_t n)
     mpz_set (o, m);
     return 1;
 }
-
-
 void mpz_print_factors (mpz_t N)
 {
     static int init;
@@ -629,8 +624,6 @@ void mpz_print_factors (mpz_t N)
     }
     puts ("");
 }
-
-
 #define _remove(n,d,c)          while ( !((n)%(d)) ) { (n)/=(d); (c)++; }
 #define _tdiv(n,d,h,p,w)            { _remove(n,d,h[w]); if ( (h)[(w)] ) { (p)[(w)++] = (d); (h)[(w)] = 0; } }
 
@@ -808,8 +801,6 @@ int mpz_factor_small (unsigned long p[], unsigned long h[], mpz_t bigp, mpz_t n,
     }
     return w;
 }
-
-
 int mpz_pollard_rho (mpz_t d, mpz_t n)
 {
     static int init;
@@ -856,8 +847,6 @@ int mpz_pollard_rho (mpz_t d, mpz_t n)
     }
     return 1;
 }
-
-
 // computes the y-coarse part of x
 int mpz_coarse_part (mpz_t o, mpz_t x, mpz_t y)
 {
@@ -1016,8 +1005,6 @@ int mpz_eval_expr (mpz_t o, char *expr)
     if ( expr[0]=='-' ) mpz_neg(o,o);
     return 1;
 }
-
-
 static unsigned long mpz_mulm_counter, mpz_powm_counter, mpz_powm_tiny_counter;
 static clock_t mpz_counter_reset_time;
 
@@ -1075,8 +1062,6 @@ void mpz_report_counters ()
     info_printf ("Counters: %ld mult, %ld tiny exp, %ld exp, %ld msec\n", mpz_mulm_counter, mpz_powm_tiny_counter, mpz_powm_counter,
                  delta_msecs(mpz_counter_reset_time, clock()));
 }
-
-
 // standard 4-ary exponentiation (fixed 2-bit window)
 // p must fit in 32-bits.  This is not checked
 unsigned long ui_powm_ui (unsigned long a, unsigned long e, unsigned long p)
@@ -1100,8 +1085,6 @@ unsigned long ui_powm_ui (unsigned long a, unsigned long e, unsigned long p)
     }
     return c;
 }
-
-
 /*
 long i_sqrt_modprime_slow (long n, long p)
 {
@@ -1323,8 +1306,6 @@ unsigned long ui_pp_div (unsigned long n, unsigned long p)
     }
     return q;
 }
-
-
 // return 1 if the integer represented by the prime factorization (p,h,w) <ULONG_MAX contains a divisor in [min,max]
 // slow implementation
 int ui_divisor_in_interval (unsigned long p[], unsigned long h[], int w, unsigned long min, unsigned long max)
@@ -1449,10 +1430,6 @@ unsigned long bach_gcd (long a, long b, unsigned long N)
     if ( c == 0 ) { out_printf ("Error c == 0 in bach_gcd\n");  abort(); }
     return c;
 }
-
-
-
-
 int mpz_eval_term_ui (mpz_t o, unsigned long numvars, unsigned long vars[], unsigned long exps[])
 {
     static int init;
@@ -1470,8 +1447,6 @@ int mpz_eval_term_ui (mpz_t o, unsigned long numvars, unsigned long vars[], unsi
     }
     return 1;
 }
-
-
 char *ui_term_to_string (char *buf, unsigned long numvars, unsigned long vars[], unsigned long exps[])
 {
     char *s;
@@ -1537,8 +1512,6 @@ void ui_invert_permutation (unsigned long p2[], unsigned long p1[], unsigned lon
     
     for ( i = 0 ; i < n ; i++ ) p2[p1[i]] = i;
 }
-
-
 double mpz_log2 (mpz_t a)
 {
     unsigned long b, n;
@@ -1553,8 +1526,6 @@ double mpz_log2 (mpz_t a)
         return (double)(b-1) + log2(1.0+(double)n/(double)(1UL<<(ULONG_BITS-2)));
     }
 }
-
-
 int _qsort_mpz_cmp (const void *a, const void *b)
 {
     return mpz_cmp (*((mpz_t *)a), *((mpz_t *)b));
@@ -1564,14 +1535,10 @@ void mpz_sort (mpz_t a[], unsigned long n)
 {
     qsort (a, n, sizeof(a[0]), _qsort_mpz_cmp);
 }
-
-
 unsigned long mpz_randomf (mpz_t o, mpz_t N, mpz_t factors[], unsigned long w)
 {
     return mpz_randomft (o, N, factors, NULL, w);
 }
-
-
 /*
     The algorithm below is an implementation of Bach's algorithm for computing random factored integers.
     See "Analytic Methods in the Analysis and Design of Number-Theoretic Algorithms", Eric Bach, MIT Press 1984
@@ -1746,8 +1713,6 @@ unsigned long ui_pp_base (unsigned long pp)
     if ( ! mpz_pp_base (b, x) ) return 0;
     return mpz_get_ui (b);
 }
-
-
 /*
     Extracts base from a prime power and returns the exponent
 */
@@ -1828,8 +1793,6 @@ mpz_ftree_t mpz_randomfp (mpz_t o, mpz_t N)
     }
     return t;   
 }
-
-
 mpz_ftree_t mpz_randomfpp (mpz_t o, mpz_t N)
 {
     static int init;
@@ -1870,8 +1833,6 @@ mpz_ftree_t mpz_randomfpp (mpz_t o, mpz_t N)
     }
     return t;   
 }
-
-
 void mpz_clear_ftree (mpz_ftree_t t)
 {
     int i;
@@ -1881,8 +1842,6 @@ void mpz_clear_ftree (mpz_ftree_t t)
     }
     for ( i = 0 ; i < MPZ_MAX_TREE_FACTORS ; i++ ) mpz_clear (t->factors[i]);
 }
-
-
 unsigned long mpz_store_bytes (mpz_t a)
 {
     unsigned long size;
@@ -1891,8 +1850,6 @@ unsigned long mpz_store_bytes (mpz_t a)
     if ( size+2 >= (1<<15) ) { gmp_err_printf ("Integer %Zd too large to store!\n", a);  abort(); }
     return size+2;
 }
-
-
 void mpz_store (char *s, mpz_t a)
 {
     size_t size, count;
@@ -1907,8 +1864,6 @@ void mpz_store (char *s, mpz_t a)
     *((short*)s) = cnt;
     return; 
 }
-
-
 void mpz_retrieve (mpz_t o, char *s)
 {
     short cnt;
@@ -1921,8 +1876,6 @@ void mpz_retrieve (mpz_t o, char *s)
     if ( sign < 0 ) mpz_neg (o, o);
     return;
 }
-
-
 unsigned long ui_eval_expr (char *expr)
 {
     char *s;
@@ -2016,8 +1969,6 @@ unsigned long ui_next_prime (unsigned long p)
     mpz_nextprime(P,P);
     return mpz_get_ui(P);
 }
-
-
 // Given 0<d<p, finds a solution to x^2+dy^2=p, where p is an odd prime
 // variant of Algorithm 1.5.2 in Cohen
 int mpz_cornacchia (mpz_t x, mpz_t y, mpz_t d, mpz_t p)
@@ -2157,8 +2108,6 @@ int mpz_exp_window_parameters (int *window_size, int *max_digit, mpz_t e, int ma
     *max_digit = minmaxd;
     return minc;
 }
-
-
 #define MAX_MF      16
 
 // computes positive solutions (x,y) to x^2-dy^2=m with d>m^2, m nonzero, and x < 2^h.  does NOT compute solution to u^2-dv^2=1

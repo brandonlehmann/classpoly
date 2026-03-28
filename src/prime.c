@@ -1,3 +1,21 @@
+/*
+    Copyright 2007-2014 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -6,11 +24,6 @@
 #include <gmp.h>
 #include "prime.h"
 #include "bitmap.h"
-
-/*
-    Copyright 2007-2014 Andrew V. Sutherland
-    See LICENSE file for details
-*/
 
 #define LONG_BITS       ((int)sizeof(long)*CHAR_BIT)
 
@@ -221,8 +234,6 @@ long pi_bound (long n)
     x *= (1.0 + 3.0/(2.0*y));
     return ((long)ceil(x));
 }
-
-
 static wheel_t *_primorial_wheel_alloc (int w)
 {
     wheel_t *wheel;
@@ -272,8 +283,6 @@ static wheel_t *_primorial_wheel_alloc (int w)
     wheel->gaps[i] = 2; // the last gap is always 2
     return wheel;       
 }
-
-
 static void _primorial_wheel_free (wheel_t *wheel)
 {
     if ( wheel->n <= PRIME_SMALL_PRIMORIAL ) return;
@@ -474,8 +483,6 @@ long prime_power_enum (prime_enum_ctx_t *ctx)
     if ( p > ctx->end ) return 0;
     return p;
 }
-
-
 long _prime_enum (prime_enum_ctx_t *ctx)
 {
     register long gap;
@@ -648,8 +655,6 @@ long prime_pi (long x)
     prime_enum_end (ctx);
     return n;
 }
-
-
 static inline long *_build_leaves (long *tp, long off, unsigned char *gaps, long numgaps)
 {
     long *leaves;
@@ -729,4 +734,3 @@ void gap_table_clear (gap_table_t tab)
     for ( int i = 0 ; i <= tab->top ; i++ ) { free (tab->levels[i]); tab->levels[i] = 0; }
     tab->top = 0;
 }
-

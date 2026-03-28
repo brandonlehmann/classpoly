@@ -1,0 +1,21 @@
+classpoly — Authors and Copyright Holders
+
+Primary Author
+  Andrew V. Sutherland <sutherla@mit.edu>
+    Copyright 2007-2024
+    classpoly core (src/)
+    ff_poly library (ff_poly_v2.0.0/)
+
+Contributors
+  Brandon Lehmann <brandonlehmann@gmail.com>
+    CMake build system, parallel computation (fork-based work queue),
+    aarch64/Apple Silicon support, test harness
+
+  Andrew R. Booker
+    Copyright 2019-2020
+    ff_poly memory management (ff_poly_v2.0.0/mem.c)
+
+Bundled Libraries
+  zn_poly 0.9 — David Harvey
+    Copyright 2007-2008
+    Fast polynomial arithmetic over Z/nZ (ff_poly_v2.0.0/zn_poly/)

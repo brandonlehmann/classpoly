@@ -1,3 +1,21 @@
+/*
+    Copyright (c) 2008-2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #define TEST_P  1   // only used when debugging code is uncommented, will cause debug info to be printed for primes above TEST_P
 
 #include <stdlib.h>
@@ -10,11 +28,6 @@
 #include "mpzutil.h"
 #include "ecurve.h"
 #include "cstd.h"
-
-/*
-    Copyright (c) 2008-2012 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 /*
     This module implements operations for genus 1 curves, both low level
@@ -65,8 +78,6 @@ unsigned long ecurve_retries;
 
 // We trust the compiler to be smart about register allocation and don't hassle with macros (the speed difference appears to be negligible in testing)
 // It would be nice to have C++ reference data types here...
-
-
 static inline int ecurve_JC_cmp (ecp_jc_t *p1, ecp_jc_t *p2)
 {
     register ff_t t0,t1;
@@ -117,8 +128,6 @@ static inline void ecurve_AJC (ecp_jc_t *p, ecp_jc_t *p1, ff_t x0, ff_t y0, ff_t
     _ff_sub(t0,t2,p->x); _ff_neg(t2,t1); _ff_sum_2_mults(p->y,f,c,t2,t0);           // y = f(ae^2-x) - ce^3
     // 10M+6A (9 redc)
 }
-
-
 /*
     Computes p=(x,y)^n where (x,y) !=1 is in affine coordinates and p is in Jacobian coordinates
     It takes advantage of the fact that all additions are of the form J+A, requiring only 11M, doubling is done in J+J form, using 10M
@@ -186,8 +195,6 @@ int ecurve_exp_ui (ff_t *x2, ff_t *y2, ff_t x1, ff_t y1, unsigned long n, ff_t f
     ecurve_JC_to_A (x2, y2 ,p, zinv);
     return 1;
 }
-
-
 
 // Combines precomputed values p[i]=p[0]^(2^i) to compute p[0]^n.  Assumes all required powers are present: NAF potentially requires one more bit!!
 // CAUTION: if this is false, the resulting behavior is very strange and unpredictable.  You have been warned...
@@ -465,8 +472,6 @@ ecurve_retries++;
     // Otherwise, try again -- we must have not gotten the full group exponent (this essentially never happens unless ecurve_ORDER_RETRIES is set quite low).
     return ecurve_order(pd,f);
 }
-
-
 /*
     Computes the order of the specified curve, assuming it is prime (which allows several optimizations).
     If low is set, only checks for order less than p
@@ -513,8 +518,6 @@ long ecurve_prime_order (ff_t f[4], int flags)
     if ( sts < 0 || exp < min || exp > max ) return 0;                   // exp should actually never be greater than max, but we won't hold bsgs to this
     return ( ui_is_prime(exp) ? exp : 0 );
 }
-
-
 /*
     Given the group order N, compute the isomorphism type of the group structure of an elliptic curve, of the form Z/n1Z x Z/n2Z with n1 dividing n2 (and also p-1), possibly n1=1.
     The parameter d specifies gcd(6,n1), which can be derived from 2-torsion and 3-torsion info by ecurve_order above (specify 0 if not known).
@@ -597,8 +600,6 @@ int ecurve_fast_trace_sign (ff_t f[4], long t)
     }
     return 0;
 }
-
-
 /*
     Las Vegas algorithm for testing whether the factored integer n is equal to the group order.
 
@@ -707,8 +708,6 @@ int ecurve_test_order2 (ppf_t  n[2], ff_t f[4])
         if ( o+2*m3 > max && ( (o == N[0] && o+m3 == N[1]) || (o==N[1] && o+m3 == N[0]) ) ) return 1;
     }
 }
-
-
 /*
     Slow Monte Carlo algorithm to test the group exponent, use for debugging/testing only.
 */
@@ -776,8 +775,6 @@ void ecurve_p_basis (ecp_jc_t *b1, long *q1, ecp_jc_t *b2, long *q2, long p, lon
 //printf ("Basis (%ld,%ld,%ld,%ld) of order %ld and (%ld,%ld,%ld,%ld) of order %ld\n", _ff_get_ui(b1->x), _ff_get_ui(b1->y), _ff_get_ui(b1->z2), _ff_get_ui(b1->z3),  *q1, _ff_get_ui(b2->x), _ff_get_ui(b2->y), _ff_get_ui(b2->z2), _ff_get_ui(b2->z3), *q2);
     return;
 }
-
-
 /*
     Given non-trivial elements b1 and b2 of the p-Sylow subgroup with |b1|=q1 and |b2|=q2  powers of p (p here is a divisor of the group order, not the characteristic of the field),
     The function below computes a basis for <b1,b2> and updates b1, b2, q1, and q2 appropriately, with q1 dividing q2 (possibly q1=1 if <b1,b2> is cyclic).
@@ -804,8 +801,6 @@ void ecurve_p_reduce (ecp_jc_t *b1, long *q1, ecp_jc_t *b2, long *q2, long p, ff
         *q1 = k;
     }
 }
-
-
 long ecurve_JC_pp_order (ecp_jc_t *a, long p, long q, ff_t f1)
 {
     register long r;
@@ -970,8 +965,6 @@ for ( i = 0 ; i < gsteps ; i++ ) printf ("   %ld: %ld\n", i*gstep, _ff_get_ui(gi
     }
     return 0;
 }
-
-
 /*
     sets exp to the unique multiple of k in [low,high] if there is one (and returns 1) or sets exp=o and returns 0
 */
@@ -982,8 +975,6 @@ static inline int set_exp (long *exp, long o, long low, long high)
     if ( ! i ) return -1;
     if ( i == 1 ) { *exp = (high/o)*o;  return 1; } else { *exp = o; return 0; }
 }
-
-
 /*
     Uses BSGS (and fastorder) to compute the order of the non-trivial element b, given that some multiple of |b| lies in [low,high] subject to (optional)
     modularity constraints specifed by a1, a2, and m.  If m=1 then a1 and a2 are ignored and no constraint is imposed.
@@ -1445,8 +1436,6 @@ static inline void ecurve_2AJ (ecp_j_t *p, ff_t x, ff_t y, ff_t f1)
     _ff_sub(t1,a,p->x); _ff_mult(t2,t1,b); _ff_sub(p->y,t2,t3);                 // y = b(a-x)-8y^4 (note we use the new x here)
     // 6M+9A
 }
-
-
 // squares a point p1 in Jacobian coords (p3 is the output, may be equal to p1)
 static inline void ecurve_2J (ecp_j_t *p3, ecp_j_t *p1, ff_t f1)
 {
@@ -1461,8 +1450,6 @@ static inline void ecurve_2J (ecp_j_t *p3, ecp_j_t *p1, ff_t f1)
     _ff_sub(t0,a,p3->x); _ff_mult(t2,t0,b); _ff_sub(p3->y,t2,c);                    // y = b(a-x)-c   -- note we use the new x value here
     // 10M+10A
 }
-
-
 // multiplies a point p in Jacobian coords by a (non-identity) affine point (p is an input and an output)
 static inline void ecurve_AJ (ecp_j_t *p, ff_t x0, ff_t y0, ff_t f1)
 {
@@ -1480,8 +1467,6 @@ static inline void ecurve_AJ (ecp_j_t *p, ff_t x0, ff_t y0, ff_t f1)
     ff_mult(p->z,p->z,e);                                               // z = 1*z*e
     // 11M+6A
 }
-
-
 // multiplies p1 in Jacobian coords by p2 Jacobian coords  and puts the result in p1.  Handles identity and will square (double) if needed
 // this is the slowest case and should be avoided when possible, AJ, AJC, and JCJC are all better
 static inline void ecurve_JJ (ecp_j_t *p1, ecp_j_t *p2, ff_t f1)
@@ -1504,8 +1489,6 @@ static inline void ecurve_JJ (ecp_j_t *p1, ecp_j_t *p2, ff_t f1)
     ff_mult(t0,p1->z,p2->z);    _ff_mult(p1->z,t0,e);                           // z = z1z2e
     // 16M+7A (ouch)
 }
-
-
 // Computes p=(x,y)^n where (x,y) !=1 is in affine coordinates and p is in Jacobian coordinates
 // It takes advantage of the fact that all additions are of the form J+A, requiring only 11M, doubling is done in J+J form, using 10M
 void ecurve_AJ_exp_ui (ecp_j_t *p, ff_t x0, ff_t y0, unsigned long n, ff_t f1)
@@ -1530,8 +1513,6 @@ hecurve_expbits+=i+1;
         if ( m&nbits ) ecurve_AJ(p,x0,negy0,f1);        // 11M+6A
     }
 }
-
-
 // Computes p=a^e where a!=1 is in Jacobian coords, and so is p.
 // This is slow and should be avoided.  Overlap is ok
 void ecurve_J_exp_ui (ecp_j_t *p, ecp_j_t *a, unsigned long n, ff_t f1)
@@ -1557,8 +1538,6 @@ hecurve_expbits+=i+1;
     }
     *p = t;
 }
-
-
 // Combines precomputed values p[i]=p[0]^(2^i) to compute p[0]^n.  Assumes all required powers are present: NAF potentially requires one more bit!
 // CAUTION: if this is false, the resulting behavior is very strange and unpredictable.  You have been warned.
 void ecurve_J_exp_powers(ecp_j_t *o, ecp_j_t *p, unsigned long n, ff_t f1)

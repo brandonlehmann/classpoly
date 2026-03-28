@@ -1,3 +1,21 @@
+/*
+    Copyright 2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,25 +28,6 @@
 #include "tecurve.h"
 #include "pickprimes.h"
 #include "findcurve.h"
-
-/*
-    Copyright 2012 Andrew V. Sutherland
-
-    This file is part of classpoly.
-
-    classpoly is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
-
-    classpoly is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 int ecurve_test_order2 (ppf_t n[2], ff_t f[4]);	// not defined in ecurve.h
 
@@ -218,8 +217,6 @@ static void inline affine_sub (ff_t *x2, ff_t *y2, ff_t x1, ff_t y1, ff_t inv)
 //printf("result (%ld,%ld)\n", _ff_get_ui(*x2), _ff_get_ui(*y2));
 	// 3M + 5A
 }
-
-
 // doubles n affine points (in place) using one inversion
 static void inline parallel_double (ff_t x[], ff_t y[], int n, ff_t f1[])
 {
@@ -279,8 +276,6 @@ gop_counter += n;
 	affine_double (x+i,y+i, t1, f1[i]);
 	// total cost is approximately (6M+6A)*n + I - 2M
 }
-
-
 // sets (x[i],y[i]) = (x[i],y[i])  - (x1[i],y1[i]) for i = 0 to n-1
 static void inline parallel_sub (ff_t x[], ff_t y[], ff_t x1[], ff_t y1[], int n, ff_t f1[])
 {
@@ -457,8 +452,6 @@ int compute_signed_exp_chain (int chain[FF_MAX_CHAIN_LEN], unsigned long e)
 /*
 	Fixing the base point with x-value zero speeds things up slightly (less than 5%), but isn't well suited to multi-exponentiation, so the code below is not used.
 */
-
-
 //  adds (0,y1) to (x2,y2) given inv=1/x2 and assuming (0,y1) != (x2,y2)
 static void inline affine_add_x0 (ff_t *x2, ff_t *y2, ff_t y1, ff_t inv)
 {

@@ -1,3 +1,21 @@
+/*
+    Copyright 2010-2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _CRT_INCLUDE_
 #define _CRT_INCLUDE_
 
@@ -77,8 +95,6 @@ struct ecrt_context {
 };
 typedef struct ecrt_context ecrt_context_t[1];
 
-
-
 struct crt_file {
 	FILE *fp;
 	unsigned long id1;
@@ -153,8 +169,6 @@ typedef struct xcrt_context xcrt_context_t[1];
 void xcrt_init (xcrt_context_t xcrt, unsigned long m[], int n, int k, mpz_t P);
 void xcrt_clear (xcrt_context_t ctx);
 void xcrt_reduce (xcrt_context_t ctx);
-
-
 static inline void xcrt_update (xcrt_context_t xcrt, int i, unsigned long c[], int k)
 {
 	register int j;

@@ -1,25 +1,20 @@
 /*
-   nuss.c:  negacyclic multiplications via Nussbaumer's algorithm
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    This file is part of ff_poly.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 
 /*
    The main routine exported from this module is nuss_mul(). This
@@ -54,8 +49,6 @@
 */
 
 #include "zn_poly_internal.h"
-
-
 /*
    The functions nuss_split() and nuss_fft() together perform the splitting
    and FFT stages of Nussbaumer's algorithm. 
@@ -78,8 +71,6 @@
 
    We require that 2M >= K >= 4.
 */
-
-
 #define nuss_split \
     ZNP_nuss_split
 void
@@ -177,8 +168,6 @@ nuss_split (pmfvec_t res, const ulong* op)
    }
 }
 
-
-
 #define nuss_fft \
     ZNP_nuss_fft
 void
@@ -206,8 +195,6 @@ nuss_fft (pmfvec_t op)
       pmf_rotate (p + half, M + s);
    }
 }
-
-
 /*
    Inverse FFT, i.e. computes
 
@@ -237,8 +224,6 @@ nuss_ifft (pmfvec_t op)
       pmf_bfly (p + half, p, M, mod);
    }
 }
-
-
 /*
    This routine performs the reverse Nussbaumer substitution, i.e.
    maps Z -> X, Y -> X^(K/2), performing appropriate additions/subtractions
@@ -326,8 +311,6 @@ nuss_combine (ulong* res, const pmfvec_t op)
    }
 }
 
-
-
 #define nuss_pointwise_mul_fudge \
     ZNP_nuss_pointwise_mul_fudge
 ulong
@@ -336,8 +319,6 @@ nuss_pointwise_mul_fudge (unsigned lgM, int sqr, const zn_mod_t mod)
    ulong M = 1UL << lgM;
    return _zn_array_mul_fudge (M, M, sqr, mod);
 }
-
-
 
 /*
    Multiplies fourier coefficients in op1 by those in op2, stores results
@@ -382,16 +363,12 @@ nuss_pointwise_mul (pmfvec_t res, const pmfvec_t op1, const pmfvec_t op2)
 
    ZNP_FASTFREE (temp);
 }
-
-
 void
 nuss_params (unsigned* lgK, unsigned* lgM, unsigned lgL)
 {
    *lgK = (lgL / 2) + 1;
    *lgM = lgL - *lgK + 1;
 }
-
-
 ulong
 nuss_mul_fudge (unsigned lgL, int sqr, const zn_mod_t mod)
 {
@@ -405,8 +382,6 @@ nuss_mul_fudge (unsigned lgL, int sqr, const zn_mod_t mod)
    
    return zn_mod_mul (fudge1, fudge2, mod);
 }
-
-
 void
 nuss_mul (ulong* res, const ulong* op1, const ulong* op2,
                 pmfvec_t vec1, pmfvec_t vec2)
@@ -442,6 +417,4 @@ nuss_mul (ulong* res, const ulong* op1, const ulong* op2,
    // recombine into result
    nuss_combine (res, vec1);
 }
-
-
 // end of file ****************************************************************

@@ -1,23 +1,19 @@
 /*
-   zn_poly.h:  main header file to be #included by zn_poly users
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef ZN_POLY_H
@@ -32,28 +28,20 @@ extern "C" {
 #include <limits.h>
 #include <stdint.h>
 #include <assert.h>
-
-
 #define ZNP_ASSERT assert
 
 #define ZNP_INLINE static inline
-
-
 /*
    Returns a string like "3.1"
 */
 extern const char*
 zn_poly_version_string ();
-
-
 /*
    Three components of "version x.y.z"
 */
 #define ZNP_VERSION_MAJOR 0
 #define ZNP_VERSION_MINOR 9
 #define ZNP_VERSION_REVISION 0
-
-
 /*
    ULONG_BITS = number of bits per unsigned long
 */
@@ -63,17 +51,11 @@ zn_poly_version_string ();
 #if ULONG_BITS != 64
 #error zn_poly requires that unsigned long is 64 bits
 #endif
-
-
 /*
    I get really sick of typing unsigned long.
 */
 typedef unsigned long  ulong;
-
-
 #include "wide_arith.h"
-
-
 /* ============================================================================
 
      zn_mod_t stuff
@@ -115,23 +97,17 @@ typedef struct
 zn_mod_struct;
 
 typedef zn_mod_struct  zn_mod_t[1];
-
-
 /*
    Initialises zn_mod_t with given modulus, performs some (fairly cheap)
    precomputations.
 */
 void
 zn_mod_init (zn_mod_t mod, ulong m);
-
-
 /*
    Must be called when the modulus object goes out of scope.
 */
 void
 zn_mod_clear (zn_mod_t mod);
-
-
 /*
    Returns the modulus.
 */
@@ -140,8 +116,6 @@ zn_mod_get (const zn_mod_t mod)
 {
    return mod->m;
 }
-
-
 /*
    Return nonzero if mod is a slim modulus.
 */
@@ -150,8 +124,6 @@ zn_mod_is_slim (const zn_mod_t mod)
 {
    return (long) mod->m >= 0;
 }
-
-
 /*
    Returns x + y mod m.
    
@@ -168,8 +140,6 @@ zn_mod_add (ulong x, ulong y, const zn_mod_t mod)
    else
       return x - temp;
 }
-
-
 /*
    Same as zn_mod_add, but only for slim moduli.
    
@@ -187,8 +157,6 @@ zn_mod_add_slim (ulong x, ulong y, const zn_mod_t mod)
       temp -= mod->m;
    return temp;
 }
-
-
 /*
    Returns x - y mod m.
    
@@ -204,8 +172,6 @@ zn_mod_sub (ulong x, ulong y, const zn_mod_t mod)
       temp += mod->m;
    return temp;
 }
-
-
 /*
    Same as zn_mod_sub, but only for slim moduli.
 */
@@ -219,8 +185,6 @@ zn_mod_sub_slim (ulong x, ulong y, const zn_mod_t mod)
    temp += (temp < 0) ? mod->m : 0;
    return temp;
 }
-
-
 /*
    Returns -x mod m.
 
@@ -232,8 +196,6 @@ zn_mod_neg (ulong x, const zn_mod_t mod)
    ZNP_ASSERT (x < mod->m);
    return x ? (mod->m - x) : x;
 }
-
-
 /*
    Return x/2 mod m.
 
@@ -251,8 +213,6 @@ zn_mod_divby2 (ulong x, const zn_mod_t mod)
    ulong half = (mod->m >> 1) + 1;    // = 1/2 mod m if m is odd
    return (x >> 1) + (mask & half);
 }
-
-
 /*
    Returns floor(x / m).
 
@@ -267,8 +227,6 @@ zn_mod_quotient (ulong x, const zn_mod_t mod)
    ZNP_MUL_HI (t, x, mod->inv1);
    return (t + ((x - t) >> 1)) >> mod->sh1;
 }
-
-
 /*
    Returns x mod m.
    
@@ -279,8 +237,6 @@ zn_mod_reduce (ulong x, const zn_mod_t mod)
 {
    return x - mod->m * zn_mod_quotient (x, mod);
 }
-
-
 /*
    Returns -x/B mod m.
    
@@ -298,8 +254,6 @@ zn_mod_reduce_redc (ulong x, const zn_mod_t mod)
    ZNP_MUL_HI (z, y, mod->m);
    return z;
 }
-
-
 
 /*
    Returns x1*B + x0 mod m.
@@ -330,8 +284,6 @@ zn_mod_reduce_wide (ulong x1, ulong x0, const zn_mod_t mod)
    
    return b0 + (b1 & mod->m);
 }
-
-
 /*
    Returns -(x1*B + x0)/B mod m.
    
@@ -350,8 +302,6 @@ zn_mod_reduce_wide_redc (ulong x1, ulong x0, const zn_mod_t mod)
    ZNP_MUL_HI (z, y, mod->m);
    return zn_mod_sub (z, x1, mod);
 }
-
-
 /*
    Returns -(x1*B + x0)/B mod m.
    
@@ -370,8 +320,6 @@ zn_mod_reduce_wide_redc_slim (ulong x1, ulong x0, const zn_mod_t mod)
    ZNP_MUL_HI (z, y, mod->m);
    return zn_mod_sub_slim (z, x1, mod);
 }
-
-
 /*
    Returns x1*B + x0 mod m.
 
@@ -388,8 +336,6 @@ zn_mod_reduce2 (ulong x1, ulong x0, const zn_mod_t mod)
 
    return zn_mod_reduce_wide (c1, c0, mod);
 }
-
-
 
 /*
    Returns -(x1*B + x0)/B mod m.
@@ -411,8 +357,6 @@ zn_mod_reduce2_redc (ulong x1, ulong x0, const zn_mod_t mod)
 
    return zn_mod_reduce_wide_redc (c1, c0, mod);
 }
-
-
 /*
    Returns x2*B^2 + x1*B + x0 mod m.
 
@@ -438,8 +382,6 @@ zn_mod_reduce3 (ulong x2, ulong x1, ulong x0, const zn_mod_t mod)
    // finally reduce it mod m
    return zn_mod_reduce_wide (c1, c0, mod);
 }
-
-
 
 /*
    Returns -(x2*B^2 + x1*B + x0)/B mod m.
@@ -471,8 +413,6 @@ zn_mod_reduce3_redc (ulong x2, ulong x1, ulong x0, const zn_mod_t mod)
    return zn_mod_reduce_wide_redc (c1, c0, mod);
 }
 
-
-
 /*
    Returns x * y mod m.
    
@@ -487,8 +427,6 @@ zn_mod_mul (ulong x, ulong y, const zn_mod_t mod)
    ZNP_MUL_WIDE (hi, lo, x, y);
    return zn_mod_reduce_wide (hi, lo, mod);
 }
-
-
 /*
    Returns -(x * y)/B mod m.
    
@@ -504,8 +442,6 @@ zn_mod_mul_redc (ulong x, ulong y, const zn_mod_t mod)
    ZNP_MUL_WIDE (hi, lo, x, y);
    return zn_mod_reduce_wide_redc (hi, lo, mod);
 }
-
-
 /*
    Returns -(x * y)/B mod m.
    
@@ -522,8 +458,6 @@ zn_mod_mul_redc_slim (ulong x, ulong y, const zn_mod_t mod)
    ZNP_MUL_WIDE (hi, lo, x, y);
    return zn_mod_reduce_wide_redc_slim (hi, lo, mod);
 }
-
-
 /*
    Returns x^k mod m.
    
@@ -533,8 +467,6 @@ zn_mod_mul_redc_slim (ulong x, ulong y, const zn_mod_t mod)
 */
 ulong
 zn_mod_pow (ulong x, long k, const zn_mod_t mod);
-
-
 /*
    Returns 1/x mod n, or 0 if x is not invertible mod m.
    
@@ -542,8 +474,6 @@ zn_mod_pow (ulong x, long k, const zn_mod_t mod);
 */
 ulong
 zn_mod_invert (ulong x, const zn_mod_t mod);
-
-
 
 /* ============================================================================
 
@@ -560,15 +490,11 @@ void
 zn_array_scalar_mul (ulong* res, const ulong* op, size_t n, ulong x,
                      const zn_mod_t mod);
 
-
-
 /* ============================================================================
 
      polynomial multiplication on raw arrays
      
 ============================================================================ */
-
-
 /*
    Multiplies op1[0, n1) by op2[0, n2), stores result in res[0, n1 + n2 - 1).
    
@@ -585,8 +511,6 @@ zn_array_mul (ulong* res,
               const ulong* op1, size_t n1,
               const ulong* op2, size_t n2,
               const zn_mod_t mod);
-
-
 /*
    Middle product of op1[0, n1) and op2[0, n2), stores result in
    res[0, n1 - n2 + 1).
@@ -606,12 +530,8 @@ zn_array_mulmid (ulong* res,
                  const ulong* op1, size_t n1,
                  const ulong* op2, size_t n2,
                  const zn_mod_t mod);
-
-
 // forward declaration (see zn_poly_internal.h)
 struct ZNP_zn_array_mulmid_fft_precomp1_struct;
-
-
 /*
    Stores precomputed information for performing a middle product where the
    first input array op1[0, n1) is invariant, and the *length* of the second
@@ -637,8 +557,6 @@ typedef struct
 zn_array_mulmid_precomp1_struct;
 
 typedef zn_array_mulmid_precomp1_struct  zn_array_mulmid_precomp1_t[1];
-
-
 /*
    Initialises res to perform middle product of op1[0, n1) by operands of
    size n2.
@@ -655,15 +573,11 @@ zn_array_mulmid_precomp1_init (zn_array_mulmid_precomp1_t res,
 void
 zn_array_mulmid_precomp1_execute (ulong* res, const ulong* op2,
                                   const zn_array_mulmid_precomp1_t precomp);
-
-
 /*
    Deallocates op.
 */
 void
 zn_array_mulmid_precomp1_clear (zn_array_mulmid_precomp1_t op);
-
-
 
 /*
    Same as zn_array_mul(), but uses the Schonhage/Nussbaumer FFT algorithm,
@@ -686,15 +600,11 @@ zn_array_mul_fft_dft (ulong* res,
                       const ulong* op2, size_t n2,
                       unsigned lgT, const zn_mod_t mod);
 
-
-
 /* ============================================================================
 
      polynomial division on raw arrays
      
 ============================================================================ */
-
-
 /*
    NOTE: this interface is going to *change* in a future version of zn_poly!
 
@@ -709,15 +619,11 @@ zn_array_mul_fft_dft (ulong* res,
 void
 zn_array_invert (ulong* res, const ulong* op, size_t n, const zn_mod_t mod);
 
-
-
 /* ============================================================================
 
      other miscellaneous zn_array stuff
 
 ============================================================================ */
-
-
 /*
    res := -op
    
@@ -725,8 +631,6 @@ zn_array_invert (ulong* res, const ulong* op, size_t n, const zn_mod_t mod);
 */
 void
 zn_array_neg (ulong* res, const ulong* op, size_t n, const zn_mod_t mod);
-
-
 /*
    res := op1 - op2.
    
@@ -735,15 +639,11 @@ zn_array_neg (ulong* res, const ulong* op, size_t n, const zn_mod_t mod);
 void
 zn_array_sub (ulong* res, const ulong* op1, const ulong* op2, size_t n,
               const zn_mod_t mod);
-
-
 /*
    Returns zero if op1[0, n) and op2[0, n) are equal, otherwise nonzero.
 */
 int
 zn_array_cmp (const ulong* op1, const ulong* op2, size_t n);
-
-
 /*
    Copies op[0, n) to res[0, n).
    
@@ -751,8 +651,6 @@ zn_array_cmp (const ulong* op1, const ulong* op2, size_t n);
 */
 void
 zn_array_copy (ulong* res, const ulong* op, size_t n);
-
-
 /*
    Sets res[0, n) to zero.
 */
@@ -762,8 +660,6 @@ zn_array_zero (ulong* res, size_t n)
    for (; n; n--)
       *res++ = 0;
 }
-
-
 #ifdef __cplusplus
 }
 #endif

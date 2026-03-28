@@ -1,3 +1,21 @@
+/*
+    Copyright 2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -14,25 +32,6 @@
 #include "bitmap.h"
 #include "cstd.h"
 
-/*
-    Copyright 2012 Andrew V. Sutherland
-
-    This file is part of classpoly.
-
-    classpoly is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
-
-    classpoly is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #define MAX_V		 	1200		// this really should be consistent with PHI_MAX_V
 #define MAX_VK		5
 
@@ -42,8 +41,6 @@ static int32_t *sieve_primes;
 static int32_t *sieve_sqrts;
 static int sieve_pcnt, sieve_pmax;
 static long minL = 3;
-
-
 double split_prime_rating (long p, long t, int *ptwist, int *ptor, int *ps2, int *pt3);
 
 void setup_sieve_primes (long maxL, long D)
@@ -91,8 +88,6 @@ void free_sieve_primes (void)
 		free(sieve_primes); free(sieve_sqrts); sieve_primes = 0; sieve_sqrts = 0; sieve_pcnt = sieve_pmax = 0;  minL = 3;
 	}
 }
-
-
 // This is ridiculously slow and is implemented only to prove this fact, and as a sanity check
 int pick_primes_cornacchia (long *plist, int *tlist, int *vlist, int maxn, long D, long h, double bits)
 {
@@ -408,8 +403,6 @@ double split_prime_rating (long p, long t, int *ptwist, int *ptor, int *ps2, int
 //printf ("p=%ld, tor = %d, r=%f\n", p, *ptor, minr);
 	return minr;
 }
-
-
 double split_prime_rating_new (long p, long t, int *ptwist, int *ptor, int *ps2, int *pt3)
 {
 	struct torctab_rec *torctab;
@@ -477,4 +470,3 @@ double split_prime_rating_new (long p, long t, int *ptwist, int *ptor, int *ps2,
 		}
 	}
 }
-

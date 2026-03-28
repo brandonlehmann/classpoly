@@ -1,14 +1,26 @@
+/*
+    Copyright 2011-2019 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
 #include "cstd.h"
 #include "ff2k.h"
-
-/*
-    Copyright 2011-2019 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
-
 
 // primitive polys taken from Hansen & Mullen "Primitive polynomials over finite fields", Math. Comp. 59 (1992), 639--643, S47.
 // https://doi.org/10.2307/2153081
@@ -376,8 +388,6 @@ int ff2k_poly_count_distinct_roots_d3 (ff2k_t f[4])
     return (1<<(_ff2k_ctx->k-r))-1;
 }
 
-
-
 // Attempts to tranform quartic f(x) into linearized L(x)=x^4+b*x^2+c*x+d with the same # distinct roots
 // If f(x) has a repeated root, the # of distinct roots is returned and L is not set, otherwise return value is 0 and L is set
 int ff2k_poly_count_distinct_roots_d4_linearize (ff2k_t L[5], ff2k_t f[5])
@@ -423,5 +433,3 @@ int ff2k_poly_count_distinct_roots_d4 (ff2k_t f[5])
     if ( (ff2_mat_vec_mult (M, _ff2k_ctx->k, L[0]) & ~((1u<<r)-1)) ) return 0;
     return (1<<(_ff2k_ctx->k-r));
 }
-
-

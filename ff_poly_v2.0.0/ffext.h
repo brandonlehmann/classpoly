@@ -1,10 +1,23 @@
-#ifndef _FFEXT_INCLUDE_
-#define _FFEXT_INCLUDE_
-
 /*
     Copyright 2008-2012 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FFEXT_INCLUDE_
+#define _FFEXT_INCLUDE_
 
 #include "ff.h"
 #include "ffpoly.h"
@@ -31,8 +44,6 @@ void ff_ext_setup(void);
 void _ff3_setup(void);
 static inline void ff3_setup(void) { if ( ! _ff3_f[3] ) _ff3_setup(); }
 static inline void ff2_setup(void) { if ( ! _ff_2g ) ff_setup_2g(); }
-
-
 // for convenience
 static inline ff_t *ff2_random(ff_t o[2]) { _ff_random(o[0]);  _ff_random_nz(o[1]); return o; }
 static inline ff_t *ff3_random(ff_t o[3]) { do { _ff_random(o[0]);  _ff_random(o[1]);  _ff_random(o[2]); } while ( _ff_zero(o[1]) && _ff_zero(o[2]) ); return o; }
@@ -161,8 +172,6 @@ static inline ff_t *ff2_invert (ff_t o[2], ff_t a[2]) { return ff2_invert_s(o,a,
 void ff2_exp_ui_s (ff_t o[2], ff_t a[2], unsigned long e, ff_t s);  // computes in F_p[z]/(z^2-s)
 void ff2_exp_ui_s_x (ff_t o[2], ff_t a[2], unsigned long e, ff_t s);
 static inline void ff2_exp_ui (ff_t o[2], ff_t a[2], unsigned long e) { ff2_exp_ui_s(o,a,e,_ff_2g); }
-
-
 // Cube roots in F_p^2 are only relevant when p=2mod3, since otherwise the 3-Sylow of F_p^2 is the 3-Sylow of F_p.
 void _ff2_setup_cbrt(void);
 static inline void ff2_setup_cbrt(void) { if ( ! _ff2_cbrt_setup ) _ff2_setup_cbrt(); }
@@ -170,8 +179,6 @@ int ff2_3Sylow_invcbrt (ff_t o[2], ff_t a[2]);
 
 // g(x)=f(x+c), works in place, currently d_f must be <= FF_BINOMIAL_MAX
 void ff2_poly_translate (ff_t g[], int *pd_g, ff_t f[], int d_f, ff_t c[2]);
-
-
 // Note ff_setup_3g() must be called before using any of the ff3 functions below
 // ff3_poly_eval, ff3_sqrt, and ff3_exp_ui do this automatically
 
@@ -196,8 +203,6 @@ static inline ff_t *ff3_mult (ff_t o[3], ff_t a[3], ff_t b[3])
     if ( ! _ff_p1mod3 ) { _ff_addto(o[1],w1); _ff_addto(o[2],w2); }
     return o;
 }
-
-
 // squares mod x^3-s, 7M + 5A
 static inline void _ff3_square_mod_0s (ff_t o[3], ff_t a[3], ff_t s)
 {
@@ -274,8 +279,6 @@ static inline ff_t *ff3_exp_p (ff_t o[3], ff_t a[3])
     }
     return o;
 }
-
-
 extern int _ff3_trace_z2;
 
 // tr(a[0]+a[1]z+a[2]z^2 = 3a[0]+a[1]tr(z)+a[2]tr(z^2) = 3a[0]+a[2]tr(z^2) since tr(z)=0 for z^3-z-s=0 and z^3-s=0
@@ -328,8 +331,6 @@ static inline ff_t *ff3_invert (ff_t o[3], ff_t a[3])
     ff3_scalar_mult (o,t,b);
     return o;
 }
-
-
 void ff3_minpoly (ff_t f[4], ff_t a[3]);
 
 // these functions evaluate a poly defined over F_p at a point in F_p^2 or F_p^3
@@ -338,8 +339,6 @@ void ff3_poly_eval_ff (ff_t y[3], ff_t f[], int d, ff_t x[3]);
 
 // g(x)=f(x+c), works in place, currently d_f must be <= FF_BINOMIAL_MAX
 void ff2_poly_translate (ff_t g[], int *pd_g, ff_t f[], int d_f, ff_t c[2]);
-
-
 // these functions evaluate a poly defined over F_p^2 or F_p^3, computing y = f(x)
 // the array f holds all the coefficients, ordered by degree; a total of (2*(d+1) entries in Fp^2, 3*(d+1) entries in Fp^3)
 void ff2_poly_eval (ff_t y[2], ff_t f[], int d, ff_t x[2]);
@@ -449,8 +448,6 @@ static inline int ff3_poly_count_distinct_roots_d2 (ff_t f[9])
     ff3_square (r, f+3);  ff3_sub (w, r, w);
     return 1 + ff3_legendre(w);
 }
-
-
 static inline ff_t *ff2_poly_alloc (int d) { return ff_poly_alloc(2*d+1); } // this will allocate 2*d+2 ff_t's, which is what we want
 static inline ff_t *ff3_poly_alloc (int d) { return ff_poly_alloc(3*d+2); } // this will allocate 3*d+3 ff_t's, which is what we want
 static inline ff_t *ff2_poly_stack_alloc (int d) { return ff_poly_stack_alloc(2*d+1); } // this will allocate 2*d+2 ff_t's, which is what we want
@@ -465,8 +462,6 @@ static inline int ff2_poly_from_mpz (ff_t f[], mpz_t F[], int d) { for ( int i =
 static inline int ff3_poly_from_ui (ff_t f[], unsigned long F[], int d) { for ( int i = 0 ; i < 3*d+3 ; i++ ) _ff_set_ui (f[i],F[i]); return ff3_poly_degree(f,d); }
 static inline int ff3_poly_from_si (ff_t f[], long F[], int d) { for ( int i = 0 ; i < 3*d+3 ; i++ ) _ff_set_si (f[i],F[i]); return ff3_poly_degree(f,d); }
 static inline int ff3_poly_from_mpz (ff_t f[], mpz_t F[], int d) { for ( int i = 0 ; i < 3*d+3 ; i++ ) _ff_set_mpz (f[i],F[i]); return ff3_poly_degree(f,d); }
-
-
 static inline ff_t *ff2_poly_copy (ff_t g[], int *dg, ff_t f[], int df)
     { memcpy (g, f, 2*(df+1)*sizeof(ff_t)); if ( dg ) *dg = df; return g; }
 static inline ff_t *ff3_poly_copy (ff_t g[], int *dg, ff_t f[], int df)
@@ -553,8 +548,6 @@ void ff3_exp_ui_rs (ff_t o[3], ff_t a[3], unsigned long e, ff_t r, ff_t s);
 
 // computes z^n mod f, where z is our generator for F_p^3
 void ff3_zn_mod (ff_t o[3], unsigned long n, ff_t f[2]);            // only looks at f[0] and f[1], assumes f[2]=0 and f[3]=1
-
-
 // overlap not allowed
 static inline void ff2_poly_mult (ff_t h[], int *dh, ff_t f[], int df, ff_t g[], int dg)
 {

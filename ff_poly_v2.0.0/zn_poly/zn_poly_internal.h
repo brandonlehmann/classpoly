@@ -1,26 +1,20 @@
 /*
-   zn_poly_internal.h:  main header file #included internally by zn_poly
-                        modules
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 
 /*
 
@@ -30,8 +24,6 @@
    future versions of zn_poly. You have been warned!
 
 */
-
-
 #ifndef ZN_POLY_INTERNAL_H
 #define ZN_POLY_INTERNAL_H
 
@@ -39,8 +31,6 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "zn_poly.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -48,8 +38,6 @@ extern "C" {
 
 // use GMP integer multiplication
 #define ZNP_mpn_mul mpn_mul
-
-
 /*
    Executes "stuff", and checks that it returns 0. Usage is e.g.:
    
@@ -65,32 +53,22 @@ extern "C" {
        __xyz_cy = (stuff);          \
        ZNP_ASSERT (__xyz_cy == 0);  \
     } while (0)
-
-
 /*
    For integers a >= 1 and b >= 1, returns ceil(a / b).
 */
 #define CEIL_DIV(a, b) ((((a) - 1) / (b)) + 1)
-
-
 /*
    For integers a >= 1 and 0 <= r < ULONG BITS, returns ceil(a / 2^r).
 */
 #define CEIL_DIV_2EXP(a, r) ((((a) - 1) >> (r)) + 1)
-
-
 #define ZNP_MIN(aaa, bbb) (((aaa) < (bbb)) ? (aaa) : (bbb))
 #define ZNP_MAX(aaa, bbb) (((aaa) > (bbb)) ? (aaa) : (bbb))
-
-
 /*
    Estimate of the L1 cache size, in bytes.
    If this is a bit on the small side, it's probably not a big deal.
    If it's on the big side, that might start to seriously degrade performance.
 */
 #define ZNP_CACHE_SIZE 32768
-
-
 /*
    Returns ceil(log2(x)).
    x must be >= 1.
@@ -98,8 +76,6 @@ extern "C" {
 #define ceil_lg \
     ZNP_ceil_lg
 int ceil_lg (ulong x);
-
-
 /*
    Returns floor(log2(x)).
    Returns -1 for x == 0.
@@ -108,8 +84,6 @@ int ceil_lg (ulong x);
     ZNP_floor_lg
 int
 floor_lg (ulong x);
-
-
 /*
    res := abs(op1 - op2).
 
@@ -132,8 +106,6 @@ signed_mpn_sub_n (mp_limb_t* res, const mp_limb_t* op1, const mp_limb_t* op2,
       return 1;
    }
 }
-
-
 /*
    The ZNP_FASTALLOC and ZNP_FASTFREE macros are used for allocating memory
    which is taken off the stack if the request is small enough, or off the
@@ -169,15 +141,11 @@ signed_mpn_sub_n (mp_limb_t* res, const mp_limb_t* op1, const mp_limb_t* op2,
    if (ptr != __FASTALLOC_##ptr)                          \
       free (ptr);
 
-
-
 extern size_t
 ZNP_mpn_smp_kara_thresh;
 
 extern size_t
 ZNP_mpn_mulmid_fallback_thresh;
-
-
 /*
    Stores tuning data for moduli of a specific bitsize.
 */
@@ -208,16 +176,12 @@ typedef struct
    
 }
 tuning_info_t;
-
-
 /*
    Global array of tuning_info_t's, one for each bitsize.
 */
 #define tuning_info \
     ZNP_tuning_info
 extern tuning_info_t tuning_info[];
-
-
 
 /* ============================================================================
 
@@ -245,8 +209,6 @@ extern tuning_info_t tuning_info[];
 void
 zn_array_pack (mp_limb_t* res, const ulong* op, size_t n, ptrdiff_t s,
                unsigned b, unsigned k, size_t r);
-
-
 /*
    Let op be an integer of the form
 
@@ -265,8 +227,6 @@ zn_array_pack (mp_limb_t* res, const ulong* op, size_t n, ptrdiff_t s,
 void
 zn_array_unpack (ulong* res, const mp_limb_t* op, size_t n, unsigned b,
                  unsigned k);
-
-
 /*
    Same as zn_array_unpack, but adds an assertion to check that the unpacking
    routine will not read beyond the first r limbs of op.
@@ -277,8 +237,6 @@ do                                                                    \
    ZNP_ASSERT((n) * (b) + (k) <= (r) * GMP_NUMB_BITS);                \
    zn_array_unpack(res, op, n, b, k);                                 \
 } while (0)
-
-
 
 /* ============================================================================
 
@@ -308,15 +266,11 @@ _zn_array_mul (ulong* res,
 ulong
 _zn_array_mul_fudge (size_t n1, size_t n2, int sqr, const zn_mod_t mod);
 
-
-
 /* ============================================================================
 
      stuff from ks_support.c
 
 ============================================================================ */
-
-
 /*
    Sets res[i * s] = reduction modulo mod of the i-th entry of op,
    for 0 <= i < n. Each entry of op is w ulongs.
@@ -331,8 +285,6 @@ _zn_array_mul_fudge (size_t n1, size_t n2, int sqr, const zn_mod_t mod);
 void
 array_reduce (ulong* res, ptrdiff_t s, const ulong* op, size_t n, unsigned w,
               int redc, const zn_mod_t mod);
-
-
 
 /*
    This is a helper function for the variants of KS that evaluate at
@@ -371,8 +323,6 @@ void
 zn_array_recover_reduce (ulong* res, ptrdiff_t s, const ulong* op1,
                          const ulong* op2, size_t n, unsigned b, int redc,
                          const zn_mod_t mod);
-
-
 
 /* ============================================================================
 
@@ -423,15 +373,11 @@ zn_array_mul_KS4 (ulong* res,
                   const ulong* op1, size_t n1,
                   const ulong* op2, size_t n2,
                   int redc, const zn_mod_t mod);
-
-
 /* ============================================================================
 
      stuff from mulmid_ks.c
 
 ============================================================================ */
-
-
 /*
    These are the same as zn_array_mulmid(). They use four different types of
    Kronecker substitution.
@@ -475,15 +421,11 @@ zn_array_mulmid_KS4 (ulong* res,
                      const ulong* op2, size_t n2,
                      int redc, const zn_mod_t mod);
 
-
-
 /* ============================================================================
 
      pmf_t stuff
 
 ============================================================================ */
-
-
 /*
    Let R = Z/mZ. A pmf_t ("pmf" = "polynomial modulo fermat") represents an
    element of S = R[Y]/(Y^M + 1). This is used as the coefficient ring in
@@ -518,8 +460,6 @@ typedef ulong*  pmf_t;
 #define pmf_const_t \
     ZNP_pmf_const_t
 typedef const ulong*  pmf_const_t;
-
-
 /*
    op := op * x
 */
@@ -530,8 +470,6 @@ pmf_scalar_mul (pmf_t op, ulong M, ulong x, const zn_mod_t mod)
 {
    zn_array_scalar_mul (op + 1, op + 1, M, x, mod);
 }
-
-
 /*
    op := 0, with bias reset to zero too
 */
@@ -543,8 +481,6 @@ pmf_zero (pmf_t op, ulong M)
    for (M++; M > 0; M--)
       *op++ = 0;
 }
-
-
 /*
    op := op / 2
 
@@ -560,8 +496,6 @@ pmf_divby2 (pmf_t op, ulong M, const zn_mod_t mod)
    for (op++; M > 0; M--, op++)
       *op = zn_mod_divby2 (*op, mod);
 }
-
-
 /*
    res := op
 */
@@ -573,8 +507,6 @@ pmf_set (pmf_t res, pmf_t op, ulong M)
    for (M++; M > 0; M--)
       *res++ = *op++;
 }
-
-
 /*
    op := Y^r * op
 */
@@ -585,8 +517,6 @@ pmf_rotate (pmf_t op, ulong r)
 {
    op[0] += r;
 }
-
-
 /*
    op1 := op2 + op1
    op2 := op2 - op1
@@ -617,10 +547,6 @@ pmf_add (pmf_t op1, const pmf_t op2, ulong M, const zn_mod_t mod);
     ZNP_pmf_sub
 void
 pmf_sub (pmf_t op1, const pmf_t op2, ulong M, const zn_mod_t mod);
-
-
-
-
 /*
    These functions are exported just for profiling purposes:
 */
@@ -642,15 +568,11 @@ void
 zn_array_sub_inplace (ulong* op1, const ulong* op2, ulong n,
                       const zn_mod_t mod);
 
-
-
 /* ============================================================================
 
      pmfvec_t stuff
 
 ============================================================================ */
-
-
 /*
    A pmfvec_t stores a vector of length K = 2^lgK of elements of S.
    
@@ -688,8 +610,6 @@ pmfvec_struct;
 #define pmfvec_t \
     ZNP_pmfvec_t
 typedef pmfvec_struct  pmfvec_t[1];
-
-
 /*
    Checks that vec1 and vec2 have compatible data,
    i.e. have the same K, M, mod.
@@ -702,8 +622,6 @@ pmfvec_compatible (const pmfvec_t vec1, const pmfvec_t vec2)
    return (vec1->K == vec2->K) && (vec1->M == vec2->M) &&
           (vec1->mod == vec2->mod);
 }
-
-
 /*
    Initialises res with given parameters, allocates memory.
 */
@@ -712,8 +630,6 @@ pmfvec_compatible (const pmfvec_t vec1, const pmfvec_t vec2)
 void
 pmfvec_init (pmfvec_t res, unsigned lgK, ptrdiff_t skip, unsigned lgM,
              const zn_mod_t mod);
-
-
 /*
    Initialises res in preparation for a Nussbaumer multiplication of
    length 2^lgL.
@@ -722,8 +638,6 @@ pmfvec_init (pmfvec_t res, unsigned lgK, ptrdiff_t skip, unsigned lgM,
     ZNP_pmfvec_init_nuss
 void
 pmfvec_init_nuss (pmfvec_t res, unsigned lgL, const zn_mod_t mod);
-
-
 /*
    Destroys op, frees all associated memory.
 */
@@ -731,8 +645,6 @@ pmfvec_init_nuss (pmfvec_t res, unsigned lgL, const zn_mod_t mod);
     ZNP_pmfvec_clear
 void
 pmfvec_clear (pmfvec_t op);
-
-
 /*
    res := op
 */
@@ -740,8 +652,6 @@ pmfvec_clear (pmfvec_t op);
     ZNP_pmfvec_set
 void
 pmfvec_set (pmfvec_t res, const pmfvec_t op);
-
-
 /*
    Multiplies first n coefficients of op by x.
 */
@@ -749,8 +659,6 @@ pmfvec_set (pmfvec_t res, const pmfvec_t op);
     ZNP_pmfvec_scalar_mul
 void
 pmfvec_scalar_mul (pmfvec_t op, ulong n, ulong x);
-
-
 /*
    Multiplies pointwise the first n coefficients of op1 and op2, puts result
    in res.
@@ -780,8 +688,6 @@ pmfvec_mul (pmfvec_t res, const pmfvec_t op1, const pmfvec_t op2, ulong n,
     ZNP_pmfvec_mul_fudge
 ulong
 pmfvec_mul_fudge (unsigned lgM, int sqr, const zn_mod_t mod);
-
-
 /*
    Modifies the op->data and op->skip to make it look as if the first
    coefficient is the one at index n - 1, and the last coefficient is
@@ -793,8 +699,6 @@ pmfvec_mul_fudge (unsigned lgM, int sqr, const zn_mod_t mod);
     ZNP_pmfvec_reverse
 void
 pmfvec_reverse (pmfvec_t op, ulong n);
-
-
 
 /* ============================================================================
 
@@ -850,8 +754,6 @@ pmfvec_reverse (pmfvec_t op, ulong n);
         simultaneously a generalisation of van der Hoeven's truncated Fourier
         transform and Bailey's FFT algorithm [Bai89]. (I used something
         similar in the ZmodF_poly module in FLINT.)
-
-
    ---------- inverse FFTs ----------
 
    The functions
@@ -914,8 +816,6 @@ pmfvec_reverse (pmfvec_t op, ulong n);
         The algorithm is not as simple as the FFT version; it is necessary
         to alternate between "row" and "column" transforms in a slightly
         complicated way. I believe the algorithm to be new.
-
-
    ---------- transposed forward and inverse FFTs ----------
 
    The functions
@@ -944,8 +844,6 @@ pmfvec_reverse (pmfvec_t op, ulong n);
    transposing every step of the algorithm; see for example [BLS03] for how
    this is done. We don't have comments in these routines; see the comments
    on the corresponding FFT/IFFT routines.
-
-
    ---------- notes for all the above functions ----------
 
    These functions all perform O(n * lgK + K) operations in S (an "operation"
@@ -967,8 +865,6 @@ pmfvec_reverse (pmfvec_t op, ulong n);
    don't expect to fit that many in cache anyway.
 
 */
-
-
 #define pmfvec_fft \
     ZNP_pmfvec_fft
 void
@@ -1051,15 +947,11 @@ pmfvec_tpifft_dc (pmfvec_t op, ulong n, int fwd, ulong z, ulong t);
 void
 pmfvec_tpifft_basecase (pmfvec_t op, ulong t);
 
-
-
 /* ============================================================================
 
      stuff in array.c
 
 ============================================================================ */
-
-
 /*
    Computes
 
@@ -1080,8 +972,6 @@ zn_skip_array_signed_add (ulong* res, ptrdiff_t skip, size_t n,
                           const ulong* op1, int neg1,
                           const ulong* op2, int neg2,
                           const zn_mod_t mod);
-
-
 /*
    Same as zn_array_scalar_mul, but has a _redc_ flag. If the flag is set,
    then REDC reduction is used (in which case the modulus must be odd),
@@ -1092,8 +982,6 @@ zn_skip_array_signed_add (ulong* res, ptrdiff_t skip, size_t n,
 void
 _zn_array_scalar_mul (ulong* res, const ulong* op, size_t n, ulong x,
                       int redc, const zn_mod_t mod);
-
-
 /*
    Behaves just like zn_array_scalar_mul, except it uses the obvious
    optimisation if x == 1.
@@ -1103,15 +991,11 @@ _zn_array_scalar_mul (ulong* res, const ulong* op, size_t n, ulong x,
 void
 zn_array_scalar_mul_or_copy (ulong* res, const ulong* op, size_t n,
                              ulong x, const zn_mod_t mod);
-
-
 /* ============================================================================
 
      stuff in nuss.c
 
 ============================================================================ */
-
-
 /*
    Performs negacyclic multiplication using Nussbaumer's algorithm.
    
@@ -1140,8 +1024,6 @@ nuss_mul (ulong* res, const ulong* op1, const ulong* op2,
     ZNP_nuss_mul_fudge
 ulong
 nuss_mul_fudge (unsigned lgL, int sqr, const zn_mod_t mod);
-
-
 /*
    Computes optimal lgK and lgM for given lgL, as described above for
    nuss_mul().
@@ -1151,15 +1033,11 @@ nuss_mul_fudge (unsigned lgL, int sqr, const zn_mod_t mod);
 void
 nuss_params (unsigned* lgK, unsigned* lgM, unsigned lgL);
 
-
-
 /* ============================================================================
 
      stuff from mul_fft.c
 
 ============================================================================ */
-
-
 /*
    Splits op[-k, n) into pieces of length M/2, where M = res->M, and where
    the first k coefficients are assumed to be zero. The pieces are written to
@@ -1174,8 +1052,6 @@ nuss_params (unsigned* lgK, unsigned* lgM, unsigned lgL);
 void
 fft_split (pmfvec_t res, const ulong* op, size_t n, size_t k, ulong x,
            ulong b);
-
-
 /*
    Performs the substitution back from S[Z]/(Z^K - 1) to a polynomial in X,
    i.e. mapping Y -> X, Z -> X^(M/2). It only looks at the first z coefficients
@@ -1191,8 +1067,6 @@ fft_split (pmfvec_t res, const ulong* op, size_t n, size_t k, ulong x,
 void
 fft_combine (ulong* res, size_t n, const pmfvec_t op, ulong z,
              int skip_first);
-
-
 
 /*
    Same as zn_array_mul(), but uses the Schonhage/Nussbaumer FFT algorithm.
@@ -1220,8 +1094,6 @@ zn_array_mul_fft (ulong* res,
     ZNP_zn_array_mul_fft_fudge
 ulong
 zn_array_mul_fft_fudge (size_t n1, size_t n2, int sqr, const zn_mod_t mod);
-
-
 /*
    Computes the best lgK, lgM, m1, m2 such that polynomials of length n1 and
    n2 may be multiplied with fourier transform parameters lgK and lgM, and
@@ -1240,8 +1112,6 @@ zn_array_mul_fft_fudge (size_t n1, size_t n2, int sqr, const zn_mod_t mod);
 void
 mul_fft_params (unsigned* lgK, unsigned* lgM, ulong* m1, ulong* m2,
                 size_t n1, size_t n2);
-
-
 /*
    Same as zn_array_mulmid(), but uses the Schonhage/Nussbaumer FFT algorithm.
 
@@ -1266,8 +1136,6 @@ zn_array_mulmid_fft (ulong* res,
     ZNP_zn_array_mulmid_fft_fudge
 ulong
 zn_array_mulmid_fft_fudge (size_t n1, size_t n2, const zn_mod_t mod);
-
-
 /*
    Computes the best lgK, lgM, m1, m2, p such that the middle product of
    polynomials of length n1 and n2 may be computed with fourier transform
@@ -1290,8 +1158,6 @@ zn_array_mulmid_fft_fudge (size_t n1, size_t n2, const zn_mod_t mod);
 void
 mulmid_fft_params (unsigned* lgK, unsigned* lgM, ulong* m1, ulong* m2,
                    ulong* p, size_t n1, size_t n2);
-
-
 /*
    Stores precomputed information for performing an FFT-based middle product
    where the first input array is invariant, and the length of the second
@@ -1313,8 +1179,6 @@ struct zn_array_mulmid_fft_precomp1_struct
     ZNP_zn_array_mulmid_fft_precomp1_t
 typedef struct zn_array_mulmid_fft_precomp1_struct
                zn_array_mulmid_fft_precomp1_t[1];
-
-
 /*
    Initialises res to perform middle product of op1[0, n1) by operands of
    size n2.
@@ -1350,8 +1214,6 @@ zn_array_mulmid_fft_precomp1_execute
     ZNP_zn_array_mulmid_fft_precomp1_fudge
 ulong
 zn_array_mulmid_fft_precomp1_fudge (size_t n1, size_t n2, const zn_mod_t mod);
-
-
 /*
    Deallocates op.
 */
@@ -1360,15 +1222,11 @@ zn_array_mulmid_fft_precomp1_fudge (size_t n1, size_t n2, const zn_mod_t mod);
 void
 zn_array_mulmid_fft_precomp1_clear (zn_array_mulmid_fft_precomp1_t op);
 
-
-
 /* ============================================================================
 
      stuff from mpn_mulmid.c
 
 ============================================================================ */
-
-
 /*
    Let n1 >= n2 >= 1, and let
 
@@ -1387,8 +1245,6 @@ zn_array_mulmid_fft_precomp1_clear (zn_array_mulmid_fft_precomp1_t op);
    Note that SMP(a, b) is at most n1 - n2 + 3 limbs long (we assume throughout
    that n1 is less than the maximum value stored in a limb).
 */
-
-
 /*
    Computes SMP(op1[0, n1), op2[0, n2)).
    
@@ -1398,8 +1254,6 @@ void
 ZNP_mpn_smp (mp_limb_t* res,
              const mp_limb_t* op1, size_t n1,
              const mp_limb_t* op2, size_t n2);
-
-
 /*
    Same as mpn_smp(), but always uses basecase (quadratic-time) algorithm.
    
@@ -1409,8 +1263,6 @@ void
 ZNP_mpn_smp_basecase (mp_limb_t* res,
                       const mp_limb_t* op1, size_t n1,
                       const mp_limb_t* op2, size_t n2);
-
-
 /*
    Computes SMP(op1[0, 2*n - 1), op2[0, n)). Algorithm is selected depending
    on size of n.
@@ -1420,8 +1272,6 @@ ZNP_mpn_smp_basecase (mp_limb_t* res,
 void
 ZNP_mpn_smp_n (mp_limb_t* res, const mp_limb_t* op1,
                const mp_limb_t* op2, size_t n);
-
-
 /*
    Computes SMP(op1[0, 2*n - 1), op2[0, n)), using Karatsuba algorithm.
    
@@ -1432,8 +1282,6 @@ ZNP_mpn_smp_n (mp_limb_t* res, const mp_limb_t* op1,
 void
 ZNP_mpn_smp_kara (mp_limb_t* res, const mp_limb_t* op1, const mp_limb_t* op2,
                   size_t n);
-
-
 
 /*
    Computes the *true* middle product of op1[0, n1) and op2[0, n2).
@@ -1452,8 +1300,6 @@ void
 ZNP_mpn_mulmid (mp_limb_t* res,
                 const mp_limb_t* op1, size_t n1,
                 const mp_limb_t* op2, size_t n2);
-
-
 /*
    Same as mpn_mulmid, but always just falls back on using mpn_mul.
 */
@@ -1461,17 +1307,11 @@ void
 ZNP_mpn_mulmid_fallback (mp_limb_t* res,
                          const mp_limb_t* op1, size_t n1,
                          const mp_limb_t* op2, size_t n2);
-
-
-
-
 /* ============================================================================
 
      stuff from mulmid.c
 
 ============================================================================ */
-
-
 /*
    Same as zn_array_mulmid(), but always falls back on doing the full product
    via _zn_array_mul().
@@ -1495,8 +1335,6 @@ zn_array_mulmid_fallback (ulong* res,
     ZNP_zn_array_mulmid_fallback_fudge
 ulong
 zn_array_mulmid_fallback_fudge (size_t n1, size_t n2, const zn_mod_t mod);
-
-
 /*
    Identical to zn_array_mulmid(), except for the fastred flag.
    
@@ -1518,15 +1356,11 @@ _zn_array_mulmid (ulong* res,
     ZNP__zn_array_mulmid_fudge
 ulong
 _zn_array_mulmid_fudge (size_t n1, size_t n2, const zn_mod_t mod);
-
-
 /* ============================================================================
 
      other random stuff
 
 ============================================================================ */
-
-
 /*
    Compute 2^k mod m.
    
@@ -1539,16 +1373,12 @@ _zn_array_mulmid_fudge (size_t n1, size_t n2, const zn_mod_t mod);
 ulong
 zn_mod_pow2 (int k, const zn_mod_t mod);
 
-
-
 /*
    Constants describing algorithms for precomputed middle products
 */
 #define ZNP_MULMID_ALGO_FALLBACK  0
 #define ZNP_MULMID_ALGO_KS        1
 #define ZNP_MULMID_ALGO_FFT       2
-
-
 
 #ifdef __cplusplus
 }

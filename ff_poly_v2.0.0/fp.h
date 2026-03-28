@@ -1,10 +1,23 @@
-#ifndef _FP_INCLUDE_
-#define _FP_INCLUDE_
-
 /*
     Copyright 2018 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FP_INCLUDE_
+#define _FP_INCLUDE_
 
 #include <gmp.h>
 #include "polyparse.h"
@@ -24,8 +37,6 @@ typedef struct fp_ctx_struct {
     mm_t R3;        // B^3 mod p
     mm_t half;      // 1/2 mod p
 } fp_ctx_t[1];
-
-
 static inline struct fp_ctx_struct *fp_init (fp_ctx_t ctx, long p)
 {
     ctx->p = p; ctx->pinv = mm_pinv(ctx->p);

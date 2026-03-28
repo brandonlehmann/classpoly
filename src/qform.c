@@ -1,3 +1,21 @@
+/*
+    Copyright 2012-2018 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -9,25 +27,6 @@
 #include "table.h"
 #include "bitmap.h"
 #include "cstd.h"
-
-/*
-    Copyright 2012 Andrew V. Sutherland
-
-    This file is part of classpoly.
-
-    classpoly is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
-
-    classpoly is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 #define QFORM_MAX_H     50000000                        // we don't expect to deal with big class groups here, if we do, we need to switch to a baby-steps giant-steps algorithm
 
@@ -67,8 +66,6 @@ static inline double qform_jbound (long a, long D)
     if ( B < qform_min_jbound ) qform_min_jbound = B;
     return B;
 }
-
-
 // there is no need to insert the identity, it is implicitly present 
 static inline void qform_insert (long a, long b, long c)
 {
@@ -181,8 +178,6 @@ static inline void log_poly_mult_monic (double h[], double f[], int f_d, double 
     for ( i = 0 ; i < f_d ; i++ ) for ( j = 0 ; j < g_d ; j++ ) h[i+j] = log_add(h[i+j],f[i]+g[j]);     // add (f-lt(f)) * (g-lt(g)) to h
     for ( j = 0 ; j < g_d ; i++, j++ ) h[i] = log_add(h[i],g[j]);                               // add lt(f) * (g-lt(g)) to h
 }
-
-
 // O(n^2) algorithm to compute prod (X+r[i]), doesn't set monic coeff, f may equal r
 void log_buildpoly (double f[], double r[], int n)
 {
@@ -246,8 +241,6 @@ double qform_hilbert_height_bound (long D, int deg)
     info_printf ("b = log2(binom(h,m)) - m*log2(M_h) + sum(log2(M_i)) = %.4f - %ld * %.4f + %.4f = %.4f bits\n", MPZ_LOG2E*y, i, MPZ_LOG2E*qform_min_jbound, MPZ_LOG2E*sum, b);
     return b;
 }
-
-
 /*
     sums log|j(z)| for z = (-b+sqrt(D))/2a over the unique subgroup H presented by the prefix of (p,n) defined by d1 and e
     The subgroup H consists of elements of the form p1^e1*...*pk^ek where k=d1, 0<=e_i<n[i], and ek is a multiple of e (necessarily 0 if e=n[d1])
@@ -298,8 +291,6 @@ void qform_sum_jbounds_subgroup (double *psummax, double *pmaxdelta, long p[IQ_M
     }
     *psummax = totsummax/j; *pmaxdelta = totmaxdelta/j;         // heuristically, taking the average works well (not clear why)
 }
-
-
 /*
     sums log|j(z)| for z = (-b+sqrt(D))/2a over the n largest values of z occuring for <a,b,c> in cl(D)
     Assumes table is loaded for D
@@ -681,8 +672,6 @@ int qform_new_generators (long new_p[IQ_MAX_GENS], long new_n[IQ_MAX_GENS], long
     return new_k;
 }
 */
-
-
 // Determines the least integer k such that every element of cl(D) can be expressed as a product of a subset of the first k primeforms.
 // ellmax is set to the norm of the kth prime form.  Used to test the conjecture in "A Pollard-type algorithm for finding short product
 // representations in finite groups" by Bisson and Sutherland.
@@ -709,8 +698,6 @@ int qform_least_representing_sequence (long D, long h, long *ellmax)
     if ( ellmax ) *ellmax = ell;
     return k;
 }
-
-
 // primeform needn't be reduced
 long qform_primeform_order (long p, long D)
 {
@@ -1061,8 +1048,6 @@ long qform_primeform_mod_discrete_log (long p, long q, long e1, long n1, long n2
     if ( e2 < 0 ) return -1;
     return e1+e2*n1;
 }
-
-
 // simple binary exponentiation, overlap ok
 void qform_exp (long *pu, long *pv, long *pw, long u, long v, long w, long e, long L)
 {
@@ -1093,8 +1078,6 @@ void qform_exp (long *pu, long *pv, long *pw, long u, long v, long w, long e, lo
     *pu=a; *pv=b; *pw=c;
     return; 
 }
-
-
 // finds the reduced form of discriminant D with *pa > a0 prime and minimal, with *pa <= MPZ_MAX_SMALL_PRIME, or returns 0 if no such form exists
 // note that if we have to search past MPZ_MAX_TINY_PRIME, things slow down
 int qform_small_primeform (long *pa, long *pb, long *pc, long D, long a0)
@@ -1112,8 +1095,6 @@ int qform_small_primeform (long *pa, long *pb, long *pc, long D, long a0)
     }
     return 0;
 }
-
-
 int qform_primeform (long *pa, long *pb, long *pc, long p, long D, int rflag)
 {
     long b;
@@ -1166,8 +1147,6 @@ int qform_nform (long *pa, long *pb, long *pc, long n, long D)
     *pa=u; *pb=v; *pc=w;
     return 1;
 }
-
-
 // computes product of primeforms over primes appearing in the prime factorization of n (including multiplicity)
 int qform_ppf_form (long *pa, long *pb, long *pc, ppf_t N, long D)
 {
@@ -1183,8 +1162,6 @@ int qform_ppf_form (long *pa, long *pb, long *pc, ppf_t N, long D)
     *pa=u; *pb=v; *pc=w;
     return 1;
 }
-
-
 // assumes a > 0, but b may be negative
 static inline long gcdext(long a, long b, long *x, long *y)
 {

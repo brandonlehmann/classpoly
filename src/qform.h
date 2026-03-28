@@ -1,11 +1,3 @@
-#ifndef _QFORM_INCLUDE_
-#define _QFORM_INCLUDE_
-
-#include <math.h>
-#include <stdint.h>
-#include "mpzutil.h"
-#include "iqclass.h"
-
 /*
     Copyright 2012-2018 Andrew V. Sutherland
 
@@ -13,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,6 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _QFORM_INCLUDE_
+#define _QFORM_INCLUDE_
+
+#include <math.h>
+#include <stdint.h>
+#include "mpzutil.h"
+#include "iqclass.h"
 
 #define FIB_PRIME               11400714819323198549UL                              // FIB_PRIME/2^64 is approximately (sqrt(5)-1)/2
 
@@ -67,8 +66,6 @@ int qform_next_primeform (long *a, long *b, long *c, long *ell, long D, long B, 
                                                                                                 // Otherwise we get the next primitive non-principal primeform, even if not reduced (of norm prime to ellfilter)
 
 int qform_least_representing_sequence (long D, long h, long *ellmax);                           // returns least k s.t. every elt of cl(D) is a product of a subset of the first k primeforms (ellmax is the norm of the kth primeform)
-
-
 static inline int qform_primeform_is_principal (long n, long D)
     { long a, b, c;  qform_primeform(&a,&b,&c,n,D,-1); return qform_is_identity(a,b,c); }
 int qform_nform (long *pa, long *pb, long *pc, long n, long D);                             // returns reduced power-product of primeforms corresponding to the prime factorization of n
@@ -123,8 +120,6 @@ static inline long qform_primeform_discrete_log_ph (long p, long q, long n, long
     L = ceil(pow(-D,0.25));
     return qform_discrete_log_ph (a,b,c,u,v,w,n,L);
 }
-
-
 static inline void qform_primeform_exp (long *pa, long *pb, long *pc, long p, long e, long D)
 {
     long L;
@@ -215,6 +210,4 @@ static inline long unique_multiple (long e, long min, long max)
     register long k = e*(max/e);                  // largest multiple of e bounded by max
     return k < min ? 0 : ( k-e < min ? k : -1 );
 }
-
-
 #endif

@@ -1,17 +1,27 @@
+/*
+    Copyright (c) 2007-2014 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _CSTD_INCLUDE_
 #define _CSTD_INCLUDE_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/*
-    Copyright (c) 2007-2014 Andrew V. Sutherland
-    See LICENSE file for license details.
-
-    Header file for general purpose definitions and library extensions
-    that we want to be able to use everywhere.
-*/
 
 #include <assert.h>
 #include <stdint.h>
@@ -127,8 +137,6 @@ static inline long double logintl (long double x)
     for ( n = 2 ; n <= b ; n++ ) { y *= t/(2*n);  if ( (n&1) ) { z += 1.0/n; s += y*z; } else { s -= y*z; } }
     return GAMMA + logl(t) + sqrtl(x)*s;
 }
-
-
 // The ceilbound/floorbound functions do not return ceil/floor they return upper/lower bounds that may be off by 1, but they are much faster than ceill and floorl.
 //static inline uint64_t fastceilboundl(long double x) { union { long double ld; uint64_t i; } u; u.ld = x+0.5; u.ld += (long double)(1ul<<63); return u.i & ~(1ul<<63); }
 //static inline uint64_t fastfloorboundl(long double x) { union { long double ld; uint64_t i; } u; u.ld = x-0.5; u.ld += (long double)(1ul<<63); return u.i & ~(1ul<<63); }
@@ -359,8 +367,6 @@ static inline uint64_t strto64(char *str)
 
 static inline uint32_t strto32(char *str)
     { uint64_t n = strto64(str); return ( n < ((uint64_t)1<<32) ? (uint32_t)n : 0 ); }
-
-
 // Functions to enumerate all t-tuples of integers in [0..n-1] in lexicographic order c[t],c[t-1],...,c[1], using Knuth Alg 7.2.1.3T
 // c[0] holds an auxiliary variable, combination is c[1],c[2],...,c[t], where 0 < t < n, space for 2 sentinels is also required, so c must have t+3 entries allocated
 static inline void lex_combo_first (int c[], int n, int t)
@@ -439,8 +445,6 @@ static inline uint128_t strto128(char *str)
     }
     return n;
 }
-
-
 static inline char *itoa128 (char buf[], __int128_t n)
 {
     char c, *s, *t = buf;
@@ -452,8 +456,6 @@ static inline char *itoa128 (char buf[], __int128_t n)
     while ( s > t ) { c = *s; *s-- = *t; *t++ = c; }
     return buf;
 }
-
-
 static inline int atoii (long v[], int n, char *s)
 {
     while (isspace(*s)) s++;
@@ -526,8 +528,6 @@ static inline double atoff (double v[], int n, char *s)
     if ( c == '{' && *s != '}' ) return -1;
     return i;
 }
-
-
 
 static inline int veclen(char *s)
 {
@@ -749,4 +749,3 @@ int dbl_qsort_cmp (const void *a, const void *b);
 #endif
 
 #endif
-

@@ -1,10 +1,23 @@
+/*
+    Copyright (c) 2011-2014 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _ECURVE_INCLUDE_
 #define _ECURVE_INCLUDE_
-
-/*
-     Copyright (c) 2011-2014 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 #include <gmp.h>
 #include "ff_poly.h"
@@ -30,8 +43,6 @@ struct ecp_jc_struct {
 	ff_t x, y, z2, z3;				// note that we don't maintain z, this saves a field multiplication when adding points
 };
 typedef struct ecp_jc_struct ecp_jc_t;
-
-
 // converts affine coord to reduced Chudnovsky Jacobian coords
 static inline void ecurve_A_to_JC (ecp_jc_t *p, ff_t x, ff_t y)
 	{ _ff_set(p->x,x); _ff_set(p->y,y); _ff_set_one(p->z2); _ff_set_one(p->z3); }
@@ -77,8 +88,6 @@ int ecurve_fast_trace_sign (ff_t f[4], long t);
 int ecurve_test_maximal (ff_t f[4], int flag);				// flag > 0 tests maximal, flag < 0 tests minimal, flag == 0 tests extremal
 
 long ecurve_fastorder (ff_t x, ff_t y, long e, ff_t f1);		// compute the order of (x,y) given multiple e of the order (e.g. group order), f1=A
-
-
 int ecurve_3tor (ff_t f[4]);								// f must be of the form x^3+ax+b
 int ecurve_4tor (int *o, ff_t f[4], int flag8);				// f must be of the form x^3+ax+b (flag8 set indicates that Z/8Z should also be checked)
 int ecurve_4tor_test (ff_t *tt, ff_t f[4]);					// returns true if y^2=f(x) has a 4-torsion pt, false otherwise.  If specified, tt must point to a root of f
@@ -169,8 +178,6 @@ extern unsigned long ecurve_points;
 ecurve_points++;
 	return 1;
 }
-
-
 // doubles a point p1 in reduced Chudnovsky Jacobian coords (p3 is the output, may be equal to p1)
 // This code requires one more multiplication than doubling in standard Jacobian coordinates (but two fewer additions, which makes it a close call)
 // Surprisingly, it is actually slightly faster than doubling in Jacobian coords when tested on an AMD Athlon 64 (YMMV).

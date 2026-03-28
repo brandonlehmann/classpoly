@@ -1,3 +1,21 @@
+/*
+    Copyright 2007-2013 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
@@ -6,11 +24,6 @@
 #include "ff.h"
 #include "ffpolyalloc.h"
 #include "cstd.h"
-
-/*
-    Copyright 2007-2013 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 ff_t _ff_t1;
 ff_t _ff_p;
@@ -51,8 +64,6 @@ ff_t *_ff_mont_itab = __ff_mont_itab;       // my be repointed to mange multiple
 ff_t _ff_mont_R;
 ff_t _ff_mont_R2;
 unsigned long _ff_mont_pni;
-
-
 void ff_montgomery_setup (int ring);
 
 void ff_ext_setup(void);
@@ -118,8 +129,6 @@ void ff_setup_ui (unsigned long p)
 // macros to handle setting ff_t types in raw mode -- needed to handle multiples of p and montgomery values
 #define _ff_raw_set_mpz(z,X)        ((z) = mpz_get_ui(X))
 #define _ff_raw_get_mpz(Z,x)        (mpz_set_ui(Z,x),Z)
-
-
 #if FF_MONTGOMERY
 
 void ff_montgomery_setup (int ring)
@@ -640,8 +649,6 @@ int ff_precompute_exp_chain (int chain[FF_MAX_CHAIN_LEN], unsigned long e)
 //printf("Verified chain for e=%ld (p=%ld)\n", e, _ff_p);
     return k;
 }
-
-
 void ff_exp_chain (ff_t o[1], ff_t a[1], int chain[], int len)
 {
     register int i, j;
@@ -747,8 +754,6 @@ int _ff_fast_fourth_root (ff_t a[1], ff_t x[1]) // _ff_p must be 3 mod 4, not ve
     ff_square(t,*a); ff_square(t,t);
     return _ff_equal(s,t);
 }
-
-
 /*
     For p=11 mod 12, we may compute y=x^{1/6} as x^{(p+1)/4 * (2p-1)/3} since (p+1)/4 * (2p-1)/3 = 1/6 mod p-1
     This yields y^6 = x^{(p+1)/2 * (2p-1)} = x^{((p-1)/2+1) * 1} = +/- x
@@ -801,8 +806,6 @@ int _ff_fast_eighth_root (ff_t a[1], ff_t x[1])
     ff_square(t,*a); ff_square(t,t); ff_square(t,t);
     return _ff_equal(s,t);
 }
-
-
 /*
     For p=3 mod 4, we may compute y=x^{1/16} as x^{(p+1)^4/256} since (p+1)^4/256 = 2^4/256 = 1/16 mod p-1.
     This yields y^16 = x^{(p+1)^4/16} = x^{(p-1)/2+1}^4 = x^{((p-1)/2)^4 + 4*((p-1)/2)^3 + 6*((p-1)/2)^2 +4*(p-1)/2 + 1} = +/- x, 
@@ -829,8 +832,6 @@ int _ff_fast_sixteenth_root (ff_t a[1], ff_t x[1])
     ff_square(t,*a); ff_square(t,t); ff_square(t,t);
     return _ff_equal(s,t);
 }
-
-
 void ff_setup_fifth(void)
 {
     register unsigned long x;
@@ -848,8 +849,6 @@ void ff_setup_fifth(void)
     }
     _ff_set_ui(_ff_fifth,x);
 }
-
-
 void ff_setup_seventh(void)
 {
     register unsigned long x;
@@ -1005,8 +1004,6 @@ void ff_complementary_products (ff_t o[], ff_t a[], int n)
     if ( n&1 ) { _ff_set(o[n-1],pparent[0]);  pparent--;  pchild = a+n-3;  echild = o+n-3; } else { pchild = a+n-2;  echild = o+n-2; }
     for ( ; pchild >= a ; pparent--, pchild -= 2, echild -=2 ) { _ff_mult(echild[1],pparent[0],pchild[0]); _ff_mult(echild[0],pparent[0],pchild[1]); }
 }
-
-
 // implementation of Cornacchia's algorithm to find positive (x,y) s.t. x^2+dy^2 = p  (d>0) using Cohen, Alg. 1.5.2
 // returns 0 if no solution exists.
 int ff_cornacchia (long *x, long *y, long d)
@@ -1030,8 +1027,6 @@ int ff_cornacchia (long *x, long *y, long d)
     *x=b;
     return 1;
 }
-
-
 int _qsort_ff_ui_cmp (const void *a, const void *b)
 {
     unsigned long x, y;
@@ -1073,4 +1068,3 @@ void ff_matrix_destructive_determinant (ff_t A[], int n)
     _ff_invert(x,x);
     _ff_mult(A[0],x,A[n*n-1]);
 }
-

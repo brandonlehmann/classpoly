@@ -1,6 +1,3 @@
-#ifndef _PHI_POLY_INCLUDE_
-#define _PHI_POLY_INCLUDE_
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -8,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,6 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _PHI_POLY_INCLUDE_
+#define _PHI_POLY_INCLUDE_
 
 /*
 	The module phi_poly contains functions that use precomputed modular polynomials Phi_m(X,Y) for reasonably small values of m < PHI_MAX_M,
@@ -117,8 +116,6 @@ static inline int phi_degree (int m)
 static inline int phi_count (int m) { int d;  d = phi_degree(m); return  (d*(d+1))/2; }		// upper bound on the number of distinct coefficients of Phi_m
 static inline int phi_offset (long j, long m, long d, long s)								// returns the least i for which X^i*Y^j has a potentially nonzero coeff in Phi_m of degree d with sparseness factor s
 	{ return (int)((d+(s-1)*m*j)%s); }												// note that we force conversion to longs to avoid worrying about overflow in the multiplication
-
-
 static inline void phi_exps(int *i, int *j, int k)
 {
 	register int m;
@@ -149,8 +146,6 @@ void phi_poly_init (phi_poly_t phi, int m, int inv);
 void phi_poly_clear (phi_poly_t phi);
 int phi_poly_load (phi_poly_t phi, int m, int inv);
 int phi_poly_create (phi_poly_t phi, int m, int inv);
-
-
 static inline void ff_phi_poly_reduce (phi_poly_t phi)
 {
 	register ff_t *c;
@@ -195,6 +190,4 @@ static inline void ff_phi_poly_eval_derivative (ff_t f[], phi_poly_t phi, ff_t x
 		ff_dot_product(f+i,phi->w1,phi->w2,phi->d);
 	}
 }
-
-
 #endif

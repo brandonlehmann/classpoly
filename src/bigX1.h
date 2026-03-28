@@ -1,6 +1,3 @@
-#ifndef _BIGX1_INCLUDE_
-#define _BIGX1_INCLUDE_
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -8,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,6 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _BIGX1_INCLUDE_
+#define _BIGX1_INCLUDE_
 
 #define BIGX1_MAX_YDEG	15
 
@@ -133,8 +132,6 @@ static inline int X29_eval(ff_t f[], ff_t x)
 	_ff_set_one(f[X29_YDEG]);
 	return X29_YDEG;
 }
-
-
 /*
 X30:=y^8 - (2*x^3 + 4*x^2 + x + 5)*y^7 + (x^6 + 4*x^5 + 6*x^4 + 9*x^3 + 14*x^2 + 10)*y^6 - (x^7 + 4*x^6 + 9*x^5 + 10*x^4 + 4*x^3 + 15*x^2 - 10*x + 10)*y^5
 		+ (x^8 + 4*x^7 + 4*x^6 - 5*x^4 - 20*x^3 + 5*x^2 - 20*x + 5)*y^4 + (3*x^7 + 11*x^6 + 15*x^5 + 9*x^4 + 18*x^3 - 9*x^2 + 14*x - 1)*y^3
@@ -216,8 +213,6 @@ static inline int X31_eval(ff_t f[], ff_t x)
 	_ff_set_one(f[X31_YDEG]);
 	return X31_YDEG;
 }
-
-
 /*
 X32:=y^10 + (x^3 + 5*x^2 + 5*x - 5)*y^9 + (4*x^5 + 15*x^4 + 15*x^3 - 16*x^2 - 25*x + 10)*y^8 + (6*x^7 + 26*x^6 + 23*x^5 - 45*x^4 - 88*x^3 + 50*x - 10)*y^7
 		   + (4*x^9 + 23*x^8 + 26*x^7 - 70*x^6 - 165*x^5 - 33*x^4 + 150*x^3 + 55*x^2 - 50*x + 5)*y^6

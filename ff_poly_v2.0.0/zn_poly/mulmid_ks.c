@@ -1,28 +1,22 @@
 /*
-   mulmid_ks.c:  polynomial middle products by Kronecker substitution
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "zn_poly_internal.h"
-
-
 /*
    In the routines below, we denote by f1(x) and f2(x) the input polynomials
    op1[0, n1) and op2[0, n2), and by h(x) their product in Z[x].
@@ -70,8 +64,6 @@
    diagonal() function accomplishes this.
 
 */
-
-
 
 /*
    Middle product using Kronecker substitution at 2^b.
@@ -128,8 +120,6 @@ zn_array_mulmid_KS1 (ulong* res,
    ZNP_FASTFREE (z);
    ZNP_FASTFREE (limbs);
 }
-
-
 
 /*
    Middle product using Kronecker substitution at 2^b and -2^b.
@@ -295,8 +285,6 @@ zn_array_mulmid_KS2 (ulong* res,
    ZNP_FASTFREE (limbs);
 }
 
-
-
 /*
    Computes the sum
    
@@ -367,8 +355,6 @@ diagonal_sum (ulong* res, const ulong* op1, const ulong* op2,
                   : zn_mod_reduce3 (sum2, sum1, sum0, mod);
    }
 }
-
-
 /*
    Inplace subtract 2^i*x from res[0, n).
    x is an array of w ulongs, where 1 <= w <= 3.
@@ -402,8 +388,6 @@ subtract_ulongs (mp_limb_t* res, size_t n, size_t i, ulong* x, unsigned w)
 #error Not nails-safe yet
 #endif
 }
-
-
 /*
    Middle product using Kronecker substitution at 2^b and 2^(-b).
 
@@ -522,8 +506,6 @@ zn_array_mulmid_KS3 (ulong* res,
    ZNP_FASTFREE (z);
    ZNP_FASTFREE (limbs);
 }
-
-
 
 /*
    Middle product using Kronecker substitution at 2^b, -2^b, 2^(-b)
@@ -846,6 +828,4 @@ zn_array_mulmid_KS4 (ulong* res,
    ZNP_FASTFREE (z);
    ZNP_FASTFREE (limbs);
 }
-
-
 // end of file ****************************************************************

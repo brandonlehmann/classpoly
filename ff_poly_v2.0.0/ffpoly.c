@@ -1,3 +1,21 @@
+/*
+    Copyright 2008-2019 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <assert.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -14,12 +32,6 @@
 #include "ffpolybig.h"
 #include "polyparse.h"
 #include "cstd.h"
-
-/*
-    Copyright 2008-2019 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
-
 
 // find a rational point (x0:y0:1) on conic c = c0*x^2 + c1*x*y + c2*x*z + c3*y^2 + c4*y*z + c5*z^2 (monomial lex order)
 void ff_poly_conic_rational_point (ff_t *x0, ff_t *y0, ff_t c[6])
@@ -125,8 +137,6 @@ void ff_poly_plane_quartic_translate (ff_t cc[15], ff_t c[15], ff_t x0, ff_t y0)
         // cc6 = c6
     }
 }
-
-
 // compute f(t) = q(x(t),y(t),z(t)) where x,y,z are quadratic polys in t (possibly with lc zero), and c(x,y,z) is a plane quartic
 int ff_poly_plane_quartic_quadratic_eval (ff_t f[9], ff_t c[15], ff_t x[3], ff_t y[3], ff_t z[3])
 {
@@ -217,8 +227,6 @@ void ff_poly_short_weierstrass (ff_t f[4], ff_t W[5])
 //printf ("x^3+%ld*x+%ld\n", _ff_get_ui(f[1]), _ff_get_ui(f[0]));
     // 8M+2S
 }   
-
-
 int ff_poly_parse (ff_t f[], int maxd, char *expr)
 {
     int i, d;
@@ -228,8 +236,6 @@ int ff_poly_parse (ff_t f[], int maxd, char *expr)
     for ( ; i <= maxd ; i++ ) _ff_set_zero (f[i]);      // pad out with zeroes 
     return d;
 }
-
-
 void ff_poly_print (ff_t f[], int d_f)
 {
     char buf[65536];
@@ -295,8 +301,6 @@ void ff_poly_twist (ff_t g[], ff_t f[], int d)
     }
     return;
 }
-
-
 // Naive Euclidean division of a by b, computes q and r such that a = qb+r with deg(r) < deg(b).  Overlap is ok.  Does not require any inversions if b is monic
 // pd_q, and r optional (if r is specified pd_r must be specified)
 void ff_poly_div (ff_t q[], int *pd_q, ff_t r[], int *pd_r, ff_t a[], int d_a, ff_t b[], int d_b)
@@ -510,8 +514,6 @@ done:
     ff_poly_stack_pop(s);
     return *pd_g;
 }
-
-
 // [CCANT] algorithm 3.2.2, makes output monic.  None of the polynomials can overlap.  g may be null.  degree of gcd is returned in any case
 // computes u, v, and g such that g=gcd(a,b) = u*a+v*b
 int ff_poly_gcdext (ff_t g[], int *pd_g, ff_t u[], int *pd_u, ff_t v[], int *pd_v, ff_t a[], int d_a, ff_t b[], int d_b)
@@ -579,8 +581,6 @@ int ff_poly_inv_mod (ff_t h[], int *pd_h, ff_t f[], int d_f, ff_t g[], int d_g)
     ff_poly_stack_pop (v);
     return ( n ? 0 : 1);
 }
-
-
 // g = a^e mod f, requires deg(a) < deg(f)
 void ff_poly_pow_mod (ff_t g[], int *pd_g, ff_t a[], int d_a, unsigned long e, ff_t f[], int d_f)
 {
@@ -655,8 +655,6 @@ void ff_poly_pow_modulus_mpz (ff_t g[], int *pd_g, ff_t a[], int d_a, mpz_t e,  
     ff_poly_copy (g, pd_g, h, d_h);
     ff_poly_stack_pop (h);
 }
-
-
 // attempts to compute h = sqrt(f) mod g using slow Tonelli-Shanks, where g is assumed to be irreducible and deg(f) < deg(g)
 // h and f may overlap
 int ff_poly_sqrt_modulus (ff_t h[], int *pd_h, ff_t f[], int d_f, ff_poly_modulus_t mod)
@@ -724,8 +722,6 @@ int ff_poly_sqrt_mod (ff_t h[], int *pd_h, ff_t f[], int d_f, ff_t g[], int d_g)
     ff_poly_mod_clear (mod);
     return ret;
 }
-
-
 // computes x^n mod f for monic f (should be depressed if degree is small)
 void ff_poly_xn_mod (ff_t g[], int *pd_g, unsigned long e, ff_t f[], int d_f)
 {
@@ -833,8 +829,6 @@ void ff_poly_xn_mod_mpz (ff_t g[], int *pd_g, mpz_t e, ff_t f[], int d_f)
     ff_poly_xn_modulus_mpz (g, pd_g, e,mod);
     ff_poly_mod_clear(mod);
 }
-
-
 // computes (x+a)^n mod f for depressed monic f of deg > 1
 void ff_poly_xpan_mod (ff_t g[], int *pd_g, ff_t a, unsigned long e, ff_t f[], int d_f)
 {
@@ -972,8 +966,6 @@ int ff_poly_factorization_pattern_and_root (int counts[], ff_t f[], int d_f, ff_
     if ( d_g ) { if ( counts ) counts[d_g]++; n++; }
     return n;
 }
-
-
 // completely factors a square-free monic polynomial f that is the product of d/k irreducible polynomials of degree k, using Cantor-Zassenhaus (Algs 14.8 and 14.10 in GG)
 // r must have space for d=(d/k)*k coefficients:  a concatenated list of d/k implicitly monic polys of degree k will be stored in w, each using just d/k coeffs (monic leading coeff is omitted).
 // r and f cannot overlap
@@ -1009,8 +1001,6 @@ void ff_poly_equal_degree_factorization (ff_t r[], ff_t f[], int d, int k)
     ff_poly_equal_degree_factorization (r+d-d_g, g, d_g, k);
     ff_poly_stack_pop (g);
 }
-
-
 // completely factors a monic polynomial f, using Cantor-Zassenhaus (Algs 14.13 in GG)
 // r must have space for d_f coefficients:  a concatenated list of implicitly monic polys f_1,...,f_t will be written to r, with n[i] set to deg f_i.
 // r and f cannot overlap.  the number of factors t is returned
@@ -1058,8 +1048,6 @@ int ff_poly_factors (ff_t r[], int n[], ff_t f[], int d)
 //printf ("Found %d factors of degrees: ", t);  for ( i = 0 ; i < t ; i++ ) printf ("%d ", n[i]); puts ("");
     return t;
 }
-
-
 int ff_poly_distinct_roots (ff_t r[], ff_t f[], int d_f)                        //  only returns distinct roots, f need not be monic
 {
     ff_t w[d_f+1];
@@ -1241,8 +1229,6 @@ int ff_poly_count_distinct_roots (ff_t f[], int d_f)
     ff_poly_stack_pop (g);
     return d_g;
 }
-
-
 // returns the total number of Fp-roots of f, with multiplicity.
 int ff_poly_count_roots (ff_t f[], int d_f)
 {
@@ -1269,8 +1255,6 @@ int ff_poly_count_roots (ff_t f[], int d_f)
     ff_poly_stack_pop (g);
     return n;
 }
-
-
 int ff_poly_square_free_part (ff_t g[], int *pd_g, ff_t f[], int d_f)
 {
     ff_t *h, *s, *t, *w, k;
@@ -1485,8 +1469,6 @@ int ff_poly_squarefree (ff_t f[], int deg)
     ff_poly_stack_pop(df);
     return b;
 }
-
-
 void ff_poly_disc (ff_t D[1], ff_t f[], int d)
 {
     ff_t *df, *M, t, w;
@@ -1538,8 +1520,6 @@ void ff_poly_resultant (ff_t D[1], ff_t f[], int df, ff_t g[], int dg)
     _ff_set(D[0],M[0]);
     ff_poly_stack_pop(M);
 }
-
-
 /*
     Given monic f(x) of degree d, computes linear translation g(x)=(x-f[d-1]/d) which will be a monic poly with d-1 coefficient zero.
     The parameter s is optional, if specified it will be set to f[d-1]/d so that g(x)=f(x-s) (and g(x+s)=f(x)).  Replaces f by g.
@@ -1560,8 +1540,6 @@ void _ff_poly_depress_monic_inplace (ff_t s[1], ff_t f[], int d_f)
         _ff_addto(f[j-1],c);
     }
 }
-
-
 /*
     For monic f, substitute x <- (x - f_{d-1}/[d*f_d]) to make f_{d-1} term zero if necessary
     Returns 1 if poly modified, 0 if not
@@ -1601,8 +1579,6 @@ int mpz_poly_depress_monic_inplace (mpz_t f[], int d)
 
     return 1;
 }
-
-
 // uses recursive divide-and conquer algorithm
 void ff_poly_from_roots (ff_t f[], ff_t r[], int d)
 {
@@ -1615,8 +1591,6 @@ void ff_poly_from_roots (ff_t f[], ff_t r[], int d)
     ff_poly_mult(f,&df,g,dg,h,dh);
     ff_poly_stack_pop(g);
 }
-
-
 /*
     Use hardwired fast schoolbook for multiplying small polys.
     Uses ff_poly_mult_big if we are above the crossover defined by FF_POLY_MULT_SMALL_DEGREE
@@ -1669,8 +1643,6 @@ void ff_poly_mult (ff_t h[], int *pd_h, ff_t f[], int d_f, ff_t g[], int d_g)
     if ( pd_h ) *pd_h = ff_poly_degree (y,d_f+d_g);
     if ( y != h ) ff_poly_copy (h, 0, y, d_f+d_g);  // copy everything to make sure we zero pad to d_f+d_g
 }
-
-
 /*
     Compute the inverse of f mod x^n using Algorithm 9.3 in von zur Gathen & Gerhard.
     Incorporates optimization to efficiently treat n not a power of 2.
@@ -1912,4 +1884,3 @@ void ff_poly_translate (ff_t g[], ff_t f[], int d, ff_t c)
     using the initial condition f(0)=0.  Based on the algorithm of Brent & Kung in Section 2.3 of BSMS2008
     f can alias any of the inputs.
 */
-

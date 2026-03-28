@@ -1,29 +1,22 @@
 /*
-   ks_support.c:  support routines for algorithms based on Kronecker
-                  substitution
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "zn_poly_internal.h"
-
-
 void
 array_reduce (ulong* res, ptrdiff_t s, const ulong* op, size_t n, unsigned w,
               int redc, const zn_mod_t mod)
@@ -71,8 +64,6 @@ array_reduce (ulong* res, ptrdiff_t s, const ulong* op, size_t n, unsigned w,
       }
    }
 }
-
-
 
 /*
    Same as zn_array_recover_reduce(), but requires 0 < 2 * b <= ULONG_BITS
@@ -141,8 +132,6 @@ zn_array_recover_reduce1 (ulong* res, ptrdiff_t s, const ulong* op1,
       }
    }
 }
-
-
 /*
    Same as zn_array_recover_reduce(), but requires
    ULONG_BITS < 2 * b < 2*ULONG_BITS
@@ -215,8 +204,6 @@ zn_array_recover_reduce2 (ulong* res, ptrdiff_t s, const ulong* op1,
       }
    }
 }
-
-
 /*
    Same as zn_array_recover_reduce(), but requires b == ULONG_BITS
 */
@@ -284,8 +271,6 @@ zn_array_recover_reduce2b (ulong* res, ptrdiff_t s, const ulong* op1,
       }
    }
 }
-
-
 /*
    Same as zn_array_recover_reduce(), but requires
    2 * ULONG_BITS < 2 * b <= 3 * ULONG_BITS.
@@ -380,8 +365,6 @@ zn_array_recover_reduce3 (ulong* res, ptrdiff_t s, const ulong* op1,
       }
    }
 }
-
-
 /*
    Dispatches to one of the above routines depending on b.
 */
@@ -401,6 +384,4 @@ zn_array_recover_reduce (ulong* res, ptrdiff_t s, const ulong* op1,
    else
       zn_array_recover_reduce3 (res, s, op1, op2, n, b, redc, mod);
 }
-
-
 // end of file ****************************************************************

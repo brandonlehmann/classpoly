@@ -1,10 +1,23 @@
-#ifndef _FF_INCLUDE_
-#define _FF_INCLUDE_
-
 /*
     Copyright 2007-2017 Andrew V. Sutherland
-    See LICENSE file for license details.
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FF_INCLUDE_
+#define _FF_INCLUDE_
 
 #include <assert.h>
 #include <math.h>
@@ -67,11 +80,7 @@ extern int _ff_p1mod3;
 
 extern int _ff_cbrt_setup;
 extern ff_t _ff_cbrt_unity;             // MUST CALL ff_cbrt_setup() or ff_cbrt() to initialize.  Set to 1 if p=2mod3
-
-
 void ff_setup_ui (unsigned long p);     // DOES NOT CHECK PRIMALITY
-
-
 // WARNING - several of the macros below are decidedly unsafe.  In general, if it starts with an underscore,
 // don't use side effects, and be aware that many can't be used in expressions.
 // These could be converted to inline functions, but many involve assignments and would require passing
@@ -98,8 +107,6 @@ void ff_setup_ui (unsigned long p);     // DOES NOT CHECK PRIMALITY
 #define _ff_set_i(x,z)              if ( (z) < 0 ) { _ff_set_ui(x,-(z));  ff_negate(x); } else { _ff_set_ui(x,z); }
 #define _ff_set_si(x,z)             _ff_set_i(x,z)
 #define _ff_set_mpz(x,Z)            _ff_set_ui(x, mpz_fdiv_ui(Z,_ff_p))
-
-
 // Basic operations and 0/1 - IMPORTANT: the binary value 1 is not the field identity in a Montgomery representation (but 0 is zero)
 #define _ff_set_null(z)             ((z) =_ff_p)        // sets z to a value that does not represent an element of F_p (this works in Montgomery rep also)
 #define _ff_null(z)                 ((z) == _ff_p)
@@ -437,8 +444,6 @@ typedef unsigned int uint128_t __attribute__((mode(TI)));
 #define _ff_qsubfrom(z,x)               _ff_subfrom(z,x);
 #define _ff_qadd(z,x,y)             _ff_add(z,x,y);
 #define _ff_qaddto(z,x)             _ff_addto(z,x);
-
-
 unsigned long ff_ui_inverse (unsigned long a, unsigned long m);
 void ff_exp_ui (ff_t o[1], ff_t a[1], unsigned long e);
 int ff_precompute_exp_chain (int chain[FF_MAX_CHAIN_LEN], unsigned long e);
@@ -481,8 +486,6 @@ static inline unsigned long ff_randomb_ui (int b)  { ff_randinit(); return gmp_u
 static inline void ff_random (ff_t *x) { *x = ff_randomm_ui (_ff_p); }      // note, with Montgomery representation, x is *not* set to the integer returned by ff_random_ui, but it is still a random element of F_p
 #define _ff_random_nz(x)                ((x) = 1+ff_randomm_ui(_ff_p-1))
 static inline void ff_random_nz (ff_t *x) { *x = 1+ff_randomm_ui (_ff_p-1); }
-
-
 void ff_organize (ff_t a[], int n);                 // organize sorts the array into an order convenient for searching.  This is *not* the ordering 1 < 1+1 < 1+1+1 < ...
 int ff_find (ff_t x, ff_t a[], int n);              // returns the index of the element x in the organized array a[] or -1 if not found.
 
@@ -510,8 +513,6 @@ static  inline unsigned  ff_montgomery1_mult (unsigned  x, unsigned  y)
     return z;
 }
 #endif
-
-
 
 #if FF_MONTGOMERY
 
@@ -559,8 +560,6 @@ static inline void ff_dot_product (ff_t z[1], ff_t x[], ff_t y[], int n)
     }
     _ff_add(z[0],t0,t1);
 }
-
-
 // computes x[0]*y[n-1]+x[1]*y[n-2]+...+x[n-2]*y[1]+x[n-1]*y[0]
 static inline void ff_conv (ff_t z[1], ff_t x[], ff_t y[], int n)
 {
@@ -603,8 +602,6 @@ static inline void ff_conv (ff_t z[1], ff_t x[], ff_t y[], int n)
     }
     _ff_add(z[0],t0,t1);
 }
-
-
 // computes x[0]*x[n-1]+x[1]*x[n-2]+...+x[n-2]*x[1]+x[n-1]*x[0]
 // this is significantly slower than using the hardwired versions for n < 16
 static inline void ff_unary_conv (ff_t z[1], ff_t x[], int n)
@@ -664,8 +661,6 @@ static inline void ff_unary_conv (ff_t z[1], ff_t x[], int n)
     }
     _ff_add(z[0],t0,t1);
 }
-
-
 // assumes n > 16
 static inline void ff_unary_conv_big (ff_t z[1], ff_t x[], int n)
 {
@@ -772,8 +767,6 @@ static inline void ff_least_sextic_nonresidue (ff_t z[1])
         if ( ! _ff_one(t) ) return;
     }
 }
-
-
 static inline void ff_exp_small (ff_t o[1], ff_t a[1], int e)
 {
     register ff_t t0,t1;

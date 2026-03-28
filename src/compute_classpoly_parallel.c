@@ -1,3 +1,22 @@
+/*
+    Copyright 2012 Andrew V. Sutherland
+    Copyright 2026 Brandon Lehmann
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,18 +37,6 @@
 #include "classpoly_inv.h"
 #include "crt.h"
 #include "cstd.h"
-
-/*
-    Parallel classpoly computation via fork().
-
-    Each child process gets its own copy of all mutable state (ff_poly globals,
-    Phi_ff cache, etc.) via copy-on-write. Children accumulate ECRT partial sums
-    into per-worker shared memory buffers. The parent merges all buffers after
-    children exit, then finalizes and writes output.
-
-    Copyright 2012 Andrew V. Sutherland (original serial code)
-    Parallel wrapper 2026
-*/
 
 #define DELTA_PERCENT		0.05
 #define HEIGHT_MARGIN		256

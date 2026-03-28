@@ -1,6 +1,3 @@
-#ifndef _VELU_INCLUDE_
-#define _VELU_INCLUDE_
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -8,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,6 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _VELU_INCLUDE_
+#define _VELU_INCLUDE_
 
 #define VELU_MAX_ELL		131072
 

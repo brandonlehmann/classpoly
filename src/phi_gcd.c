@@ -1,13 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include "ff_poly.h"
-#include "ff_poly/ffpolysmall.h"
-#include "phi_poly.h"
-#include "phi_eval.h"
-#include "phi_gcd.h"
-#include "cstd.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -15,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,6 +15,16 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "ff_poly.h"
+#include "ff_poly/ffpolysmall.h"
+#include "phi_poly.h"
+#include "phi_eval.h"
+#include "phi_gcd.h"
+#include "cstd.h"
 
 int  phi_surface_gcd_cycle_7_11 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_7, ff_t *phi_11)
 {
@@ -713,8 +712,6 @@ static inline void phi2_s3_qeval_rem (ff_t g[3], ff_t phi2[], ff_t a, ff_t b, ff
 	_ff_sum_2_mults (g[0],bc,bd2,t1,t2);													// g[0]=phi[4]ab^2d^2+bc(b^2c-a^2d)
 	// 11M+2A (9 redc)
 }
-
-
 // computes s^3*g/(x-r/s) assuming g(r/s)=0 for a quartic g (not assumed monic)
 static inline void ff_poly_remove_qroot_4 (ff_t g[5], ff_t r[1], ff_t s[1])
 {
@@ -1071,8 +1068,6 @@ int phi_surface_qgcd_cycle_3_5 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_3, f
 	}
 	return 1;
 }
-
-
 int phi_surface_qgcd_cycle_3_7 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_3, ff_t *phi_7)
 {
 	ff_t f[9], g[5], h[2], d[BATCH_INVERTS+2];
@@ -1220,8 +1215,6 @@ int phi_surface_qgcd_cycle_3_11 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_3, 
 	}
 	return 1;
 }
-
-
 int phi_surface_qgcd_cycle_3_13 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_3, ff_t *phi_13)
 {
 	ff_t f[15], g[5], h[2], d[BATCH_INVERTS+2];
@@ -1321,8 +1314,6 @@ int phi_surface_qgcd_cycle_3_p2 (ff_t r[], ff_t *r2, int n, int p2, int e, ff_t 
 	}
 	return 1;
 }
-
-
 static inline void ff_poly_s24_gcd_linear_8_6 (ff_t h[2], ff_t f[8], ff_t g[7])	// assumes f = x^8+f7x^7+f4x^4+f1x+f0,  g = g6x^6+g5x^5+g1x+g0
 {
 	register ff_t t0, t1, t2, t3, t4, t5, s0, s1, s2, s3, s4, g6, g62, ng0, ng1, ng5, w, w1;
@@ -1375,8 +1366,6 @@ static inline void ff_poly_s12_gcd_linear_8_6 (ff_t h[2], ff_t f[8], ff_t g[7])	
 	ff_poly_gcd_linear_5_4_reg (h,t0,t1,t2,t3,t4,t5,s0,s1,s2,s3,s4);
 	// 72M+48A (37 redc)
 }
-
-
 static inline void ff_poly_s24_gcd_linear_12_6 (ff_t h[2], ff_t f[12], ff_t g[7])	// assumes f = x^12+f11x^11+f9x^9+f7x^7+f5x^5+f3x^3+f1x+f0,  g = g6x^6+g5x^5+g1x+g0
 {
 	register ff_t t0, t1, t2, t3, t4, t5, s0, s1, s2, s3, s4, w, w0, w1, w5, ng0, ng1, g6, g62, g63, g64, g65, g67;
@@ -1716,8 +1705,6 @@ static inline void ff_poly_s12_gcd_linear_20_6 (ff_t h[2], ff_t f[12], ff_t g[7]
 	ff_poly_gcd_linear_5_4_reg (h,t0,t1,t2,t3,t4,t5,s0,s1,s2,s3,s4);
 	// 137M
 }
-
-
 int phi_surface_qgcd_cycle_5_7 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_5, ff_t *phi_7)
 {
 	ff_t f[9], g[7], h[2], d[BATCH_INVERTS+2];
@@ -2229,8 +2216,6 @@ int phi_surface_qgcd_cycle_5_17 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_5, 
 	}
 	return 1;
 }
-
-
 int phi_surface_qgcd_cycle_5_19 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_5, ff_t *phi_19)
 {
 	ff_t f[21], g[7], h[2], d[BATCH_INVERTS+2];
@@ -2362,8 +2347,6 @@ int phi_surface_qgcd_cycle_5_19 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_5, 
 	}
 	return 1;
 }
-
-
 int phi_surface_qgcd_cycle_5_p2 (ff_t r[], ff_t *r2, int n, int p2, int e, ff_t *phi_5, ff_t *phi_p2)
 {
 	ff_t f[PHI_MAX_M+2], g[7], d[BATCH_INVERTS+2], h[2];
@@ -2393,8 +2376,6 @@ int phi_surface_qgcd_cycle_5_p2 (ff_t r[], ff_t *r2, int n, int p2, int e, ff_t 
 	}
 	return 1;
 }
-
-
 /*
 	Enumerates a surface p1-cycle using gcds with Phi_p2, where alpha_p2=alpha_p1^e and |alpha_p1|=n
 	(Here alpha_a denotes the class represented by the pos def reduced primeform <a,b,c>).
@@ -2509,8 +2490,6 @@ dbg_printf ("gcd_path(%d,%d) n=%d, e=%d\n", p1, p2, n, e);
 	}
 }
 
-
-
 /*
 	These functions have been superseded by qgcd_cycle functions that batch inversions
 
@@ -2563,8 +2542,6 @@ void phi_surface_gcd_cycle_3_5 (ff_t r[], int n, int e, ff_t *phi_3, ff_t *phi_5
 		_ff_mult(t0,t1,h1[1]); _ff_mult(t2,t0,h2[0]);  _ff_neg(r[j2],t2);
 	} while ( j2 > j1+1 );
 }
-
-
 static inline void ff_poly_f_mgcd_linear_8_6 (ff_t h[2], ff_t f[8], ff_t g[7])	// assumes f = x^8+f7x^7+f4x^4+f1x+f0,  g = g6x^6+g5x^5+g1x+g0 (this will be true for Phi_7^f(X,j) and s^6*Phi_5^f(X,r/s))
 {
 	register ff_t g5, g52, s0,s1,s2, t0, t1, t2, t3, t4,t5;
@@ -2605,8 +2582,6 @@ static inline void ff_poly_f_mgcd_linear_12_6 (ff_t h[2], ff_t f[12], ff_t g[7])
 	ff_poly_gcd_linear_5_4_reg (h,t0,t1,t2,t3,t4,t5,s0,s1,s2,s3,s4);
 	// 67M+520A (35 redc)
 }
-
-
 static inline void ff_poly_f_mgcd_linear_14_6 (ff_t h[2], ff_t f[14], ff_t g[7])	// assumes f monic with coeff f3,f5,f7,f9,f11=0,  g = x^6+g5x^5+g1x+g0 (this will be true for Phi_13^f(X,j) and Phi_5^f(X,j)
 {
 	register ff_t t0, t1, t2, t3, t4, t5, s0, s1, s2, s3, s4, w, w0, w1, w5, g6;
@@ -2636,8 +2611,6 @@ static inline void ff_poly_f_mgcd_linear_14_6 (ff_t h[2], ff_t f[14], ff_t g[7])
 	ff_poly_gcd_linear_5_4_reg (h,t0,t1,t2,t3,t4,t5,s0,s1,s2,s3,s4);
 	// 67M+52A (35 redc)
 }
-
-
 static inline void ff_poly_f_mgcd_linear_18_6 (ff_t h[2], ff_t f[18], ff_t g[7])	// assumes f monic with coeff f4,f7,f11,f14=0,  g = x^6+g5x^5+g1x+g0 (this will be true for Phi_17^f(X,j) and Phi_5^f(X,j)
 {
 	register ff_t t0, t1, t2, t3, t4, t5, s0, s1, s2, s3, s4, w, w0, w1, w5, g6;
@@ -2671,8 +2644,6 @@ static inline void ff_poly_f_mgcd_linear_18_6 (ff_t h[2], ff_t f[18], ff_t g[7])
 	ff_poly_gcd_linear_5_4_reg (h,t0,t1,t2,t3,t4,t5,s0,s1,s2,s3,s4);
 	// 87M+71A (42 redc)
 }
-
-
 static inline void ff_poly_f_mgcd_linear_20_6 (ff_t h[2], ff_t f[18], ff_t g[7])	// assumes f monic with coeff f5,f10,f15=0,  g = x^6+g5x^5+g1x+g0 (this will be true for Phi_19^f(X,j) and Phi_5^f(X,j)
 {
 	register ff_t t0, t1, t2, t3, t4, t5, s0, s1, s2, s3, s4, w, w0, w1, w5, g6;
@@ -3078,8 +3049,6 @@ int  phi_surface_gcd_cycle_5_13 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_5, 
 	}
 	return 1;
 }
-
-
 int  phi_surface_gcd_cycle_5_17 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_5, ff_t *phi_17)
 {
 	ff_t f[19], g[7], h1[2], h2[2];
@@ -3125,8 +3094,6 @@ int  phi_surface_gcd_cycle_5_17 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_5, 
 	}
 	return 1;
 }
-
-
 int  phi_surface_gcd_cycle_5_19 (ff_t r[], ff_t *r2, int n, int e, ff_t *phi_5, ff_t *phi_19)
 {
 	ff_t f[21], g[7], h1[2], h2[2];

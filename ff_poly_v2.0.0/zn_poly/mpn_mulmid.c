@@ -1,29 +1,23 @@
 /*
-   mpn_mulmid.c:  middle products of integers
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "zn_poly_internal.h"
 #include <string.h>
-
-
 void
 ZNP_mpn_smp_basecase (mp_limb_t* res,
                       const mp_limb_t* op1, size_t n1,
@@ -57,8 +51,6 @@ ZNP_mpn_smp_basecase (mp_limb_t* res,
 #error Not nails-safe yet
 #endif
 }
-
-
 /*
    Let x = op1[0, 2*n-1),
        y = op2[0, n),
@@ -146,8 +138,6 @@ bilinear2_sub_fixup (mp_limb_t* hi, mp_limb_t* lo, mp_limb_t* res,
 #error Not nails-safe yet
 #endif
 }
-
-
 /*
    Let x = op1[0, 2*n-1),
        y = op2[0, 2*n-1),
@@ -231,8 +221,6 @@ bilinear1_add_fixup (mp_limb_t* hi, mp_limb_t* lo, mp_limb_t* res,
 #error Not nails-safe yet
 #endif
 }
-
-
 
 void
 ZNP_mpn_smp_kara (mp_limb_t* res, const mp_limb_t* op1, const mp_limb_t* op2,
@@ -402,8 +390,6 @@ ZNP_mpn_smp_kara (mp_limb_t* res, const mp_limb_t* op1, const mp_limb_t* op2,
 #error Not nails-safe yet
 #endif
 }
-
-
 void
 ZNP_mpn_smp_n (mp_limb_t* res, const mp_limb_t* op1, const mp_limb_t* op2,
                size_t n)
@@ -413,8 +399,6 @@ ZNP_mpn_smp_n (mp_limb_t* res, const mp_limb_t* op1, const mp_limb_t* op2,
    else
       ZNP_mpn_smp_kara (res, op1, op2, n);
 }
-
-
 void
 ZNP_mpn_smp (mp_limb_t* res,
              const mp_limb_t* op1, size_t n1,
@@ -524,8 +508,6 @@ ZNP_mpn_smp (mp_limb_t* res,
       }
    }
 }
-
-
 void
 ZNP_mpn_mulmid_fallback (mp_limb_t* res,
                          const mp_limb_t* op1, size_t n1,
@@ -539,8 +521,6 @@ ZNP_mpn_mulmid_fallback (mp_limb_t* res,
    memcpy (res + 2, temp + n2 + 1, sizeof(mp_limb_t) * (n1 - n2 - 1));
    ZNP_FASTFREE (temp);
 }
-
-
 void
 ZNP_mpn_mulmid (mp_limb_t* res, const mp_limb_t* op1, size_t n1,
                 const mp_limb_t* op2, size_t n2)
@@ -570,6 +550,4 @@ ZNP_mpn_mulmid (mp_limb_t* res, const mp_limb_t* op1, size_t n1,
 #error Not nails-safe yet
 #endif
 }
-
-
 // end of file ****************************************************************

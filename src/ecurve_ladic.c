@@ -1,3 +1,21 @@
+/*
+    Copyright (c) 2010-2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -5,11 +23,6 @@
 #include "ff_poly.h"
 #include "ff_poly/ffpolysmall.h"
 #include "ecurve.h"
-
-/*
-    Copyright (c) 2010-2012 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 static ff_t phi3[10];			// coefficients ab of X^aY^b terms are stored in order as 00,10,11,20,21,22,30,31,32,33, but we know 00 coeff is zero and 33 coeff is -1
 static ff_t phi3_p;
@@ -304,8 +317,6 @@ int ecurve_halve (ff_t *x, ff_t *y, ff_t f[4])
 	_ff_set(*x,t2); _ff_set(*y,*g);
 	return 1;
 }
-
-
 /*
 	Given the *unique* root x0 of f(x)=x^3+Ax+B and the x-coord x1 of a point P1 on y^2=f(x) (x1!=x0),
 	verifies that x1 can be halved exactly k times (i.e. P1=2^k*P for some P, but P1=2^{k+1}Q does not hold for any Q).
@@ -374,8 +385,6 @@ int ecurve_halve_x (ff_t x2[1], ff_t x1, ff_t f[4])
 	return 1;
 }
 
-
-
 /*
 	Returns the size of the 2-Sylow subgroup of the elliptic curve y^2=f(x)=x^3+f1x+f0, provided it is cyclic.
 	Otherwise the return value is -1, which indicates that Z/2Z x Z/2Z is a subgroup (and the group order is divisible by 4)
@@ -395,8 +404,6 @@ int ecurve_2Sylow (ff_t f[4])
 	for ( n = 2 ; ecurve_halve (&x, &y, f) ; n<<= 1 );
 	return n;
 }
-
-
 /*
 	Computes the order and rank of the 4-torsion subgroup of the elliptic curve y^2=f(x)=x^3+f1x+f0. 
 	Set o to the order and returns d to indicate the group Z/dZ x Z/eZ where d*e = o, d divides e (and may be 1)

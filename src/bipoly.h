@@ -1,9 +1,3 @@
-#ifndef _BIPOLY_INCLUDE_
-#define _BIPOLY_INCLUDE_
-
-#include <gmp.h>
-#include "ff_poly.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -11,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _BIPOLY_INCLUDE_
+#define _BIPOLY_INCLUDE_
+
+#include <gmp.h>
+#include "ff_poly.h"
 
 struct mpz_bipt_struct {
 	int e[2];
@@ -41,8 +40,6 @@ struct str_bipt_struct {
 typedef struct mpz_bipt_struct bipoly_mpz_t;
 typedef struct ff_bipt_struct bipoly_ff_t;
 typedef struct str_bipt_struct bipoly_str_t;
-
-
 typedef struct bipoly_struct {
 	bipoly_mpz_t *mpz_terms;
 	bipoly_ff_t *ff_terms;

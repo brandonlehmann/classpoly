@@ -1,8 +1,3 @@
-#ifndef _FINDCURVE_INCLUDE_
-#define _FINDCURVE_INCLUDE_
-
-#include "ff_poly.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -10,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _FINDCURVE_INCLUDE_
+#define _FINDCURVE_INCLUDE_
+
+#include "ff_poly.h"
 
 #define FINDCURVE_NOFILTER		2
 #define FINDCURVE_FILTER_JCUBE	4

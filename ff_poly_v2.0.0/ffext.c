@@ -1,3 +1,21 @@
+/*
+    Copyright 2008-2012 Andrew V. Sutherland
+
+    This file is part of ff_poly.
+
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "ff.h"
@@ -6,11 +24,6 @@
 #include "ffpolysmall.h"
 #include "ffpolyalloc.h"
 #include "cstd.h"
-
-/*
-    Copyright 2008-2012 Andrew V. Sutherland
-    See LICENSE file for license details.
-*/
 
 ff_t _ff3_c;
 ff_t _ff3_f[4];                                     // irred minimal poly of z - polynomial basis {1,z,z^2}  of the form x^3-s or x^3-x-s
@@ -72,8 +85,6 @@ void ff2_nonresidue (ff_t o[2])
         _ff_set (o[0], _ff2_nr_a);
     }
 }
-
-
 /*
     sqrt algorithm over F_p^2, reduces problem to two sqrts in F_p
 
@@ -194,8 +205,6 @@ void _ff2_setup_cbrt(void)
     ff2_set (_ff2_cbrt_unity,_ff2_3Sylow_tab[_ff_p3_e-1][0]);
 //printf ("cube root of unity is %ldz+%ld, 2g=%d\n", _ff_get_ui(_ff2_cbrt_unity[1]), _ff_get_ui(_ff2_cbrt_unity[0]), _ff_get_ui(_ff_2g));
 }
-
-
 // computes a^{-1/3} for a in the 3-Sylow subgroup, returns 0 if not a quadratic residue
 // uses precomputed table of 2e powers of the 3-Sylow generator to reduce running time by a factor of 2 over standard Tonelli-Shanks (still O(e^2)).
 int ff2_3Sylow_invcbrt (ff_t o[2], ff_t a[2])
@@ -270,8 +279,6 @@ void _ff3_setup (void)
     // Note that the norm of z is the product of the roots of f, which is -f[0] = __ff3_c
     // the trace of z is -f[2] = 0, trace of z^2 is 0 for p=1mod3 and 2 o.w.
 }
-
-
 // multiplies modulo (z^3-rz-s), overlap ok (duplicates code in ff3_mult, then adjusts for r)
 static inline void _ff3_mult_mod_rs (ff_t o[3], ff_t a[3], ff_t b[3], ff_t r, ff_t s)
 {
@@ -331,8 +338,6 @@ void ff2_poly_eval_ff (ff_t o[2], ff_t f[], int d, ff_t x[2])
     ff2_set(o,y);
     return;
 }
-
-
 // compute o=f(x) where x is in Fp^3 and f is in Fp[x]
 void ff3_poly_eval_ff (ff_t o[3], ff_t f[], int d, ff_t x[3])
 {
@@ -347,8 +352,6 @@ void ff3_poly_eval_ff (ff_t o[3], ff_t f[], int d, ff_t x[3])
     ff3_set(o,y);
     return;
 }
-
-
 // compute o=f(x) where x is in Fp^2 and f is in Fp^2[x]
 void ff2_poly_eval (ff_t o[2], ff_t f[], int d, ff_t x[2])
 {
@@ -362,8 +365,6 @@ void ff2_poly_eval (ff_t o[2], ff_t f[], int d, ff_t x[2])
     ff2_set(o,y);
     return;
 }
-
-
 // compute o=f(x) where x is in Fp^2 and f is in Fp^2[x]
 void ff3_poly_eval (ff_t o[3], ff_t f[], int d, ff_t x[3])
 {
@@ -377,8 +378,6 @@ void ff3_poly_eval (ff_t o[3], ff_t f[], int d, ff_t x[3])
     ff3_set(o,y);
     return;
 }
-
-
 void ff3_minpoly (ff_t f[4], ff_t a[3])
 {
     ff_t x[3];
@@ -392,8 +391,6 @@ void ff3_minpoly (ff_t f[4], ff_t a[3])
     ff3_trace(f+1,x);               // f[1] = (a*a^p+a^p*a^(p^2)+a^(p^2)*a)
     ff3_norm(&t,a);  _ff_neg(f[0],t);   // f[0] = -N(a) = -a*a^p*a^(p^2)
 }
-
-
 // computes z^n mod f=z^3-az-b, optimized for a=1 case
 // standard 4-ary exponentiation (fixed 2-bit window)
 void ff3_zn_mod (ff_t o[3], unsigned long n, ff_t f[2])         // only looks at f[0] and f[1], implicitly assumes f[2]=0 and f[3]=1
@@ -493,8 +490,6 @@ void ff3_zn_mod (ff_t o[3], unsigned long n, ff_t f[2])         // only looks at
     }
     ff3_set (o, t);
 }
-
-
 // standard 4-ary exponentiation (fixed 2-bit window)
 void ff3_exp_ui (ff_t o[3], ff_t a[3], unsigned long e)
 {
@@ -610,8 +605,6 @@ static inline void _ff3_mult_zpa_mod_rs (ff_t o[3], ff_t v[3], ff_t a, ff_t r, f
     _ff_add(o[0],w1,w2);
     // 5M+4A
 }
-
-
 // Computes tr(sqrt(z)) in F_p^3=F_p[z]/(z^3-rz-s).  This is a support function for factoring quartics.
 int ff3_trsqrt_zpa_mod_rs (ff_t o[1], ff_t a, ff_t r, ff_t s)
 {
@@ -853,8 +846,6 @@ static inline void ff2_poly_monic_norm (ff_t g[], int *dg, ff_t f[], int d)
     }
     ff_poly_monic (g, dg, g, 2*d);
 }
-
-
 // g = f + fbar made monic 
 // overlap OK
 static inline void ff2_poly_monic_trace (ff_t g[], int *dg, ff_t f[], int d)
@@ -1056,8 +1047,6 @@ int ff3_poly_count_distinct_roots_d3 (ff_t f[12])
         return ff2_is_cube(z) ? 3 : 0;
     }
 }
-
-
 int ff3_poly_count_distinct_roots (ff_t f[], int d)
 {
     ff_t *g1,*g2,*g3;
@@ -1099,6 +1088,3 @@ int ff3_poly_count_distinct_roots (ff_t f[], int d)
     ff_poly_stack_pop(g3);
     return (d1+d2+d3)/3;
 }
-
-
-

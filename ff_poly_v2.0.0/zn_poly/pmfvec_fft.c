@@ -1,36 +1,28 @@
 /*
-   pmfvec_fft.c:  FFT/IFFT and transposed FFT/IFFT routines for pmfvec_t
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <stdio.h>
 #include "zn_poly_internal.h"
-
-
 /* ============================================================================
 
      FFT routines
 
 ============================================================================ */
-
-
 void
 pmfvec_fft_basecase (pmfvec_t op, ulong t)
 {
@@ -59,8 +51,6 @@ pmfvec_fft_basecase (pmfvec_t op, ulong t)
       pmf_rotate (p + half, M + s);
    }
 }
-
-
 
 void
 pmfvec_fft_dc (pmfvec_t op, ulong n, ulong z, ulong t)
@@ -137,8 +127,6 @@ pmfvec_fft_dc (pmfvec_t op, ulong n, ulong z, ulong t)
    op->K <<= 1;
    op->lgK++;
 }
-
-
 
 /*
    As described above, this splits the length K transform into T = 2^lgT rows
@@ -222,8 +210,6 @@ pmfvec_fft_huge (pmfvec_t op, unsigned lgT, ulong n, ulong z, ulong t)
    op->lgK = lgK;
 }
 
-
-
 void
 pmfvec_fft (pmfvec_t op, ulong n, ulong z, ulong t)
 {
@@ -243,8 +229,6 @@ pmfvec_fft (pmfvec_t op, ulong n, ulong z, ulong t)
       pmfvec_fft_huge (op, op->lgK / 2, n, z, t);
    }
 }
-
-
 
 /* ============================================================================
 
@@ -282,8 +266,6 @@ pmfvec_ifft_basecase (pmfvec_t op, ulong t)
       pmf_bfly (p + half, p, M, mod);
    }
 }
-
-
 
 void
 pmfvec_ifft_dc (pmfvec_t op, ulong n, int fwd, ulong z, ulong t)
@@ -449,8 +431,6 @@ pmfvec_ifft_dc (pmfvec_t op, ulong n, int fwd, ulong z, ulong t)
    op->lgK++;
 }
 
-
-
 void
 pmfvec_ifft_huge (pmfvec_t op, unsigned lgT, ulong n, int fwd, ulong z,
                   ulong t)
@@ -579,8 +559,6 @@ pmfvec_ifft_huge (pmfvec_t op, unsigned lgT, ulong n, int fwd, ulong z,
    op->data = data;
 }
 
-
-
 void
 pmfvec_ifft (pmfvec_t op, ulong n, int fwd, ulong z, ulong t)
 {
@@ -602,15 +580,11 @@ pmfvec_ifft (pmfvec_t op, ulong n, int fwd, ulong z, ulong t)
    }
 }
 
-
-
 /* ============================================================================
 
      transposed FFT routines
 
 ============================================================================ */
-
-
 void
 pmfvec_tpfft_basecase (pmfvec_t op, ulong t)
 {
@@ -639,8 +613,6 @@ pmfvec_tpfft_basecase (pmfvec_t op, ulong t)
       pmf_bfly (p + half, p, M, mod);
    }
 }
-
-
 
 void
 pmfvec_tpfft_dc (pmfvec_t op, ulong n, ulong z, ulong t)
@@ -706,8 +678,6 @@ pmfvec_tpfft_dc (pmfvec_t op, ulong n, ulong z, ulong t)
    op->lgK++;
 }
 
-
-
 void
 pmfvec_tpfft_huge (pmfvec_t op, unsigned lgT, ulong n, ulong z, ulong t)
 {
@@ -769,8 +739,6 @@ pmfvec_tpfft_huge (pmfvec_t op, unsigned lgT, ulong n, ulong z, ulong t)
    op->lgK = lgK;
 }
 
-
-
 void
 pmfvec_tpfft (pmfvec_t op, ulong n, ulong z, ulong t)
 {
@@ -788,8 +756,6 @@ pmfvec_tpfft (pmfvec_t op, ulong n, ulong z, ulong t)
       pmfvec_tpfft_huge (op, op->lgK / 2, n, z, t);
    }
 }
-
-
 
 /* ============================================================================
 
@@ -823,8 +789,6 @@ pmfvec_tpifft_basecase (pmfvec_t op, ulong t)
       pmf_rotate (p + half, M - s);
    }
 }
-
-
 
 void
 pmfvec_tpifft_dc (pmfvec_t op, ulong n, int fwd, ulong z, ulong t)
@@ -921,8 +885,6 @@ pmfvec_tpifft_dc (pmfvec_t op, ulong n, int fwd, ulong z, ulong t)
    op->lgK++;
 }
 
-
-
 void
 pmfvec_tpifft_huge (pmfvec_t op, unsigned lgT, ulong n, int fwd, ulong z,
                     ulong t)
@@ -1007,8 +969,6 @@ pmfvec_tpifft_huge (pmfvec_t op, unsigned lgT, ulong n, int fwd, ulong z,
    op->K = K;
 }
 
-
-
 void
 pmfvec_tpifft (pmfvec_t op, ulong n, int fwd, ulong z, ulong t)
 {
@@ -1027,7 +987,5 @@ pmfvec_tpifft (pmfvec_t op, ulong n, int fwd, ulong z, ulong t)
       pmfvec_tpifft_huge (op, op->lgK / 2, n, fwd, z, t);
    }
 }
-
-
 
 // end of file ****************************************************************

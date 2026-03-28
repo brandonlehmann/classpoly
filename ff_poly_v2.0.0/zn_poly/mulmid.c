@@ -1,35 +1,27 @@
 /*
-   mulmid.c:  middle products
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "zn_poly_internal.h"
-
-
 ulong
 zn_array_mulmid_fallback_fudge (size_t n1, size_t n2, const zn_mod_t mod)
 {
    return _zn_array_mul_fudge (n1, n2, 0, mod);
 }
-
-
 void
 zn_array_mulmid_fallback (ulong* res, 
                           const ulong* op1, size_t n1,
@@ -47,8 +39,6 @@ zn_array_mulmid_fallback (ulong* res,
 
    ZNP_FASTFREE (temp);
 }
-
-
 ulong
 _zn_array_mulmid_fudge (size_t n1, size_t n2, const zn_mod_t mod)
 {
@@ -69,8 +59,6 @@ _zn_array_mulmid_fudge (size_t n1, size_t n2, const zn_mod_t mod)
    // return whatever fudge is used by the fft middle product code
    return zn_array_mulmid_fft_fudge (n1, n2, mod);
 }
-
-
 void
 _zn_array_mulmid (ulong* res,
                   const ulong* op1, size_t n1,
@@ -102,8 +90,6 @@ _zn_array_mulmid (ulong* res,
       zn_array_mulmid_fft (res, op1, n1, op2, n2, x, mod);
    }
 }
-
-
 void
 zn_array_mulmid (ulong* res,
                  const ulong* op1, size_t n1,
@@ -112,8 +98,6 @@ zn_array_mulmid (ulong* res,
 {
    _zn_array_mulmid (res, op1, n1, op2, n2, 0, mod);
 }
-
-
 
 void
 zn_array_mulmid_precomp1_init (zn_array_mulmid_precomp1_t res,
@@ -173,8 +157,6 @@ zn_array_mulmid_precomp1_init (zn_array_mulmid_precomp1_t res,
       default: ZNP_ASSERT (0);
    }
 }
-
-
 void
 zn_array_mulmid_precomp1_clear (zn_array_mulmid_precomp1_t op)
 {
@@ -193,8 +175,6 @@ zn_array_mulmid_precomp1_clear (zn_array_mulmid_precomp1_t op)
       default: ZNP_ASSERT (0);
    }
 }
-
-
 
 void
 zn_array_mulmid_precomp1_execute (ulong* res, const ulong* op2,
@@ -217,6 +197,4 @@ zn_array_mulmid_precomp1_execute (ulong* res, const ulong* op2,
       default: ZNP_ASSERT (0);
    }
 }
-
-
 // end of file ****************************************************************

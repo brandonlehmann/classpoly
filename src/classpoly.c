@@ -1,3 +1,21 @@
+/*
+    Copyright 2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdlib.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,25 +34,6 @@
 #include "findcurve.h"
 #include "polycosts.h"
 #include "cstd.h"
-
-/*
-    Copyright 2012 Andrew V. Sutherland
-
-    This file is part of classpoly.
-
-    classpoly is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
-
-    classpoly is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 int ecurve_test_order2 (ppf_t n[2], ff_t f[4]);	// not defined in ecurve.h
 
@@ -62,8 +61,6 @@ int classpoly_init (classpoly_t H, long D, int inv)
 	for ( i = 0 ; i < k ; i++ ) {H->u->p[i] = (int)p[i];  H->u->h[i] = (int) h[i]; }
 	return 1;
 }
-
-
 void classpoly_setup_find_jinv (classpoly_t H)
 {
 	long D1;
@@ -92,8 +89,6 @@ void classpoly_setup_find_jinv (classpoly_t H)
 	}
 	return;
 }
-
-
 int classpoly_setup_enum_roots (classpoly_t H, long ellfilter, long ell0, int enum_inv)
 {
 	if ( ! ellfilter ) ellfilter = 1;
@@ -117,8 +112,6 @@ int classpoly_setup_enum_roots (classpoly_t H, long ellfilter, long ell0, int en
 
 	return 1;
 }
-
-
 // find suborder datastructure, create if needed
 struct suborder_struct *classpoly_get_suborder (classpoly_t H, long index)
 {
@@ -139,8 +132,6 @@ struct suborder_struct *classpoly_get_suborder (classpoly_t H, long index)
 	dbg_printf ("Created suborder of index %ld relative to D=%ld\n", index, H->D);
 	return o;
 }
-
-
 int classpoly_suborder_setup_enum_roots (classpoly_t H, long ellfilter, long ell0, long index, int enum_inv)
 {
 	struct suborder_struct *o;
@@ -157,8 +148,6 @@ int classpoly_suborder_setup_enum_roots (classpoly_t H, long ellfilter, long ell
 	o->roots = mem_alloc ((o->pres->enum_cnt+PHI_MAX_H+1)*sizeof(ff_t));
 	return 1;
 }
-
-
 int classpoly_create (classpoly_t H, long D, int inv)
 {	
 	if ( ! classpoly_load (H, D, inv) ) {
@@ -247,8 +236,6 @@ void classpoly_clear (classpoly_t H)
 	}
 	memset (H, 0, sizeof(*H));
 }
-
-
 void ff_classpoly_reduce (classpoly_t H)
 {
 	register int i;
@@ -337,8 +324,6 @@ int ff_classpoly_jinv (ff_t j[1], classpoly_t H)
 	dbg_printf ("Obtained j-invariant %ld from root %ld of H_%ld mod %ld (inv=%d)\n", _ff_get_ui(j[0]), _ff_get_ui(r[0]), -H->D, _ff_p, H->inv);
 	return 1;
 }
-
-
 int ff_classpoly_suborder_root (ff_t r[1], classpoly_t H, long index)
 {
 	struct suborder_struct *o;
@@ -366,8 +351,6 @@ int ff_classpoly_suborder_root (ff_t r[1], classpoly_t H, long index)
 	}
 	return 1;
 }
-
-
 int ff_classpoly_suborder_jinv (ff_t j[1], classpoly_t H, long index)
 {
 	struct suborder_struct *o;
@@ -395,8 +378,6 @@ int ff_classpoly_suborder_jinv (ff_t j[1], classpoly_t H, long index)
 	}
 	return 1;
 }
-
-
 ff_t *ff_classpoly_jinvs (classpoly_t H)
 {
 	ff_t r;
@@ -444,8 +425,6 @@ int ff_classpoly_isroot (classpoly_t H, ff_t r)
 	ff_poly_eval (&y, H->c, H->F_d, &r);
 	return ( _ff_zero(y) ? 1 : 0 );
 }
-
-
 int ff_classpoly_find_jinv (ff_t J[1], classpoly_t H)
 {
 	struct phi_vshape_struct s;
@@ -483,8 +462,6 @@ int ff_classpoly_find_jinv (ff_t J[1], classpoly_t H)
 	}
 	return 1;
 }
-
-
 ff_t *ff_classpoly_enum_roots (classpoly_t H, ff_t r, int enum_inv)
 {
 	long cnt;
@@ -499,8 +476,6 @@ ff_t *ff_classpoly_enum_roots (classpoly_t H, ff_t r, int enum_inv)
 	H->roots_p = _ff_p;
 	return H->roots;
 }
-
-
 ff_t *ff_classpoly_suborder_enum_roots (classpoly_t H, long u, ff_t r, int enum_inv)
 {
 	struct suborder_struct *o;
@@ -515,8 +490,6 @@ ff_t *ff_classpoly_suborder_enum_roots (classpoly_t H, long u, ff_t r, int enum_
 	o->roots_p = _ff_p;
 	return o->roots;
 }
-
-
 int torsor_setup (torsor_t T, classpoly_t H, long u)
 {
 	struct suborder_struct *o;
@@ -584,8 +557,6 @@ for ( i = 0 ; i < pres->k ; i++ ) {
 }
 	return 1;
 }
-
-
 // We want to avoid situations where alpha_i^{+/-2} = alpha_j^2 (or = alpha_0*alpha_j^2 if ell0 flag is set), with |alpha_i| = |alpha_j| = 4 (or have 4th powers in <ell0> but not 2nd powers in <ell0>) and j < i
 // These cases cause problems when enumerating roots via gcds
 // returns the index of the first bad generator, or -1 if no bad generators are found
@@ -617,8 +588,6 @@ int classgroup_pcp_check_generators (classgroup_pcp_t pres)
 	}
 	return -1;
 }
-
-
 // This function must be called while qform_table has been filled by a call to qform_generators
 void classgroup_pcp_setup_auxiliary_primes (classgroup_pcp_t pres, int enum_inv)		// enum_inv is only used to estimate costs
 {
@@ -669,8 +638,6 @@ void classgroup_pcp_setup_auxiliary_primes (classgroup_pcp_t pres, int enum_inv)
 		else { info_printf ("ell[%d]=%ld not using aux_ell\n", i, ell[i]);}
 	}
 }
-
-
 int classgroup_pcp_setup (classgroup_pcp_t pres, long D, long ellfilter, long ell0, int enum_inv)		// enum_inv is only used to estimate costs
 {
 	int i, j;
@@ -799,8 +766,6 @@ int classgroup_pcp_orient (classgroup_pcp_t pres)
 	pres->orientable = 1;
 	return 1;
 }
-
-
 void classgroup_pcp_print (classgroup_pcp_t pres)
 {
 	long a, b, c;
@@ -816,8 +781,6 @@ void classgroup_pcp_print (classgroup_pcp_t pres)
 		info_printf ("\n");
 	}
 }
-
-
 long classgroup_pcp_vfilter (classgroup_pcp_t pres)
 {
 	int i;

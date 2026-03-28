@@ -1,9 +1,3 @@
-#ifndef _PHI_EVAL_INCLUDE_
-#define _PHI_EVAL_INCLUDE_
-
-#include <stdio.h>
-#include "phi_poly.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -11,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,6 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _PHI_EVAL_INCLUDE_
+#define _PHI_EVAL_INCLUDE_
+
+#include <stdio.h>
+#include "phi_poly.h"
 
 // note that m is assumed to be prime in this module
 
@@ -224,8 +223,6 @@ static inline void phi5_s8_eval_ff (ff_t f[], ff_t phi[], ff_t J)
 	_ff_set_one(f[6]);
 	// 7M+2A (10 redc)
 }
-
-
 static inline void phi5_s12_eval_ff (ff_t f[], ff_t phi[], ff_t J)
 {
 	register ff_t J2, J3, J5;
@@ -902,8 +899,6 @@ static inline void phi17_s12_eval_ff (ff_t f[], ff_t phi[], ff_t J)
     _ff_mult(t1,J5,phi[311]); _ff_sub(f[17],t1,J17);
     _ff_set_one(f[18]);
 }
-
-
 static inline void phi17_s24_eval_ff (ff_t f[], ff_t phi[], ff_t J)
 {
 	register ff_t J2, J3, J4, J5, J6, J8, J9, J10, J12, J13, J15, J16;

@@ -1,10 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <limits.h>
-#include "mpzutil.h"
-#include "iqclass.h"
-#include "cstd.h"
-
 /*
     Copyright 2012 Andrew V. Sutherland
 
@@ -12,8 +5,7 @@
 
     classpoly is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, version 2 of the License.
 
     classpoly is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,6 +16,12 @@
     along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <limits.h>
+#include "mpzutil.h"
+#include "iqclass.h"
+#include "cstd.h"
 
 // Finds the least t > u s.t. 4p=t^2+dv^2 with p an odd prime (note D=-d).  Set *p to the prime and *t to t
 int next_split_prime (long *p, long *t, long d, long u, long v, long filter)
@@ -56,8 +54,6 @@ int next_split_prime (long *p, long *t, long d, long u, long v, long filter)
     return 1;
 }
 
-
-
 // Finds the least t > T s.t. 4p=t^2+dv^2 with p prime (note D=-d).  Set P to the prime and T to t
 int mpz_next_split_prime (mpz_t P, mpz_t T, long d, long v)
 {
@@ -70,8 +66,6 @@ int mpz_next_split_prime (mpz_t P, mpz_t T, long d, long v)
     }
     return 1;
 }
-
-
 
 // Given a fundamental discriminant D < -4 and v, computes h(v^2D)/h(D)
 long relative_h (long D, long v)
@@ -89,8 +83,6 @@ long relative_h (long D, long v)
     }
     return (m*v)/n;
 }
-
-
 // Given a fundamental discriminant D < -4 and v, computes the sum of h(u^2D)/h(D) over all the divisors u of v
 long sum_relative_h (long D, long v)
 {
@@ -117,4 +109,3 @@ long sum_relative_h (long D, long v)
     } while ( i < w ); 
     return sum;
 }
-

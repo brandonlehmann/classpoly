@@ -1,26 +1,20 @@
 /*
-   mul_fft.c:  polynomial multiplication and and middle product via
-               Schonhage/Nussbaumer FFT
-   
-   Copyright (C) 2007, 2008, David Harvey
-   
-   This file is part of the zn_poly library (version 0.9).
-   
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 2 of the License, or
-   (at your option) version 3 of the License.
+    Copyright (C) 2007, 2008, David Harvey
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+    This file is part of ff_poly.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ff_poly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
 
+    ff_poly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ff_poly.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 
 /*
    The multiplication algorithm is essentially that of [Sch77].
@@ -31,8 +25,6 @@
    be large enough that the product can be resolved unambiguously in
    S[Z]/(Z^K - 1), and we want M minimal subject to these conditions (we end
    up with M and K around sqrt(n1 + n2)).
-
-
    Our middle product algorithm conceptually has two pieces:
       (1) reducing the problem from a middle product in R[X] to a middle
           product in S[Z], and
@@ -94,19 +86,13 @@
       * compute transposed FFT of product, and reverse the output
 
 */
-
-
 #include <stdio.h>
 #include "zn_poly_internal.h"
-
-
 /* ============================================================================
 
      splitting and combining routines
 
 ============================================================================ */
-
-
 void
 fft_split (pmfvec_t res, const ulong* op, size_t n, size_t k, ulong x,
            ulong b)
@@ -159,8 +145,6 @@ fft_split (pmfvec_t res, const ulong* op, size_t n, size_t k, ulong x,
       zn_array_zero (dest + 1 + n, M - n);
    }
 }
-
-
 /*
    If neg == 0, copies op[0, n) into res[0, n).
    If neg == 1, copies the negative of op[0, n) into res[0, n).
@@ -176,8 +160,6 @@ zn_array_signed_copy (ulong* res, const ulong* op, ulong n, int neg,
    else
       zn_array_copy (res, op, n);
 }
-
-
 /*
    This routine adds the last M/2 coefficients of op1 to the first M/2
    coefficients of op2, and writes them to res[0, M/2). If n < M/2, it
@@ -311,8 +293,6 @@ fft_combine_chunk (ulong* res, size_t n, pmf_const_t op1,
                              op2 + s2 - s1, !neg2, op1, !neg1, mod);
 }
 
-
-
 void
 fft_combine (ulong* res, size_t n, const pmfvec_t op, ulong z, int skip_first)
 {
@@ -360,15 +340,11 @@ fft_combine (ulong* res, size_t n, const pmfvec_t op, ulong z, int skip_first)
       zn_array_zero (res + op->M/2, n - op->M/2);
 }
 
-
-
 /* ============================================================================
 
      multiplication routine
 
 ============================================================================ */
-
-
 void
 mul_fft_params (unsigned* lgK, unsigned* lgM, ulong* m1, ulong* m2,
                 size_t n1, size_t n2)
@@ -395,8 +371,6 @@ mul_fft_params (unsigned* lgK, unsigned* lgM, ulong* m1, ulong* m2,
    *m2 = _m2;
 }
 
-
-
 ulong
 zn_array_mul_fft_fudge (size_t n1, size_t n2, int sqr, const zn_mod_t mod)
 {
@@ -411,8 +385,6 @@ zn_array_mul_fft_fudge (size_t n1, size_t n2, int sqr, const zn_mod_t mod)
    
    return zn_mod_mul (fudge1, fudge2, mod);
 }
-
-
 
 void zn_array_mul_fft (ulong* res,
                        const ulong* op1, size_t n1,
@@ -488,15 +460,11 @@ void zn_array_mul_fft (ulong* res,
       zn_array_scalar_mul_or_copy (res, res, n3, x, mod);
 }
 
-
-
 /* ============================================================================
 
      middle product routines
 
 ============================================================================ */
-
-
 void
 mulmid_fft_params (unsigned* lgK, unsigned* lgM, ulong* m1, ulong* m2,
                    ulong* p, size_t n1, size_t n2)
@@ -525,8 +493,6 @@ mulmid_fft_params (unsigned* lgK, unsigned* lgM, ulong* m1, ulong* m2,
    *m2 = CEIL_DIV_2EXP (n2, _lgM - 1);
 }
 
-
-
 ulong
 zn_array_mulmid_fft_precomp1_fudge (size_t n1, size_t n2, const zn_mod_t mod)
 {
@@ -541,15 +507,11 @@ zn_array_mulmid_fft_precomp1_fudge (size_t n1, size_t n2, const zn_mod_t mod)
    
    return zn_mod_mul (fudge1, fudge2, mod);
 }
-
-
 ulong
 zn_array_mulmid_fft_fudge (size_t n1, size_t n2, const zn_mod_t mod)
 {
    return zn_array_mulmid_fft_precomp1_fudge (n1, n2, mod);
 }
-
-
 void
 zn_array_mulmid_fft_precomp1_init (zn_array_mulmid_fft_precomp1_t res,
                                    const ulong* op1, size_t n1, size_t n2,
@@ -581,8 +543,6 @@ zn_array_mulmid_fft_precomp1_init (zn_array_mulmid_fft_precomp1_t res,
    // transposed IFFT first input
    pmfvec_tpifft (res->vec1, res->m1, 0, res->m1, 0);
 }
-
-
 void
 zn_array_mulmid_fft_precomp1_execute
                     (ulong* res, const ulong* op2, ulong x,
@@ -615,15 +575,11 @@ zn_array_mulmid_fft_precomp1_execute
 
    pmfvec_clear (vec2);
 }
-
-
 void
 zn_array_mulmid_fft_precomp1_clear (zn_array_mulmid_fft_precomp1_t op)
 {
    pmfvec_clear (op->vec1);
 }
-
-
 void
 zn_array_mulmid_fft (ulong* res,
                      const ulong* op1, size_t n1,
@@ -640,6 +596,4 @@ zn_array_mulmid_fft (ulong* res,
    zn_array_mulmid_fft_precomp1_execute (res, op2, 1, precomp);
    zn_array_mulmid_fft_precomp1_clear (precomp);
 }
-
-
 // end of file ****************************************************************

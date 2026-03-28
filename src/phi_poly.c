@@ -1,3 +1,21 @@
+/*
+    Copyright 2012 Andrew V. Sutherland
+
+    This file is part of classpoly.
+
+    classpoly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 2 of the License.
+
+    classpoly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -11,25 +29,6 @@
 #include "polycosts.h"
 #include "phi_poly.h"
 #include "cstd.h"
-
-/*
-    Copyright 2012 Andrew V. Sutherland
-
-    This file is part of classpoly.
-
-    classpoly is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 2 of the License, or
-    (at your option) any later version.
-
-    classpoly is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with classpoly.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 #define PHI_MAX_COEFF		(((PHI_MAX_M+1)*(PHI_MAX_M+2))/2)
 
@@ -92,8 +91,6 @@ int phi_maxv;
 int phi_find_surface_pp (ff_t *sJ, ff_t phi[], int m, int h, ff_t J);
 int phi_find_surface_pq (ff_t *sJ, ff_t phi1[], int m1, ff_t phi2[], int m2, ff_t J);
 int phi_next_surface_neighbor (ff_t nJ[1], ff_t phi[], int m, int h, ff_t J, ff_t *pJ, int inv);
-
-
 void _phi_vshape (struct phi_vshape_struct *s, int v)
 {
 	unsigned long p[MAX_UI_PP_FACTORS], h[MAX_UI_PP_FACTORS];
@@ -107,8 +104,6 @@ void _phi_vshape (struct phi_vshape_struct *s, int v)
 	}
 	s->k = i;
 }
-
-
 int phi_poly_setup (void)
 {
 	int v;
@@ -123,8 +118,6 @@ void phi_vshape (struct phi_vshape_struct *s, int v)
 	if ( ! phi_maxv ) phi_poly_setup();
 	if ( v > 0 && v <= phi_maxv ) *s = phi_vshapes[v]; else _phi_vshape (s, v);
 }
-
-
 void phi_poly_init (phi_poly_t phi, int m, int inv)
 {
 	int i, n;
@@ -141,8 +134,6 @@ void phi_poly_init (phi_poly_t phi, int m, int inv)
 	phi->p = 0;
 	phi->inv = inv;
 }
-
-
 void phi_poly_clear (phi_poly_t phi)
 {
 	int i;
@@ -151,8 +142,6 @@ void phi_poly_clear (phi_poly_t phi)
 	mem_free (phi->C);  mem_free (phi->c);  mem_free (phi->w1);  mem_free (phi->w2);
 	memset (phi, 0, sizeof (*phi));
 }
-
-
 int phi_poly_create (phi_poly_t phi, int m, int inv)
 {
 	char buf[256];
@@ -169,8 +158,6 @@ int phi_poly_create (phi_poly_t phi, int m, int inv)
 	}
 	return 1;
 }
-
-
 int phi_poly_load (phi_poly_t phi, int m, int inv)
 {
 	phi_poly_init (phi, m, inv);
@@ -310,8 +297,6 @@ done:
 	fclose (fp);
 	return sts;
 }
-
-
 // for phi_ff we store a full (m+1) x (m+1) array for fast dot products
 void _phi_reduce (int m, int inv)
 {
@@ -670,8 +655,6 @@ static inline void phi_common_neighbor_corner (ff_t nbr[1], ff_t J1, ff_t phi1[]
 	}
 	_ff_set(nbr[0],nbrs[0]);
 }
-
-
 int phi_poly_verify_edge (ff_t J1, ff_t J2, int m, int inv)
 {
 	ff_t f[PHI_MAX_M+2];
@@ -682,8 +665,6 @@ int phi_poly_verify_edge (ff_t J1, ff_t J2, int m, int inv)
 	ff_poly_eval(&r,f,m+1,&J1);
 	return ( _ff_zero(r) ? 1 : 0 );
 }
-
-
 int phi_poly_verify_2path (ff_t J1, ff_t J2, int m1, int m2, int inv)
 {
 	ff_t f[PHI_MAX_M+2], g[PHI_MAX_M+2], h[PHI_MAX_M+2];
@@ -696,8 +677,6 @@ int phi_poly_verify_2path (ff_t J1, ff_t J2, int m1, int m2, int inv)
 	ff_poly_monic(h,&d_h,h,d_h);
 	return ff_poly_count_distinct_roots(h,d_h);
 }
-
-
 /*
 	Given a path V of length n on an m1-volcano, and W[0] m2-isogenous to V[0],
 	Extends the path W to length n on an m1-volcano, with W[i] m2-isogenous to V[i]
@@ -1000,8 +979,6 @@ int phi_find_surface (ff_t *outJ, ff_t inJ, unsigned long up[], unsigned long uh
 	_ff_set(*outJ,J);
 	return 1;
 }
-
-
 // attempts to find the floor via a path begining J0->J1 of length <= h, for h > 0, where J0 is not on the floor
 // returns the length of the path or h+1 if unsuccessful
 // S contains the neighbors of J1, not including J0

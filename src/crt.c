@@ -218,11 +218,12 @@ int crt_process_files (long *totbits, long *maxbits, int id1, int id2, int n, un
     }
     if ( offset != n ) { err_printf ("Error, found a total of %d != %d coefficients in crt files\n", offset, n); goto done; }
     sts = 1;
+    rmdir(CRT_DIR);		// clean up temp directory (will only succeed if empty, which is fine)
 done:
     crt_tree_clear (t);
     free (r);  free (a);
     mpz_clear (X);  mpz_clear(Y);
-    return sts; 
+    return sts;
 }
 
 void crt_tree_init (crt_tree_t t, unsigned long m[], int n)

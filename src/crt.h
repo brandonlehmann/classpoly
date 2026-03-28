@@ -22,22 +22,24 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <gmp.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define CRT_DIR						crt_dir()		
-#define CRT_DIR_NAME				"temp"
+#define CRT_DIR						crt_dir()
 extern char _crt_dir_str[1024];
 static inline char *crt_dir (void)
 {
 	char *s;
 	if ( _crt_dir_str[0] ) return _crt_dir_str;
-	s = getenv("HOME");
-	if ( s ) sprintf (_crt_dir_str, "%s/%s", s, CRT_DIR_NAME);
-	else strcpy (_crt_dir_str, CRT_DIR_NAME);
+	s = getenv("TMPDIR");
+	if ( !s ) s = "/tmp";
+	sprintf (_crt_dir_str, "%s/classpoly_crt_%d", s, getpid());
+	mkdir(_crt_dir_str, 0700);
 	return _crt_dir_str;
 }
 

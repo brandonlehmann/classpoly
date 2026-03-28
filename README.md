@@ -15,8 +15,8 @@ Based on the algorithms described in:
 - **64-bit OS** (Linux or macOS, x86_64 or aarch64/Apple Silicon)
 
 **Important:**
-- The `$HOME/phi_files` directory must contain the modular polynomials before running. To change this location, modify `phi_dir()` in `phi_poly.h`.
-- The `$HOME/temp` directory must exist (used for intermediate CRT files when computing over Z).
+- The `$HOME/phi_files` directory must contain the extracted modular polynomials before running. To change this location, modify `phi_dir()` in `phi_poly.h`.
+- Intermediate CRT files are written to a per-process subdirectory under `$TMPDIR` (or `/tmp` if unset) and cleaned up automatically.
 
 ## Building
 

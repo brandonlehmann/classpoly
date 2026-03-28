@@ -11,9 +11,12 @@ Based on the algorithms described in:
 ## Prerequisites
 
 - **GMP** (version 6 or later) — <https://gmplib.org> (on Ubuntu: `libgmp-dev`)
-- **ff_poly** (version 2 or later) — included in `ff_poly_v2.0.0/`
 - **Modular polynomials** — download at least `phi_j.tar` from <https://math.mit.edu/~drew/SmallModPolys.html> and extract to `$HOME/phi_files/`. For class invariants beyond j, download all from <https://math.mit.edu/~drew/phi_polys.tar>
 - **64-bit OS** (Linux or macOS, x86_64 or aarch64/Apple Silicon)
+
+**Important:**
+- The `$HOME/phi_files` directory must contain the modular polynomials before running. To change this location, modify `phi_dir()` in `phi_poly.h`.
+- The `$HOME/temp` directory must exist (used for intermediate CRT files when computing over Z).
 
 ## Building
 
@@ -117,7 +120,3 @@ The test harness runs 7 discriminants through both serial and parallel paths, cr
 
 Cross-validation: each discriminant verified 6 ways (serial vs cache P1, serial vs cache P2, parallel vs cache P1, parallel vs cache P2, serial vs parallel P1, serial vs parallel P2). 120/120 passed.
 
-## Notes
-
-- The `$HOME/temp` directory must exist (used for intermediate CRT files when computing over Z)
-- To change the modular polynomial directory from `$HOME/phi_files`, modify `phi_dir()` in `phi_poly.h`

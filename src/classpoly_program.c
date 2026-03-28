@@ -166,8 +166,8 @@ int main (int argc, char *argv[])
 {
 	struct cli_args args;
 	int inv, picked, ret;
-	char *filename = NULL, *filename2 = NULL;
-	mpz_t P2;
+	char *filename = NULL;
+	char **par_filenames = NULL;
 	int i;
 
 	if ( argc < 2 ) { print_help(); return 0; }
@@ -180,7 +180,6 @@ int main (int argc, char *argv[])
 
 	_cstd_seed = 42;
 	mpz_util_init();
-	mpz_init(P2);
 	ret = 0;
 
 	if ( !discriminant_test(args.D) ) {
@@ -207,21 +206,19 @@ int main (int argc, char *argv[])
 			err_printf("Parallel mode (-j) requires at least one --P value\n");
 			ret = -1; goto cleanup;
 		}
-		if ( args.num_P > 2 ) {
-			err_printf("Parallel mode currently supports at most 2 --P values (got %d)\n", args.num_P);
+		if ( args.num_P > MAX_P_VALUES ) {
+			err_printf("Too many --P values for parallel mode (got %d, max %d)\n", args.num_P, MAX_P_VALUES);
 			ret = -1; goto cleanup;
 		}
 
-		filename = make_filename(args.D, args.P[0]);
-		if ( args.num_P > 1 ) {
-			mpz_set(P2, args.P[1]);
-			filename2 = make_filename(args.D, args.P[1]);
-		}
+		par_filenames = malloc(args.num_P * sizeof(char *));
+		for ( i = 0; i < args.num_P; i++ )
+			par_filenames[i] = make_filename(args.D, args.P[i]);
 
-		if ( !compute_classpoly_parallel(args.D, inv, args.P[0], P2, filename, filename2, args.nworkers) ) {
+		if ( !compute_classpoly_parallel(args.D, inv, args.P, par_filenames, args.num_P, args.nworkers) ) {
 			if ( !picked || !inv ) goto cleanup;
 			err_printf("Unable to compute classpoly using invariant %s (%d), reverting to j-invariant\n", inv_string(inv), inv);
-			if ( !compute_classpoly_parallel(args.D, 0, args.P[0], P2, filename, filename2, args.nworkers) ) {
+			if ( !compute_classpoly_parallel(args.D, 0, args.P, par_filenames, args.num_P, args.nworkers) ) {
 				err_printf("Error computing Hilbert class polynomial!\n");
 				ret = -1; goto cleanup;
 			}
@@ -253,8 +250,10 @@ int main (int argc, char *argv[])
 
 cleanup:
 	free(filename);
-	free(filename2);
-	mpz_clear(P2);
+	if ( par_filenames ) {
+		for ( i = 0; i < args.num_P; i++ ) free(par_filenames[i]);
+		free(par_filenames);
+	}
 	cli_args_clear(&args);
 	return ret;
 }

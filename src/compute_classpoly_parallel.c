@@ -121,36 +121,32 @@ static void merge_buffers (ecrt_context_t ecrt, mp_limb_t **Cbufs, mp_limb_t **S
 	}
 }
 
-int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filename1, char *filename2, int nworkers)
+int compute_classpoly_parallel (long D, int inv, mpz_t *Pvals, char **filenames, int num_P, int nworkers)
 {
 	time_t begin, start, end;
-	char buf1[256], buf2[256];
 	classpoly_t H;
 	classpoly_inv_t Hinv;
 	classpoly_crt_t crt;
-	ecrt_context_t ecrt2;
+	ecrt_context_t *ecrts = NULL;	/* extra ecrt contexts for Pvals[1..num_P-1] */
+	int num_extra;			/* num_P - 1 */
 	double bits, height_factor;
 	long vfilter, maxp;
 	double tbits;
 	long *crt_p;
 	int crt_pcnt, p1, p2;
 	int H_d, ell0, N, classno;
-	int have_P2;
 	register int i;
+	int p;				/* P-value loop index */
 
 	/* Shared memory regions */
 	struct parallel_shared *shared;
-	mp_limb_t **Cbufs1 = NULL, **Sbufs1 = NULL;
-	mp_limb_t **Cbufs2 = NULL, **Sbufs2 = NULL;
-	size_t Csize, Ssize;
+	mp_limb_t ***Cbufs = NULL, ***Sbufs = NULL;	/* Cbufs[p][w], Sbufs[p][w] */
+	size_t *Csizes = NULL, *Ssizes = NULL;		/* per-P buffer sizes */
 	pid_t *pids;
 	int w;
 
-	have_P2 = (P2 && mpz_sgn(P2));
-	if ( !P1 || !mpz_sgn(P1) ) { err_printf("P1 is required for parallel mode\n"); return 0; }
-
-	if ( !filename1 ) { filename1 = buf1; sprintf(filename1, "H_%ld_P1.txt", -D); }
-	if ( have_P2 && !filename2 ) { filename2 = buf2; sprintf(filename2, "H_%ld_P2.txt", -D); }
+	if ( num_P < 1 || !Pvals || !mpz_sgn(Pvals[0]) ) { err_printf("At least one P value is required for parallel mode\n"); return 0; }
+	num_extra = num_P - 1;
 
 	begin = clock();
 
@@ -185,8 +181,8 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 	}
 	info_printf("Selected %d primes, maxp=%ld, totbits = %.1f\n", crt_pcnt, maxp, tbits);
 
-	/* CRT setup with P1 — this calls ecrt_init for P1 inside */
-	classpoly_crt_start(crt, D, inv, (unsigned long *)crt_p, crt_pcnt, H_d, P1);
+	/* CRT setup with Pvals[0] — this calls ecrt_init for P1 inside */
+	classpoly_crt_start(crt, D, inv, (unsigned long *)crt_p, crt_pcnt, H_d, Pvals[0]);
 
 	/* classpoly_inv_setup uses the crt to consume a few primes for trace computation */
 	if ( !classpoly_inv_setup(Hinv, H, inv, crt) ) {
@@ -195,11 +191,14 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 		return 0;
 	}
 
-	/* Initialize second ecrt for P2 if needed */
-	if ( have_P2 ) {
-		char prefix2[64];
-		sprintf(prefix2, "H_%ld_2", -D);
-		ecrt_init(ecrt2, (unsigned long *)crt_p, crt_pcnt, H_d, P2, 0, 0, prefix2);
+	/* Initialize extra ecrt contexts for Pvals[1..num_P-1] */
+	if ( num_extra > 0 ) {
+		ecrts = malloc(num_extra * sizeof(ecrt_context_t));
+		for ( p = 0; p < num_extra; p++ ) {
+			char prefix[64];
+			sprintf(prefix, "H_%ld_%d", -D, p + 2);
+			ecrt_init(ecrts[p], (unsigned long *)crt_p, crt_pcnt, H_d, Pvals[p + 1], 0, 0, prefix);
+		}
 	}
 
 	qform_table_free();
@@ -213,8 +212,9 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 	out_printf("  poly degree   = %d%s\n", H_d, ell0 ? " (sqrt)" : "");
 	out_printf("  height bound  = %.1f bits (margin %d)\n", bits, HEIGHT_MARGIN);
 	out_printf("  CRT primes    = %d (%.1f bits total, maxp=%ld)\n", crt_pcnt, tbits, maxp);
-	out_printf("  P1            = "); gmp_printf("%Zd", P1); out_printf(" (%ld bits)\n", mpz_sizeinbase(P1, 2));
-	if ( have_P2 ) { out_printf("  P2            = "); gmp_printf("%Zd", P2); out_printf(" (%ld bits)\n", mpz_sizeinbase(P2, 2)); }
+	for ( p = 0; p < num_P; p++ ) {
+		out_printf("  P%-13d = ", p + 1); gmp_printf("%Zd", Pvals[p]); out_printf(" (%ld bits)\n", mpz_sizeinbase(Pvals[p], 2));
+	}
 	out_printf("  workers       = %d\n", nworkers);
 	out_printf("  batch size    = %d primes\n", PARALLEL_BATCH_SIZE);
 	out_printf("  primes/worker = ~%d (avg)\n", crt_pcnt / nworkers);
@@ -232,30 +232,28 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 	shared->pcnt = crt_pcnt;
 	shared->batch_size = PARALLEL_BATCH_SIZE;
 
-	/* Per-worker accumulator buffers */
-	Csize = (size_t)H_d * crt->ecrt->Climbs * sizeof(mp_limb_t);
-	Ssize = (size_t)H_d * crt->ecrt->slimbs * sizeof(mp_limb_t);
-
-	Cbufs1 = malloc(nworkers * sizeof(mp_limb_t *));
-	Sbufs1 = malloc(nworkers * sizeof(mp_limb_t *));
-	if ( have_P2 ) {
-		Cbufs2 = malloc(nworkers * sizeof(mp_limb_t *));
-		Sbufs2 = malloc(nworkers * sizeof(mp_limb_t *));
+	/* Per-P buffer sizes (Climbs depends on P's bit-size) */
+	Csizes = malloc(num_P * sizeof(size_t));
+	Ssizes = malloc(num_P * sizeof(size_t));
+	Csizes[0] = (size_t)H_d * crt->ecrt->Climbs * sizeof(mp_limb_t);
+	Ssizes[0] = (size_t)H_d * crt->ecrt->slimbs * sizeof(mp_limb_t);
+	for ( p = 0; p < num_extra; p++ ) {
+		Csizes[p + 1] = (size_t)H_d * ecrts[p]->Climbs * sizeof(mp_limb_t);
+		Ssizes[p + 1] = (size_t)H_d * ecrts[p]->slimbs * sizeof(mp_limb_t);
 	}
 
-	for ( w = 0; w < nworkers; w++ ) {
-		Cbufs1[w] = mmap(NULL, Csize, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-		Sbufs1[w] = mmap(NULL, Ssize, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-		if ( Cbufs1[w] == MAP_FAILED || Sbufs1[w] == MAP_FAILED ) { err_printf("mmap failed for worker %d P1 buffers\n", w); abort(); }
-		memset(Cbufs1[w], 0, Csize);
-		memset(Sbufs1[w], 0, Ssize);
-
-		if ( have_P2 ) {
-			Cbufs2[w] = mmap(NULL, Csize, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-			Sbufs2[w] = mmap(NULL, Ssize, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-			if ( Cbufs2[w] == MAP_FAILED || Sbufs2[w] == MAP_FAILED ) { err_printf("mmap failed for worker %d P2 buffers\n", w); abort(); }
-			memset(Cbufs2[w], 0, Csize);
-			memset(Sbufs2[w], 0, Ssize);
+	/* Per-worker accumulator buffers: Cbufs[p][w], Sbufs[p][w] */
+	Cbufs = malloc(num_P * sizeof(mp_limb_t **));
+	Sbufs = malloc(num_P * sizeof(mp_limb_t **));
+	for ( p = 0; p < num_P; p++ ) {
+		Cbufs[p] = malloc(nworkers * sizeof(mp_limb_t *));
+		Sbufs[p] = malloc(nworkers * sizeof(mp_limb_t *));
+		for ( w = 0; w < nworkers; w++ ) {
+			Cbufs[p][w] = mmap(NULL, Csizes[p], PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+			Sbufs[p][w] = mmap(NULL, Ssizes[p], PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+			if ( Cbufs[p][w] == MAP_FAILED || Sbufs[p][w] == MAP_FAILED ) { err_printf("mmap failed for worker %d P%d buffers\n", w, p + 1); abort(); }
+			memset(Cbufs[p][w], 0, Csizes[p]);
+			memset(Sbufs[p][w], 0, Ssizes[p]);
 		}
 	}
 
@@ -282,14 +280,14 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 			/* Free the COW-inherited Cdata/sdata first */
 			free(crt->ecrt->Cdata);
 			free(crt->ecrt->sdata);
-			crt->ecrt->Cdata = Cbufs1[w];
-			crt->ecrt->sdata = Sbufs1[w];
+			crt->ecrt->Cdata = Cbufs[0][w];
+			crt->ecrt->sdata = Sbufs[0][w];
 
-			if ( have_P2 ) {
-				free(ecrt2->Cdata);
-				free(ecrt2->sdata);
-				ecrt2->Cdata = Cbufs2[w];
-				ecrt2->sdata = Sbufs2[w];
+			for ( p = 0; p < num_extra; p++ ) {
+				free(ecrts[p]->Cdata);
+				free(ecrts[p]->sdata);
+				ecrts[p]->Cdata = Cbufs[p + 1][w];
+				ecrts[p]->sdata = Sbufs[p + 1][w];
 			}
 
 			work = mem_alloc(2 * H_d * sizeof(ff_t));
@@ -323,8 +321,8 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 					for ( i = 0; i < H_d; i++ ) work[i] = _ff_get_ui(work[i]);
 
 					ecrt_update(crt->ecrt, idx, (unsigned long *)work, H_d);
-					if ( have_P2 )
-						ecrt_update(ecrt2, idx, (unsigned long *)work, H_d);
+					for ( p = 0; p < num_extra; p++ )
+						ecrt_update(ecrts[p], idx, (unsigned long *)work, H_d);
 
 					primes_done++;
 					__sync_fetch_and_add(&shared->primes_done, 1);
@@ -393,13 +391,12 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 		goto cleanup;
 	}
 
-	/* Merge P1 */
+	/* Merge and write P1 */
 	info_printf("Merging %d worker buffers for P1...\n", nworkers);
-	merge_buffers(crt->ecrt, Cbufs1, Sbufs1, nworkers);
+	merge_buffers(crt->ecrt, Cbufs[0], Sbufs[0], nworkers);
 
-	/* Write P1 output */
 	start = clock();
-	if ( !write_ecrt_output(crt->ecrt, inv, D, P1, H_d, filename1) ) {
+	if ( !write_ecrt_output(crt->ecrt, inv, D, Pvals[0], H_d, filenames[0]) ) {
 		err_printf("Failed to write P1 output\n");
 		failures = 1;
 		goto cleanup;
@@ -407,42 +404,42 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 	end = clock();
 	info_printf("P1 finalization and output in %ld msecs\n", delta_msecs(start, end));
 	out_printf("Class polynomial for inv=%d, D=%ld reduced mod P1 (%ld bits) written to %s, degree %d\n",
-		   inv, D, mpz_sizeinbase(P1, 2), filename1, H_d);
+		   inv, D, mpz_sizeinbase(Pvals[0], 2), filenames[0], H_d);
 
-	/* Merge and write P2 if present */
-	if ( have_P2 ) {
-		info_printf("Merging %d worker buffers for P2...\n", nworkers);
-		merge_buffers(ecrt2, Cbufs2, Sbufs2, nworkers);
+	/* Merge and write extra P values */
+	for ( p = 0; p < num_extra; p++ ) {
+		info_printf("Merging %d worker buffers for P%d...\n", nworkers, p + 2);
+		merge_buffers(ecrts[p], Cbufs[p + 1], Sbufs[p + 1], nworkers);
 
 		start = clock();
-		if ( !write_ecrt_output(ecrt2, inv, D, P2, H_d, filename2) ) {
-			err_printf("Failed to write P2 output\n");
+		if ( !write_ecrt_output(ecrts[p], inv, D, Pvals[p + 1], H_d, filenames[p + 1]) ) {
+			err_printf("Failed to write P%d output\n", p + 2);
 			failures = 1;
 			goto cleanup;
 		}
 		end = clock();
-		info_printf("P2 finalization and output in %ld msecs\n", delta_msecs(start, end));
-		out_printf("Class polynomial for inv=%d, D=%ld reduced mod P2 (%ld bits) written to %s, degree %d\n",
-			   inv, D, mpz_sizeinbase(P2, 2), filename2, H_d);
+		info_printf("P%d finalization and output in %ld msecs\n", p + 2, delta_msecs(start, end));
+		out_printf("Class polynomial for inv=%d, D=%ld reduced mod P%d (%ld bits) written to %s, degree %d\n",
+			   inv, D, p + 2, mpz_sizeinbase(Pvals[p + 1], 2), filenames[p + 1], H_d);
 	}
 
 cleanup:
 	/* Unmap shared memory */
 	munmap(shared, sizeof(*shared));
-	for ( w = 0; w < nworkers; w++ ) {
-		munmap(Cbufs1[w], Csize);
-		munmap(Sbufs1[w], Ssize);
-		if ( have_P2 ) {
-			munmap(Cbufs2[w], Csize);
-			munmap(Sbufs2[w], Ssize);
+	for ( p = 0; p < num_P; p++ ) {
+		for ( w = 0; w < nworkers; w++ ) {
+			munmap(Cbufs[p][w], Csizes[p]);
+			munmap(Sbufs[p][w], Ssizes[p]);
 		}
+		free(Cbufs[p]); free(Sbufs[p]);
 	}
-	free(Cbufs1); free(Sbufs1);
-	if ( have_P2 ) { free(Cbufs2); free(Sbufs2); }
+	free(Cbufs); free(Sbufs);
+	free(Csizes); free(Ssizes);
 
 	classpoly_clear(H);
 	classpoly_inv_clear(Hinv);
-	if ( have_P2 ) ecrt_clear(ecrt2);
+	for ( p = 0; p < num_extra; p++ ) ecrt_clear(ecrts[p]);
+	free(ecrts);
 
 	end = clock();
 	out_printf("Total parallel computation time: %ld msecs\n", delta_msecs(begin, end));

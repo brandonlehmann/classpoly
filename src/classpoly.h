@@ -150,7 +150,7 @@ static inline int tower_split (long *hdiv0, long *hdiv1, long *hdiv2, long *hdiv
 }
 
 int compute_classpoly (long D, int inv, mpz_t P, char *filename); // computes classpoly for specified discriminant and invariant, mod P if specified, over Z otherwise.  Output is written to filename, or to sprintf("H_%d.txt",-D) if filename is null.
-int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filename1, char *filename2, int nworkers); // parallel version using fork(), requires P1, optionally P2
+int compute_classpoly_parallel (long D, int inv, mpz_t *Pvals, char **filenames, int num_P, int nworkers); // parallel version using fork(), requires at least one P value
 
 int classpoly_load_mpz (mpz_t H[], int n, int *inv, long D);		// obsolete, use classpoly_load
 

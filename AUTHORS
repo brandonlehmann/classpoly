@@ -9,6 +9,7 @@ Primary Author
 Contributors
   Brandon Lehmann <brandonlehmann@gmail.com>
     CMake build system, parallel computation (fork-based work queue),
+    multi-P parallel reduction, CLI refactor (--flag argument parsing),
     aarch64/Apple Silicon support, test harness
 
   Andrew R. Booker

@@ -233,10 +233,21 @@ int main (int argc, char *argv[])
 			goto next;
 		}
 		/* Run parallel for both P values */
-		if ( !compute_classpoly_parallel(tv->D, 0, P1, P2, par_p1, par_p2, 2) ) {
-			printf("  parallel: FAILED to compute\n");
-			failures += 4;
-			goto next;
+		{
+			mpz_t Pvals[2];
+			char *par_fnames[2];
+			mpz_init_set(Pvals[0], P1);
+			mpz_init_set(Pvals[1], P2);
+			par_fnames[0] = par_p1;
+			par_fnames[1] = par_p2;
+			int par_ok = compute_classpoly_parallel(tv->D, 0, Pvals, par_fnames, 2, 2);
+			mpz_clear(Pvals[0]);
+			mpz_clear(Pvals[1]);
+			if ( !par_ok ) {
+				printf("  parallel: FAILED to compute\n");
+				failures += 4;
+				goto next;
+			}
 		}
 
 		/* Parse output files */

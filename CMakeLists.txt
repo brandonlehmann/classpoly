@@ -81,3 +81,38 @@ target_link_libraries(classpoly PRIVATE ff_poly)
 set_target_properties(classpoly PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
 )
+
+# --- test target ---
+# Same sources as classpoly but replace main with test harness
+set(CLASSPOLY_LIB_SOURCES ${CLASSPOLY_SOURCES})
+list(REMOVE_ITEM CLASSPOLY_LIB_SOURCES src/classpoly_program.c)
+
+enable_testing()
+
+add_executable(test_classpoly tests/test_classpoly.c ${CLASSPOLY_LIB_SOURCES})
+target_include_directories(test_classpoly PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_compile_options(test_classpoly PRIVATE
+    -O3
+    -fomit-frame-pointer
+    -funroll-loops
+    ${ARCH_FLAG}
+    -pedantic
+    -std=gnu99
+)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|ARM64")
+    target_compile_options(test_classpoly PRIVATE
+        -Wno-format
+        -Wno-incompatible-pointer-types
+        -Wno-strict-prototypes
+        -Wno-empty-body
+        -Wno-return-type
+    )
+endif()
+target_link_libraries(test_classpoly PRIVATE ff_poly)
+set_target_properties(test_classpoly PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
+add_test(NAME classpoly_correctness
+    COMMAND test_classpoly ${CMAKE_SOURCE_DIR}/tests/data
+)

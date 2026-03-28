@@ -27,6 +27,7 @@ set(CLASSPOLY_SOURCES
     src/classpoly_crt.c
     src/classpoly_inv.c
     src/compute_classpoly.c
+    src/compute_classpoly_parallel.c
     src/phi_eval.c
     src/phi_gcd.c
     src/phi_poly.c

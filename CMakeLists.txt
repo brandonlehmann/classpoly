@@ -62,6 +62,18 @@ target_compile_options(classpoly PRIVATE
     -std=gnu99
 )
 
+# On aarch64, unsigned long and uint64_t are distinct types (unsigned long long),
+# producing harmless format and pointer warnings throughout the codebase
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|ARM64")
+    target_compile_options(classpoly PRIVATE
+        -Wno-format
+        -Wno-incompatible-pointer-types
+        -Wno-strict-prototypes
+        -Wno-empty-body
+        -Wno-return-type
+    )
+endif()
+
 # Link ff_poly statically (brings in GMP and math library transitively)
 target_link_libraries(classpoly PRIVATE ff_poly)
 

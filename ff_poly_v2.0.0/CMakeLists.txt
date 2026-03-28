@@ -76,6 +76,18 @@ target_compile_options(ff_poly PRIVATE
     -std=gnu99
 )
 
+# On aarch64, unsigned long and uint64_t are distinct types (unsigned long long),
+# producing harmless format and pointer warnings throughout the codebase
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|ARM64")
+    target_compile_options(ff_poly PRIVATE
+        -Wno-format
+        -Wno-incompatible-pointer-types
+        -Wno-strict-prototypes
+        -Wno-empty-body
+        -Wno-return-type
+    )
+endif()
+
 # Find GMP (static)
 find_library(GMP_STATIC_LIBRARY libgmp.a HINTS
     /opt/homebrew/lib

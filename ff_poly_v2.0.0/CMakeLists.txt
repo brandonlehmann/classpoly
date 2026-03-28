@@ -77,8 +77,18 @@ target_compile_options(ff_poly PRIVATE
 )
 
 # Find GMP (static)
-find_library(GMP_STATIC_LIBRARY libgmp.a HINTS /usr/local/lib /usr/lib /usr/lib/x86_64-linux-gnu)
-find_path(GMP_INCLUDE_DIR gmp.h)
+find_library(GMP_STATIC_LIBRARY libgmp.a HINTS
+    /opt/homebrew/lib
+    /opt/homebrew/opt/gmp/lib
+    /usr/local/lib
+    /usr/lib
+    /usr/lib/x86_64-linux-gnu
+    /usr/lib/aarch64-linux-gnu
+)
+find_path(GMP_INCLUDE_DIR gmp.h HINTS
+    /opt/homebrew/include
+    /opt/homebrew/opt/gmp/include
+)
 
 if(NOT GMP_STATIC_LIBRARY)
     message(FATAL_ERROR "GMP static library (libgmp.a) not found. Install libgmp-dev.")

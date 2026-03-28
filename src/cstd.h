@@ -20,7 +20,9 @@ extern "C" {
 #include <string.h>
 #include <sys/resource.h>
 #include <sys/time.h>
+#ifdef __x86_64__
 #include <x86intrin.h>
+#endif
 #include <ctype.h>
 #include <time.h>
 #include <limits.h>

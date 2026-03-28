@@ -283,13 +283,48 @@
 
 
 
+//  -------- AArch64 --------
+
+#if defined(__aarch64__) && !defined(ZNP_MUL_WIDE)
+
+/* 64x64 -> 128-bit multiply using __uint128_t.  AppleClang compiles this
+   to the same mul/umulh instruction pair as hand-written assembly. */
+#define ZNP_MUL_WIDE(hi, lo, a, b)                                            \
+   do {                                                                       \
+      __uint128_t _r = (__uint128_t)(unsigned long)(a)                        \
+                     * (unsigned long)(b);                                     \
+      (lo) = (unsigned long)_r;                                               \
+      (hi) = (unsigned long)(_r >> 64);                                       \
+   } while (0)
+
+/* 128-bit add: (s1:s0) = (a1:a0) + (b1:b0).  Compiles to adds/adcs. */
+#define ZNP_ADD_WIDE(s1, s0, a1, a0, b1, b0)                                  \
+   do {                                                                       \
+      __uint128_t _s = ((__uint128_t)(a1) << 64 | (a0))                       \
+                     + ((__uint128_t)(b1) << 64 | (b0));                      \
+      (s0) = (unsigned long)_s;                                               \
+      (s1) = (unsigned long)(_s >> 64);                                       \
+   } while (0)
+
+/* 128-bit subtract: (s1:s0) = (a1:a0) - (b1:b0).  Compiles to subs/sbcs. */
+#define ZNP_SUB_WIDE(s1, s0, a1, a0, b1, b0)                                  \
+   do {                                                                       \
+      __uint128_t _s = ((__uint128_t)(a1) << 64 | (a0))                       \
+                     - ((__uint128_t)(b1) << 64 | (b0));                      \
+      (s0) = (unsigned long)_s;                                               \
+      (s1) = (unsigned long)(_s >> 64);                                       \
+   } while (0)
+
+#endif
+
+
 //  -------- generic implementations --------
 
 
 /*
    If neither ZNP_MUL_HI nor ZNP_MUL_WIDE has an assembly implementation,
    do it in C.
-   
+
    (algorithm is from GMP's longlong.h)
 */
 #if !(defined (ZNP_MUL_HI) || defined (ZNP_MUL_WIDE))

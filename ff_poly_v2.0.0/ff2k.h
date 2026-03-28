@@ -8,7 +8,11 @@
 
 #include <gmp.h>
 #include <stdio.h>
+#if defined(__x86_64__)
 #include <wmmintrin.h>
+#elif defined(__aarch64__)
+#include <arm_neon.h>
+#endif
 #include <ctype.h>
 #include "cstd.h"
 
@@ -84,12 +88,23 @@ static inline ff2k_t ff2k_add (ff2k_t a, ff2k_t b) { return a^b; }
 static inline ff2k_t ff2k_next (ff2k_t a) { return (a+1 == _ff2k_ctx->xk) ? 0 : a+1; }
 static inline ff2k_t ff2k_from_int (long a) { return a&1; }
 
-static inline ff2k_t _ff2k_pclmul (ff2k_t a, ff2k_t b)
+static inline ff2k_t
+#if defined(__aarch64__)
+__attribute__((target("aes")))
+#endif
+_ff2k_pclmul (ff2k_t a, ff2k_t b)
 {
+#if defined(__x86_64__)
     register __m128i A, B, C;
     A[0]=a; B[0] = b;
     C = _mm_clmulepi64_si128 (A,B,0);
     return (ff2k_t)C[0];
+#elif defined(__aarch64__)
+    poly128_t result = vmull_p64((poly64_t)a, (poly64_t)b);
+    return (ff2k_t)vgetq_lane_u64(vreinterpretq_u64_p128(result), 0);
+#else
+#error "_ff2k_pclmul: unsupported architecture"
+#endif
 }
 
 //#define _ff2k_pclmultby(a,b) asm ("pclmullqlqdq %1, %0;" : "+x"(a) : "x"(b));   // use Intel carry-less multiplication to compute a = a*b

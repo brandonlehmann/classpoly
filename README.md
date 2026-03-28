@@ -48,51 +48,71 @@ make -j$(nproc)
 ## Usage
 
 ```bash
-# Serial (original)
-./classpoly D [inv P filename verbosity]
-
-# Parallel with single P
-./classpoly -j N D inv P1 0 filename1 "" [verbosity]
-
-# Parallel with two P values
-./classpoly -j N D inv P1 P2 filename1 filename2 [verbosity]
+classpoly --D <discriminant> [--inv <invariant>] [--P <prime>]... [-j <workers>] [-v <level>]
+classpoly -h | --help
 ```
 
-### Parameters
+### Options
 
-| Parameter | Description |
-|-----------|-------------|
-| `D` | Imaginary quadratic discriminant (negative; positive values are auto-negated) |
-| `inv` | Class invariant identifier (see table below; -1 = auto-pick best, 0 = j-invariant) |
-| `P` | Prime modulus (0 or omitted = compute over Z) |
-| `filename` | Output file (default: `H_{-D}.txt`) |
-| `verbosity` | 0 = normal, 1 or 2 = more detail, -1 = suppress |
-| `-j N` | Number of parallel worker processes (use physical core count; requires P) |
+| Option | Description |
+|--------|-------------|
+| `--D <value>` | **Required.** Imaginary quadratic discriminant (positive values auto-negated) |
+| `--inv <name\|code>` | Class invariant (see table below; default: auto-pick best for D) |
+| `--P <prime>` | Prime modulus for reduction (repeatable; omit for computation over Z) |
+| `-j <N>` | Number of parallel workers (requires at least one `--P`; max 2 `--P` in parallel mode) |
+| `-v <level>` | Verbosity: -1=quiet, 0=normal, 1=info, 2=debug (default: auto based on \|D\|) |
+| `-h`, `--help` | Show help message |
+
+`--P` accepts arithmetic expressions: `2^127-1`, `2^255-19`, `M31` (Mersenne), etc.
+
+### Output files
+
+Output filenames are deterministic:
+- Over **Z**: `H_D<|D|>.coeffs`
+- Mod **P**: `H_D<|D|>_p<P>.coeffs` (one file per `--P`)
+
+### Examples
+
+```bash
+# Compute over Z with auto-picked invariant
+classpoly --D 167995
+
+# Serial, single prime, explicit invariant
+classpoly --D 167995 --inv weber --P 2^127-1
+
+# Serial, two primes
+classpoly --D 167995 --P 2^127-1 --P 2^255-19
+
+# Parallel with 4 workers
+classpoly --D 167995 --inv 0 --P 2^127-1 --P 2^255-19 -j 4
+```
 
 ### Class invariants
 
-| inv | Invariant | Notes |
-|-----|-----------|-------|
-| 0 | j | Hilbert class polynomial (Sutherland 2011) |
-| 1 | f (Weber function) | See Enge-Sutherland 2010, sec. 3 |
-| 2 | f^2 | |
-| 5 | gamma\_2 (cube-root of j) | |
-| 6 | w\_{2,3} (double eta-quotient) | See Enge-Sutherland 2010, sec. 3 |
-| 9 | w\_{3,3} | |
-| 10 | w\_{2,5} | |
-| 11 | t (Ramanujan-related) | See Enge-Sutherland 2010, sec. 4.4 |
-| 12 | t^2 | |
-| 14 | w\_{2,7} | |
-| 15 | w\_{3,5} | |
-| 21 | w\_{3,7} | |
-| 23 | w\_{2,3}^2 | |
-| 24 | w\_{2,5}^2 | |
-| 26 | w\_{2,13} | |
-| 27 | w\_{2,7}^2 | |
-| 28 | w\_{3,3}^2 | |
-| 100+N | A\_N (Atkin, N=3,5,7,11,13,17,19,23,29,31,41,47,59,71) | |
-| 400+N | w\_N^s single-eta (N=3,5,7,13; s=24/gcd(24,N-1)) | |
-| 500+p1\*p2 | w\_{p1,p2}^s double-eta | Pairs: (2,3),(2,5),(2,7),(2,13),(3,3),(3,5),(3,7),(3,13),(5,7) |
+`--inv` accepts numeric codes or string names (e.g. `--inv weber`, `--inv gamma2`, `--inv a71`, `--inv w2w3`). Friendly aliases: `hilbert`=j, `weber`=f, `gamma2`=g2, `ramanujan`=t.
+
+| inv | Name | Invariant | Notes |
+|-----|------|-----------|-------|
+| 0 | j, hilbert | j | Hilbert class polynomial (Sutherland 2011) |
+| 1 | f, weber | f (Weber function) | See Enge-Sutherland 2010, sec. 3 |
+| 2 | f2 | f^2 | |
+| 5 | g2, gamma2 | gamma\_2 (cube-root of j) | |
+| 6 | w2w3e1 | w\_{2,3} (double eta-quotient) | See Enge-Sutherland 2010, sec. 3 |
+| 9 | w3w3e1 | w\_{3,3} | |
+| 10 | w2w5e1 | w\_{2,5} | |
+| 11 | t, ramanujan | t (Ramanujan-related) | See Enge-Sutherland 2010, sec. 4.4 |
+| 12 | t2 | t^2 | |
+| 14 | w2w7e1 | w\_{2,7} | |
+| 15 | w3w5e1 | w\_{3,5} | |
+| 21 | w3w7e1 | w\_{3,7} | |
+| 23 | w2w3e2 | w\_{2,3}^2 | |
+| 24 | w2w5e2 | w\_{2,5}^2 | |
+| 26 | w2w13e1 | w\_{2,13} | |
+| 27 | w2w7e2 | w\_{2,7}^2 | |
+| 28 | w3w3e2 | w\_{3,3}^2 | |
+| 100+N | a\<N\> | A\_N (Atkin, N=3,5,7,11,13,17,19,23,29,31,41,47,59,71) | |
+| 400+N | w\<N\> | w\_N^s single-eta (N=3,5,7,13; s=24/gcd(24,N-1)) | |
+| 500+p1\*p2 | w\<p1\>w\<p2\> | w\_{p1,p2}^s double-eta | Pairs: (2,3),(2,5),(2,7),(2,13),(3,3),(3,5),(3,7),(3,13),(5,7) |
 
 ## Testing
 

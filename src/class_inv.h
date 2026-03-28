@@ -344,6 +344,60 @@ static inline const char *inv_string (int inv) {
 	return (char*)"?";
 }
 
+/*
+    Parse an invariant name or numeric code string.
+    Accepts: numeric codes ("0", "5", "171"), canonical names from inv_strings ("j", "f", "g2", "w2w3e1"),
+    friendly aliases ("weber", "gamma2", "ramanujan", "hilbert"),
+    and dynamic names ("a71" for Atkin, "w13" for single-eta, "w2w3" for double-eta).
+    Returns invariant code on success, -2 on parse failure.
+*/
+static inline int inv_parse_name (const char *s)
+{
+	int i, n, p1, p2, inv;
+	char *end;
+
+	if ( !s || !*s ) return -2;
+
+	/* Numeric code (reject negatives — no valid invariant code is negative) */
+	if ( (s[0] >= '0' && s[0] <= '9') || (s[0] == '-' && s[1] >= '0' && s[1] <= '9') ) {
+		inv = (int)strtol(s, &end, 10);
+		if ( *end != '\0' || inv < 0 ) return -2;
+		return inv;
+	}
+
+	/* Friendly aliases */
+	if ( strcmp(s, "weber") == 0 ) return INV_F;
+	if ( strcmp(s, "gamma2") == 0 ) return INV_G2;
+	if ( strcmp(s, "ramanujan") == 0 ) return INV_T;
+	if ( strcmp(s, "hilbert") == 0 ) return INV_J;
+
+	/* Exact match against inv_strings table */
+	for ( i = 0; i <= INV_MAX_SPECIFIC; i++ )
+		if ( strcmp(s, inv_strings[i]) == 0 ) return i;
+
+	/* Atkin: "a<N>" */
+	if ( s[0] == 'a' && s[1] >= '0' && s[1] <= '9' ) {
+		n = (int)strtol(s + 1, &end, 10);
+		if ( *end != '\0' ) return -2;
+		return INV_ATKIN + n;
+	}
+
+	/* Double-eta: "w<p1>w<p2>" — must check before single-eta */
+	if ( s[0] == 'w' && s[1] >= '0' && s[1] <= '9' ) {
+		p1 = (int)strtol(s + 1, &end, 10);
+		if ( *end == 'w' && *(end + 1) >= '0' && *(end + 1) <= '9' ) {
+			p2 = (int)strtol(end + 1, &end, 10);
+			if ( *end != '\0' ) return -2;
+			return INV_DOUBLE_ETA + p1 * p2;
+		}
+		/* Single-eta: "w<N>" */
+		if ( *end != '\0' ) return -2;
+		return INV_SINGLE_ETA + p1;
+	}
+
+	return -2;
+}
+
 void _ff_inv_from_j (ff_t *x, ff_t *j, int inv);
 void _ff_j_from_inv (ff_t *j, ff_t *x, int inv);
 static inline void ff_inv_from_j (ff_t *x, ff_t *j, int inv) { if ( inv) _ff_inv_from_j(x,j,inv); else _ff_set(*x,*j); }

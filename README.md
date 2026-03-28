@@ -3,14 +3,16 @@
 Computes Hilbert class polynomials H_D(X) using the Chinese Remainder Theorem, with parallelized multi-process computation via `fork()`.
 
 Based on the algorithms described in:
-- [1] Andrew V. Sutherland, "Computing Hilbert class polynomials with the Chinese Remainder Theorem", Math. Comp. 80 (2011), 501-538.
-- [2] Andreas Enge and Andrew V. Sutherland, "Class invariants by the CRT method", ANTS IX, LNCS 6197 (2010), 142-156.
+
+> **\[Sutherland 2011\]** Andrew V. Sutherland, "Computing Hilbert class polynomials with the Chinese Remainder Theorem", Math. Comp. 80 (2011), 501-538.
+
+> **\[Enge-Sutherland 2010\]** Andreas Enge and Andrew V. Sutherland, "Class invariants by the CRT method", ANTS IX, LNCS 6197 (2010), 142-156.
 
 ## Prerequisites
 
-- **GMP** (version 6 or later) — https://gmplib.org (on Ubuntu: `libgmp-dev`)
+- **GMP** (version 6 or later) — <https://gmplib.org> (on Ubuntu: `libgmp-dev`)
 - **ff_poly** (version 2 or later) — included in `ff_poly_v2.0.0/`
-- **Modular polynomials** — download at least `phi_j.tar` from https://math.mit.edu/~drew/SmallModPolys.html and extract to `$HOME/phi_files/`. For class invariants beyond j, download all from https://math.mit.edu/~drew/phi_polys.tar
+- **Modular polynomials** — download at least `phi_j.tar` from <https://math.mit.edu/~drew/SmallModPolys.html> and extract to `$HOME/phi_files/`. For class invariants beyond j, download all from <https://math.mit.edu/~drew/phi_polys.tar>
 - **64-bit OS** (Linux or macOS, x86_64 or aarch64/Apple Silicon)
 
 ## Building
@@ -47,28 +49,28 @@ make -j$(nproc)
 
 ### Class invariants
 
-| inv | Invariant | Reference |
-|-----|-----------|-----------|
-| 0 | j | [1] |
-| 1 | f (Weber function) | [2] sec. 3 |
+| inv | Invariant | Notes |
+|-----|-----------|-------|
+| 0 | j | Hilbert class polynomial (Sutherland 2011) |
+| 1 | f (Weber function) | See Enge-Sutherland 2010, sec. 3 |
 | 2 | f^2 | |
-| 5 | gamma_2 (cube-root of j) | |
-| 6 | w_{2,3} (double eta-quotient) | [2] sec. 3 |
-| 9 | w_{3,3} | |
-| 10 | w_{2,5} | |
-| 11 | t (Ramanujan-related) | [2] sec. 4.4 |
+| 5 | gamma\_2 (cube-root of j) | |
+| 6 | w\_{2,3} (double eta-quotient) | See Enge-Sutherland 2010, sec. 3 |
+| 9 | w\_{3,3} | |
+| 10 | w\_{2,5} | |
+| 11 | t (Ramanujan-related) | See Enge-Sutherland 2010, sec. 4.4 |
 | 12 | t^2 | |
-| 14 | w_{2,7} | |
-| 15 | w_{3,5} | |
-| 21 | w_{3,7} | |
-| 23 | w_{2,3}^2 | |
-| 24 | w_{2,5}^2 | |
-| 26 | w_{2,13} | |
-| 27 | w_{2,7}^2 | |
-| 28 | w_{3,3}^2 | |
-| 100+N | A_N (Atkin, N=3,5,7,11,13,17,19,23,29,31,41,47,59,71) | |
-| 400+N | w_N^s single-eta (N=3,5,7,13; s=24/gcd(24,N-1)) | |
-| 500+p1*p2 | w_{p1,p2}^s double-eta (pairs: (2,3),(2,5),(2,7),(2,13),(3,3),(3,5),(3,7),(3,13),(5,7)) | |
+| 14 | w\_{2,7} | |
+| 15 | w\_{3,5} | |
+| 21 | w\_{3,7} | |
+| 23 | w\_{2,3}^2 | |
+| 24 | w\_{2,5}^2 | |
+| 26 | w\_{2,13} | |
+| 27 | w\_{2,7}^2 | |
+| 28 | w\_{3,3}^2 | |
+| 100+N | A\_N (Atkin, N=3,5,7,11,13,17,19,23,29,31,41,47,59,71) | |
+| 400+N | w\_N^s single-eta (N=3,5,7,13; s=24/gcd(24,N-1)) | |
+| 500+p1\*p2 | w\_{p1,p2}^s double-eta | Pairs: (2,3),(2,5),(2,7),(2,13),(3,3),(3,5),(3,7),(3,13),(5,7) |
 
 ## Testing
 
@@ -82,7 +84,7 @@ The test harness runs 7 discriminants through both serial and parallel paths, cr
 
 ## Parallel Architecture
 
-- **fork()** gives each worker its own copy of all mutable ff_poly globals via COW — zero changes to the finite field library
+- **fork()** gives each worker its own copy of all mutable ff\_poly globals via COW — zero changes to the finite field library
 - **Atomic work queue** (`__sync_fetch_and_add`) dynamically balances load across workers — no static chunking
 - **Shared memory** (`mmap MAP_SHARED`) accumulators — zero disk I/O
 - **Single `ecrt_init`** in the parent before fork — workers inherit via COW, no redundant CRT precomputation

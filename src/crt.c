@@ -485,15 +485,30 @@ void ecrt_init (ecrt_context_t ecrt, unsigned long m[], int n, int k, mpz_t P, i
     
     ecrt->m = (unsigned long *)malloc (n*sizeof(*ecrt->m));
     for ( i = 0 ; i < n ; i++ ) ecrt->m[i] = m[i];
-//  ecrt->d = (mpz_t *)malloc (n*sizeof(*ecrt->d));  for ( i = 0 ; i < n ; i++ ) mpz_init2(ecrt->d[i],mpz_sizeinbase(P,2));
 
-    for ( i = 0 ; i < n ; i++ ) {
+    for ( i = 0 ; i < n ; i++ )
         ecrt->a[i] = ui_inverse(ecrt->a[i],m[i]);                                               // a holds 1/M_i mod m[i]
-//      mpz_set_ui(ecrt->X,m[i]); mpz_invert(ecrt->X,ecrt->X,P);
-//      mpz_mul (ecrt->X,ecrt->X,ecrt->MP); mpz_mod(ecrt->X,ecrt->X,P);                     // compute M_i mod P using division mod P not a CRT tree (faster for log P = o(log^3 maecrt->Xm))
-//      mpz_mul_ui(ecrt->X,ecrt->X,ecrt->a[i]); mpz_mod (ecrt->d[i],ecrt->X,P);                 // d[i] = a_iM_i mod P
-//gmp_printf ("a_%d = %lu, d_%d = %Zd\n", i, ecrt->a[i], i, ecrt->d[i]);
+
+    // Precompute d[i] = a[i] * M_i mod P via batch inversion (1 inversion + O(n) multiplies
+    // instead of n independent mpz_invert calls)
+    ecrt->d = (mpz_t *)malloc (n*sizeof(*ecrt->d));
+    for ( i = 0 ; i < n ; i++ ) mpz_init2(ecrt->d[i],mpz_sizeinbase(P,2)+64);
+
+    // Forward pass: d[i] temporarily holds partial products m[0]*...*m[i] mod P
+    mpz_set_ui(ecrt->d[0], m[0]);  mpz_mod(ecrt->d[0], ecrt->d[0], P);
+    for ( i = 1 ; i < n ; i++ ) { mpz_mul_ui(ecrt->d[i], ecrt->d[i-1], m[i]); mpz_mod(ecrt->d[i], ecrt->d[i], P); }
+
+    if ( ! mpz_invert(ecrt->X, ecrt->d[n-1], P) ) { err_printf ("batch inversion failed in ecrt_init: gcd(prod(m), P) != 1\n"); abort(); }
+
+    // Backward pass: extract individual inverses and compute d[i] = a[i] * (M/m[i]) mod P
+    for ( i = n-1 ; i > 0 ; i-- ) {
+        mpz_mul(ecrt->Y, ecrt->X, ecrt->d[i-1]); mpz_mod(ecrt->Y, ecrt->Y, P);
+        mpz_mul(ecrt->d[i], ecrt->Y, ecrt->MP); mpz_mod(ecrt->d[i], ecrt->d[i], P);
+        mpz_mul_ui(ecrt->d[i], ecrt->d[i], ecrt->a[i]); mpz_mod(ecrt->d[i], ecrt->d[i], P);
+        mpz_mul_ui(ecrt->X, ecrt->X, m[i]); mpz_mod(ecrt->X, ecrt->X, P);
     }
+    mpz_mul(ecrt->d[0], ecrt->X, ecrt->MP); mpz_mod(ecrt->d[0], ecrt->d[0], P);
+    mpz_mul_ui(ecrt->d[0], ecrt->d[0], ecrt->a[0]); mpz_mod(ecrt->d[0], ecrt->d[0], P);
 }
 
 void ecrt_clear (ecrt_context_t ecrt)
@@ -503,7 +518,7 @@ void ecrt_clear (ecrt_context_t ecrt)
     if ( ecrt->fp ) fclose(ecrt->fp);
     for ( i = 0 ; i < ecrt->jobs ; i++ ) if ( ecrt->infp[i] ) fclose (ecrt->infp[i]);
     mpz_clear (ecrt->MP); mpz_clear (ecrt->X); mpz_clear (ecrt->Y); mpz_clear(ecrt->P);
-//  for ( i = 0 ; i < ecrt->n ; i++ ) mpz_clear (ecrt->d[i]);  free (ecrt->d);
+    if ( ecrt->d ) { for ( i = 0 ; i < ecrt->n ; i++ ) mpz_clear (ecrt->d[i]);  free (ecrt->d); }
     free (ecrt->a); free (ecrt->Cdata); free (ecrt->sdata);
     memset(ecrt,0,sizeof(*ecrt));
 }
@@ -528,6 +543,45 @@ void _ecrt_unlock (FILE *fp)
     fclose(fp);
 }
 
+// Compute floor((2^delta * c * a) / m) and accumulate into sdata via mpn arithmetic
+static inline void _ecrt_s_accum (mp_limb_t *sdata, int slimbs, unsigned long c, unsigned long a, int delta, unsigned long m)
+{
+    mp_limb_t buf[4] = {0, 0, 0, 0};
+    int nlimbs;
+    uint128_t ca;
+
+    if ( !c ) return;
+    ca = (uint128_t)c * a;
+    buf[0] = (mp_limb_t)ca;
+    buf[1] = (mp_limb_t)(ca >> 64);
+    nlimbs = buf[1] ? 2 : 1;
+    if ( delta > 0 ) {
+        buf[2] = (nlimbs > 1) ? (buf[1] >> (64 - delta)) : 0;
+        buf[1] = (buf[1] << delta) | (buf[0] >> (64 - delta));
+        buf[0] = buf[0] << delta;
+        nlimbs = buf[2] ? 3 : (buf[1] ? 2 : 1);
+    }
+    mpn_divrem_1(buf, 0, buf, nlimbs, m);
+    if ( buf[1] ) {
+        mpn_add_n(sdata, sdata, buf, slimbs);
+    } else if ( buf[0] ) {
+        mpn_add_1(sdata, sdata, slimbs, buf[0]);
+    }
+}
+
+// Accumulate Cdata[offset] += Y * scalar via mpn_addmul_1 with carry propagation
+static inline void _ecrt_C_accum (mp_limb_t *Cdata, int Climbs, mp_limb_t *Y_limbs, mp_size_t Y_size, unsigned long scalar)
+{
+    mp_limb_t carry;
+
+    if ( !scalar ) return;
+    carry = mpn_addmul_1(Cdata, Y_limbs, Y_size, scalar);
+    if ( carry ) {
+        if ( mpn_add_1(Cdata+Y_size, Cdata+Y_size, Climbs-Y_size, carry) )
+            { err_printf ("overflow on C in ecrt"); exit (0); }
+    }
+}
+
 // Algorithm 2.4 of Hilbert CRT paper, augmented to support batching
 void ecrt_update (ecrt_context_t ecrt, int i, unsigned long c[], int k)
 {
@@ -541,10 +595,8 @@ void ecrt_update (ecrt_context_t ecrt, int i, unsigned long c[], int k)
     if ( ecrt->j >= 0 ) { err_printf ("Error: call to ecrt_update while coefficient enumeration is in progress\n"); exit (0); }
     if ( i > ecrt->n ) { err_printf ("Error: call to ecrt_update with modulus index %d > modulus count %d\n", i, ecrt->n); exit (0); } 
     a = ecrt->a[i];  m = ecrt->m[i];
-    // compute d[i] = a_iM_i = a(M/m) mod P
-    mpz_set_ui(ecrt->X,m); mpz_invert(ecrt->X,ecrt->X,ecrt->P);
-    mpz_mul (ecrt->X,ecrt->X,ecrt->MP); mpz_mod(ecrt->X,ecrt->X,ecrt->P);                   // compute M_i mod P using division mod P
-    mpz_mul_ui(ecrt->X,ecrt->X,a); mpz_mod (ecrt->Y,ecrt->X,ecrt->P);                       // Y = d[i] = a_iM_i mod P
+    mp_limb_t *Y_limbs = ecrt->d[i]->_mp_d;
+    mp_size_t Y_size = ecrt->d[i]->_mp_size;
     if ( ecrt->batching ) {
         if ( ! ecrt->fp ) { err_printf ("Error, null file pointer in ecrt_update while using batching\n"); exit (0); }
         // acquire exclusive lock to avoid disk thrashing
@@ -557,7 +609,7 @@ void ecrt_update (ecrt_context_t ecrt, int i, unsigned long c[], int k)
             if ( j0 == CRT_BATCH_SIZE ) {
                 if ( fwrite (ecrt->Cdata, ecrt->Cbytes, CRT_BATCH_SIZE, ecrt->fp) != CRT_BATCH_SIZE ) { err_printf ("file write error %d in ecrt_update\n", errno); exit (0); }
                 if ( fwrite (ecrt->sdata, ecrt->sbytes, CRT_BATCH_SIZE, ecrt->fp) != CRT_BATCH_SIZE ) { err_printf ("file write error %d in ecrt_update\n", errno); exit (0); }
-                j0 = 0; 
+                j0 = 0;
             }
             if ( j0 == 0 ) {
                 pos = ftell(ecrt->fp);
@@ -565,13 +617,11 @@ void ecrt_update (ecrt_context_t ecrt, int i, unsigned long c[], int k)
                 if ( fread (ecrt->sdata, ecrt->sbytes, CRT_BATCH_SIZE, ecrt->fp) != CRT_BATCH_SIZE ) { err_printf ("file read error %d in ecrt_update\n", errno); exit (0); }
                 fseek (ecrt->fp, pos, SEEK_SET);
             }
-            mpz_mul_ui(ecrt->X,ecrt->Y,c[j]);       // dont' reduce mod P to save time
-            if ( mpn_add (ecrt->Cdata+j0*ecrt->Climbs, ecrt->Cdata+j0*ecrt->Climbs, ecrt->Climbs, ecrt->X->_mp_d, ecrt->X->_mp_size) ) { err_printf ("overflow on C in ecrt"); exit (0); }
-            mpz_set_ui(ecrt->X,c[j]);  mpz_mul_ui(ecrt->X,ecrt->X,a);  mpz_mul_2exp(ecrt->X,ecrt->X,ecrt->delta);  mpz_fdiv_q_ui(ecrt->X,ecrt->X,m);    // compute floor((2^delta*c[j]*a[i])/m[i])
-            if ( mpn_add (ecrt->sdata+j0*ecrt->slimbs, ecrt->sdata+j0*ecrt->slimbs, ecrt->slimbs, ecrt->X->_mp_d, ecrt->X->_mp_size) ) { err_printf ("overflow on s in ecrt"); exit (0); }
+            _ecrt_C_accum(ecrt->Cdata+j0*ecrt->Climbs, ecrt->Climbs, Y_limbs, Y_size, c[j]);
+            _ecrt_s_accum(ecrt->sdata+j0*ecrt->slimbs, ecrt->slimbs, c[j], a, ecrt->delta, m);
         }
         if ( j0 ) {
-            // we write a full batch at the end, even though the trailing entries may be unused (these will be zero)
+            // write a full batch at the end, even though trailing entries may be unused (zero)
             if ( fwrite (ecrt->Cdata, ecrt->Cbytes, CRT_BATCH_SIZE, ecrt->fp) != CRT_BATCH_SIZE ) { err_printf ("file write error %d in ecrt_update\n", errno); exit (0); }
             if ( fwrite (ecrt->sdata, ecrt->sbytes, CRT_BATCH_SIZE, ecrt->fp) != CRT_BATCH_SIZE ) { err_printf ("file write error %d in ecrt_update\n", errno); exit (0); }
         }
@@ -582,10 +632,8 @@ void ecrt_update (ecrt_context_t ecrt, int i, unsigned long c[], int k)
             out_printf ("Wrote %d coefficients (%ld bytes of data) for modulus m[%d]=%ld to disk in %ld secs, throughput %.2f MB/s\n", k, totbytes, i, ecrt->m[i], end-start, (double)totbytes / (1000000.0*(end-start)));
     } else {
         for ( j = 0 ; j < k ; j++ ) {
-            mpz_mul_ui(ecrt->X,ecrt->Y,c[j]);       // don't reduce mod P to save time
-            if ( mpn_add (ecrt->Cdata+j*ecrt->Climbs, ecrt->Cdata+j*ecrt->Climbs, ecrt->Climbs, ecrt->X->_mp_d, ecrt->X->_mp_size) ) { err_printf ("overflow on C in ecrt"); exit (0); }
-            mpz_set_ui(ecrt->X,c[j]);  mpz_mul_ui(ecrt->X,ecrt->X,a); mpz_mul_2exp(ecrt->X,ecrt->X,ecrt->delta);  mpz_fdiv_q_ui(ecrt->X,ecrt->X,m); // compute floor((2^delta*c[j]*a[i])/m[i])
-            if ( mpn_add (ecrt->sdata+j*ecrt->slimbs, ecrt->sdata+j*ecrt->slimbs, ecrt->slimbs, ecrt->X->_mp_d, ecrt->X->_mp_size) ) { err_printf ("overflow on s in ecrt"); exit (0); }
+            _ecrt_C_accum(ecrt->Cdata+j*ecrt->Climbs, ecrt->Climbs, Y_limbs, Y_size, c[j]);
+            _ecrt_s_accum(ecrt->sdata+j*ecrt->slimbs, ecrt->slimbs, c[j], a, ecrt->delta, m);
         }
     }
 }

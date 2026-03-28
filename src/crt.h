@@ -72,7 +72,7 @@ typedef struct crt_tree crt_tree_t[1];
 struct ecrt_context {
 	unsigned long *m;				// n moduli m_1,..., m_n, with M=prod m_i
 	unsigned long *a;				// n values a_i = 1/M_i mod m_i where M_i = M/m_i = prod_{j!=i} m_j
-//	mpz_t *d;						// n values d_i = a_i M_i mod P where a_i = 1/M_i mod m_i and M_i = prod_{j\ne i} m_i
+	mpz_t *d;						// n values d_i = a_i M_i mod P where a_i = 1/M_i mod m_i and M_i = prod_{j\ne i} m_i
 	mpz_t P;						// output modulus
 	mpz_t MP;						// prod m_i mod P
 	mpz_t X,Y, Z;					// work variables

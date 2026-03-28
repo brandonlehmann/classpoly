@@ -339,12 +339,13 @@ int compute_classpoly_parallel (long D, int inv, mpz_t *Pvals, char **filenames,
 	int failures = 0;
 	int workers_alive = nworkers;
 	{
-		struct timespec ts_start, ts_now;
+		struct timespec ts_start, ts_now, ts_last_print;
 		clock_gettime(CLOCK_MONOTONIC, &ts_start);
+		ts_last_print = ts_start;
 
 		while ( workers_alive > 0 ) {
-			/* Sleep 10 seconds between progress updates */
-			sleep(10);
+			/* Short sleep: 100ms poll interval for fast completion detection */
+			usleep(100000);
 
 			/* Reap any finished children (non-blocking) */
 			for ( w = 0; w < nworkers; w++ ) {
@@ -361,24 +362,28 @@ int compute_classpoly_parallel (long D, int inv, mpz_t *Pvals, char **filenames,
 				}
 			}
 
-			/* Print progress */
+			/* Print progress every ~10 seconds */
 			clock_gettime(CLOCK_MONOTONIC, &ts_now);
-			double elapsed = (ts_now.tv_sec - ts_start.tv_sec) + (ts_now.tv_nsec - ts_start.tv_nsec) / 1e9;
-			int done = shared->primes_done;
-			if ( done > crt_pcnt ) done = crt_pcnt;
-			double pct = 100.0 * done / crt_pcnt;
-			double rate = (elapsed > 0) ? done / elapsed : 0;
-			int remaining = crt_pcnt - done;
-			double eta = (rate > 0) ? remaining / rate : 0;
-			int eta_h = (int)(eta / 3600);
-			int eta_m = (int)((eta - eta_h * 3600) / 60);
-			int eta_s = (int)(eta - eta_h * 3600 - eta_m * 60);
-			int el_h = (int)(elapsed / 3600);
-			int el_m = (int)((elapsed - el_h * 3600) / 60);
-			int el_s = (int)(elapsed - el_h * 3600 - el_m * 60);
-			out_printf("  [%6.2f%%] %d/%d primes  %.0f primes/s  elapsed %dh%02dm%02ds  ETA %dh%02dm%02ds  [%d workers]\n",
-				   pct, done, crt_pcnt, rate, el_h, el_m, el_s, eta_h, eta_m, eta_s, workers_alive);
-			fflush(stdout);
+			double since_print = (ts_now.tv_sec - ts_last_print.tv_sec) + (ts_now.tv_nsec - ts_last_print.tv_nsec) / 1e9;
+			if ( since_print >= 10.0 || workers_alive == 0 ) {
+				double elapsed = (ts_now.tv_sec - ts_start.tv_sec) + (ts_now.tv_nsec - ts_start.tv_nsec) / 1e9;
+				int done = shared->primes_done;
+				if ( done > crt_pcnt ) done = crt_pcnt;
+				double pct = 100.0 * done / crt_pcnt;
+				double rate = (elapsed > 0) ? done / elapsed : 0;
+				int remaining = crt_pcnt - done;
+				double eta = (rate > 0) ? remaining / rate : 0;
+				int eta_h = (int)(eta / 3600);
+				int eta_m = (int)((eta - eta_h * 3600) / 60);
+				int eta_s = (int)(eta - eta_h * 3600 - eta_m * 60);
+				int el_h = (int)(elapsed / 3600);
+				int el_m = (int)((elapsed - el_h * 3600) / 60);
+				int el_s = (int)(elapsed - el_h * 3600 - el_m * 60);
+				out_printf("  [%6.2f%%] %d/%d primes  %.0f primes/s  elapsed %dh%02dm%02ds  ETA %dh%02dm%02ds  [%d workers]\n",
+					   pct, done, crt_pcnt, rate, el_h, el_m, el_s, eta_h, eta_m, eta_s, workers_alive);
+				fflush(stdout);
+				ts_last_print = ts_now;
+			}
 		}
 	}
 	free(pids);

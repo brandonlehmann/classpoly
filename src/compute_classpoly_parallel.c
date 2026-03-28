@@ -38,6 +38,7 @@
 /* Shared state between parent and children, allocated via mmap MAP_SHARED */
 struct parallel_shared {
 	volatile int counter;		/* atomic work counter: next prime index to claim */
+	volatile int primes_done;	/* atomic: total primes completed across all workers */
 	int pcnt;			/* total prime count */
 	int batch_size;			/* primes per batch */
 };
@@ -220,6 +221,7 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 		      MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 	if ( shared == MAP_FAILED ) { err_printf("mmap failed for shared counter\n"); abort(); }
 	shared->counter = 0;
+	shared->primes_done = 0;
 	shared->pcnt = crt_pcnt;
 	shared->batch_size = PARALLEL_BATCH_SIZE;
 
@@ -318,9 +320,9 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 						ecrt_update(ecrt2, idx, (unsigned long *)work, H_d);
 
 					primes_done++;
+					__sync_fetch_and_add(&shared->primes_done, 1);
 				}
-
-				}
+			}
 
 			/* Don't free mmap buffers — parent reads them */
 			_exit(0);
@@ -357,7 +359,7 @@ int compute_classpoly_parallel (long D, int inv, mpz_t P1, mpz_t P2, char *filen
 			/* Print progress */
 			clock_gettime(CLOCK_MONOTONIC, &ts_now);
 			double elapsed = (ts_now.tv_sec - ts_start.tv_sec) + (ts_now.tv_nsec - ts_start.tv_nsec) / 1e9;
-			int done = shared->counter;
+			int done = shared->primes_done;
 			if ( done > crt_pcnt ) done = crt_pcnt;
 			double pct = 100.0 * done / crt_pcnt;
 			double rate = (elapsed > 0) ? done / elapsed : 0;

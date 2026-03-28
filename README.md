@@ -8,15 +8,34 @@ Based on the algorithms described in:
 
 > **\[Enge-Sutherland 2010\]** Andreas Enge and Andrew V. Sutherland, "Class invariants by the CRT method", ANTS IX, LNCS 6197 (2010), 142-156.
 
+## Quick Start
+
+```bash
+# 1. Install GMP (if not already installed)
+sudo apt install libgmp-dev        # Ubuntu/Debian
+# or: brew install gmp              # macOS
+
+# 2. Extract modular polynomials to $HOME/phi_files/
+mkdir -p "$HOME/phi_files"
+for f in phi_polys/*.tar.gz; do tar xzf "$f" -C "$HOME/phi_files"; done
+
+# 3. Build
+mkdir build && cd build
+cmake ..
+make -j$(nproc)
+
+# 4. Run
+./classpoly --D 167995
+```
+
 ## Prerequisites
 
 - **GMP** (version 6 or later) — <https://gmplib.org> (on Ubuntu: `libgmp-dev`)
-- **Modular polynomials** — download at least `phi_j.tar` from <https://math.mit.edu/~drew/SmallModPolys.html> and extract to `$HOME/phi_files/`. For class invariants beyond j, download all from <https://math.mit.edu/~drew/phi_polys.tar>
+- **Modular polynomials** — included in the `phi_polys/` directory (~1.1 GB across 160 archives). These are the modular polynomial files from <https://math.mit.edu/~drew/phi_polys.tar>. They **must** be extracted to `$HOME/phi_files/` before running (see Quick Start above). To change this location, modify `PHI_DIR_NAME` in `src/phi_poly.h`.
 - **64-bit OS** (Linux or macOS, x86_64 or aarch64/Apple Silicon)
+- **CMake** 3.16 or later
 
-**Important:**
-- The `$HOME/phi_files` directory must contain the extracted modular polynomials before running. To change this location, modify `phi_dir()` in `phi_poly.h`.
-- Intermediate CRT files are written to a per-process subdirectory under `$TMPDIR` (or `/tmp` if unset) and cleaned up automatically.
+**Note:** Intermediate CRT files are written to a per-process subdirectory under `$TMPDIR` (or `/tmp` if unset) and cleaned up automatically.
 
 ## Building
 

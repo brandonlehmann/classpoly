@@ -41,7 +41,7 @@ struct cli_args {
 
 static void print_help (void)
 {
-	printf("classpoly v%s — Compute Hilbert class polynomials via CRT\n\n", CLASSPOLY_VERSION_STRING);
+	printf("classpoly v%s — Compute class polynomials via CRT\n\n", CLASSPOLY_VERSION_STRING);
 	printf("Usage:\n");
 	printf("  classpoly --D <discriminant> [--inv <invariant>] [--P <prime>]... [-j <workers>] [-v <level>]\n");
 	printf("  classpoly -h | --help\n\n");

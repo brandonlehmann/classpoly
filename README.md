@@ -1,6 +1,6 @@
 # classpoly v1.0.3 — Parallel Fork
 
-Computes Hilbert class polynomials H_D(X) using the Chinese Remainder Theorem, with parallelized multi-process computation via `fork()`.
+Computes class polynomials H_D(X) for various class invariants using the Chinese Remainder Theorem, with parallelized multi-process computation via `fork()`.
 
 Based on the algorithms described in:
 

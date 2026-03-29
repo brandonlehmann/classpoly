@@ -54,7 +54,7 @@ int compute_classpoly (long D, int inv, mpz_t P, char *filename)
 	register int i;
 	
 	if ( P && ! mpz_sgn(P) ) P = 0;
-	if ( ! filename) { filename = buf;  if ( inv < D) sprintf(filename, "H_%ld.txt", -D); else sprintf(filename, "H_%ld_%d.txt", -D, inv); }
+	if ( ! filename) { filename = buf;  if ( inv < D) sprintf(filename, "D%ld.txt", -D); else sprintf(filename, "D%ld_%d.txt", -D, inv); }
 	
 	if ( D >= -4 ) {
 		if ( inv || P ) { err_printf ("D must be less than -4 unless inv=0 and P=0\n"); return 0; }

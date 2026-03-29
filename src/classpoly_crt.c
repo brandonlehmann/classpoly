@@ -38,7 +38,7 @@ void classpoly_crt_start (classpoly_crt_t crt, long D, int inv, unsigned long *p
 	if ( P ) mpz_init_set (crt->P, P); else mpz_init (crt->P);
 	if ( mpz_sgn(crt->P) ) {
 		start = clock();
-		sprintf (prefix, "H_%ld", -D);
+		sprintf (prefix, "D%ld", -D);
 		ecrt_init (crt->ecrt, primes, pcnt, ccnt, crt->P, 0, 0, prefix);
 		end = clock();
 		info_printf ("Explicit CRT precomputation completed in %ld msecs\n", delta_msecs(start,end));

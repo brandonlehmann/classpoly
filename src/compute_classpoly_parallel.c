@@ -196,7 +196,7 @@ int compute_classpoly_parallel (long D, int inv, mpz_t *Pvals, char **filenames,
 		ecrts = malloc(num_extra * sizeof(ecrt_context_t));
 		for ( p = 0; p < num_extra; p++ ) {
 			char prefix[64];
-			sprintf(prefix, "H_%ld_%d", -D, p + 2);
+			sprintf(prefix, "D%ld_%d", -D, p + 2);
 			ecrt_init(ecrts[p], (unsigned long *)crt_p, crt_pcnt, H_d, Pvals[p + 1], 0, 0, prefix);
 		}
 	}

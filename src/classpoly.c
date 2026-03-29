@@ -166,10 +166,10 @@ int classpoly_load (classpoly_t H, long D, int inv)
 	int i, H_inv, F_d, G_d;
 
 	if ( D > 0 ) D = -D;
-	if ( inv < 0 ) sprintf(filename,"H_%ld.txt", -D); else sprintf(filename,"H_%ld_%d.txt", -D, inv);
+	if ( inv < 0 ) sprintf(filename,"D%ld.txt", -D); else sprintf(filename,"D%ld_%d.txt", -D, inv);
 	fp = fopen(filename,"r");
 	if ( ! fp ) {
-		if ( inv < 0 ) sprintf(filename,"%s/H_%ld.txt", H_DIR, -D); else sprintf(filename,"%s/H_%ld_%d.txt", H_DIR, -D, inv);
+		if ( inv < 0 ) sprintf(filename,"%s/D%ld.txt", H_DIR, -D); else sprintf(filename,"%s/D%ld_%d.txt", H_DIR, -D, inv);
 		fp = fopen(filename,"r");
 		if ( ! fp ) { if ( errno == ENOENT ) { info_printf ("File %s not found\n", filename); return 0; } else { err_printf ("Unexpected error while attempting to open file %s\n", filename); perror("fopen"); abort(); } }
 	}

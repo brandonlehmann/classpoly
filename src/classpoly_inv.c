@@ -69,7 +69,7 @@ int classpoly_inv_setup (classpoly_inv_t Hinv, classpoly_t H, int inv, classpoly
 		end = clock();
 		info_printf ("Used %ld msecs and %d primes to compute square of trace\n", delta_msecs(start,end), crt->jcnt);
 		if ( ! mpz_sgn(Z) ) { char filename[256]; FILE *fp; err_printf ("Unable to use zero trace to disambiguate class polys\n");
-sprintf (filename, "H_%ld.txt", -H->D);  fp = fopen (filename, "w");  fclose (fp);			// temporary hack for testing with hilbertbatch
+sprintf (filename, "D%ld.txt", -H->D);  fp = fopen (filename, "w");  fclose (fp);			// temporary hack for testing with hilbertbatch
 			return 0; }
 		if ( mpz_sgn(Z) < 0 || ! mpz_perfect_square_p(Z) ) { err_printf ("Error, square of trace is not a perfect square!\n"); abort(); }
 		mpz_sqrt(Hinv->T,Z);

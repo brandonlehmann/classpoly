@@ -72,8 +72,8 @@ static void print_help (void)
 	printf("  --P supports arithmetic expressions: 2^127-1, 2^255-19, M31 (Mersenne), etc.\n\n");
 
 	printf("Output files:\n");
-	printf("  H_D<|D|>.coeffs           when computing over Z\n");
-	printf("  H_D<|D|>_p<P>.coeffs      when reducing mod P (one file per --P)\n\n");
+	printf("  D<|D|>.coeffs             when computing over Z\n");
+	printf("  D<|D|>_p<P>.coeffs        when reducing mod P (one file per --P)\n\n");
 
 	printf("Examples:\n");
 	printf("  classpoly --D 167995\n");
@@ -144,8 +144,8 @@ static void cli_args_clear (struct cli_args *args)
 
 /*
     Generate a deterministic output filename for a given D and P.
-    If P is NULL or zero, produces "H_D<|D|>.coeffs".
-    Otherwise produces "H_D<|D|>_p<P>.coeffs".
+    If P is NULL or zero, produces "D<|D|>.coeffs".
+    Otherwise produces "D<|D|>_p<P>.coeffs".
     Caller must free() the returned string.
 */
 static char *make_filename (long D, mpz_t P)
@@ -154,10 +154,10 @@ static char *make_filename (long D, mpz_t P)
 	if ( P && mpz_sgn(P) ) {
 		size_t needed = mpz_sizeinbase(P, 10) + 32;
 		buf = malloc(needed);
-		gmp_snprintf(buf, needed, "H_D%ld_p%Zd.coeffs", -D, P);
+		gmp_snprintf(buf, needed, "D%ld_p%Zd.coeffs", -D, P);
 	} else {
 		buf = malloc(64);
-		snprintf(buf, 64, "H_D%ld.coeffs", -D);
+		snprintf(buf, 64, "D%ld.coeffs", -D);
 	}
 	return buf;
 }

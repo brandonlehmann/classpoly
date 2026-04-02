@@ -33,17 +33,26 @@
 #include "ff_poly.h"
 #include "iqclass.h"				// this is only here to get IQ_MAX_GENS as the array dimension for aux_map in phi_enum_roots -- this dependency could be removed
 
-// directory for modulary polynomial files phi_*.txt
+// directory for modular polynomial files phi_*.txt
+// search order: _phi_dir_str (set by --phi-dir), CLASSPOLY_PHI_DIR env var,
+// compile-time CLASSPOLY_DEFAULT_PHI_DIR, $HOME/phi_files
 #define PHI_DIR				phi_dir()
 #define PHI_DIR_NAME			"phi_files"
+#ifndef CLASSPOLY_DEFAULT_PHI_DIR
+#define CLASSPOLY_DEFAULT_PHI_DIR		""
+#endif
 extern char _phi_dir_str[1024];
+static inline void phi_dir_set (const char *path) { snprintf(_phi_dir_str, sizeof(_phi_dir_str), "%s", path); }
 static inline char *phi_dir (void)
 {
 	char *s;
 	if ( _phi_dir_str[0] ) return _phi_dir_str;
+	s = getenv("CLASSPOLY_PHI_DIR");
+	if ( s && s[0] ) { phi_dir_set(s); return _phi_dir_str; }
+	if ( CLASSPOLY_DEFAULT_PHI_DIR[0] ) { phi_dir_set(CLASSPOLY_DEFAULT_PHI_DIR); return _phi_dir_str; }
 	s = getenv("HOME");
-	if ( s ) sprintf (_phi_dir_str, "%s/%s", s, PHI_DIR_NAME);
-	else strcpy (_phi_dir_str, PHI_DIR_NAME);
+	if ( s ) snprintf (_phi_dir_str, sizeof(_phi_dir_str), "%s/%s", s, PHI_DIR_NAME);
+	else snprintf (_phi_dir_str, sizeof(_phi_dir_str), "%s", PHI_DIR_NAME);
 	return _phi_dir_str;
 }
 

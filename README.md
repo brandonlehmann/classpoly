@@ -31,7 +31,7 @@ make -j$(nproc)
 ## Prerequisites
 
 - **GMP** (version 6 or later) — <https://gmplib.org> (on Ubuntu: `libgmp-dev`)
-- **Modular polynomials** — included in the `phi_polys/` directory (~1.1 GB across 160 archives). These are the modular polynomial files from <https://math.mit.edu/~drew/phi_polys.tar>. They **must** be extracted to `$HOME/phi_files/` before running (see Quick Start above). To change this location, modify `PHI_DIR_NAME` in `src/phi_poly.h`.
+- **Modular polynomials** — included in the `phi_polys/` directory (~1.1 GB across 160 archives). These are the modular polynomial files from <https://math.mit.edu/~drew/phi_polys.tar>. They are extracted automatically by `make install`, or can be extracted manually (see Quick Start above).
 - **64-bit OS** (Linux or macOS, x86_64 or aarch64/Apple Silicon)
 - **CMake** 3.16 or later
 
@@ -43,12 +43,13 @@ make -j$(nproc)
 mkdir build && cd build
 cmake ..
 make -j$(nproc)
+make install        # installs binary and extracts phi_polys to prefix
 ```
 
 ## Usage
 
 ```bash
-classpoly --D <discriminant> [--inv <invariant>] [--P <prime>]... [-j <workers>] [-v <level>]
+classpoly --D <discriminant> [--inv <invariant>] [--P <prime>]... [--phi-dir <path>] [-j <workers>] [-v <level>]
 classpoly -h | --help
 ```
 
@@ -59,6 +60,7 @@ classpoly -h | --help
 | `--D <value>` | **Required.** Imaginary quadratic discriminant (positive values auto-negated) |
 | `--inv <name\|code>` | Class invariant (see table below; default: auto-pick best for D) |
 | `--P <prime>` | Prime modulus for reduction (repeatable; omit for computation over Z) |
+| `--phi-dir <path>` | Directory containing modular polynomial files (`phi_*.txt`) |
 | `-j <N>` | Number of parallel workers (requires at least one `--P`; max 2 `--P` in parallel mode) |
 | `-v <level>` | Verbosity: -1=quiet, 0=normal, 1=info, 2=debug (default: auto based on \|D\|) |
 | `-h`, `--help` | Show help message |

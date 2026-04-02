@@ -24,6 +24,7 @@
 #include <gmp.h>
 #include "ff_poly.h"
 #include "classpoly.h"
+#include "phi_poly.h"
 #include "cstd.h"
 
 #define BIG_D		1000000
@@ -52,6 +53,7 @@ static void print_help (void)
 	printf("Optional:\n");
 	printf("  --inv <name|code>  Class invariant to use (default: auto-pick best for D)\n");
 	printf("  --P <prime>        Prime modulus for reduction (repeatable; omit for computation over Z)\n");
+	printf("  --phi-dir <path>   Directory containing modular polynomial files (phi_*.txt)\n");
 	printf("  -j <N>             Number of parallel worker processes (requires at least one --P)\n");
 	printf("  -v <level>         Verbosity level: -1=quiet, 0=normal, 1=info, 2=debug (default: auto)\n");
 	printf("  -h, --help         Show this help message\n\n");
@@ -110,6 +112,9 @@ static int parse_args (struct cli_args *args, int argc, char *argv[])
 			args->inv = inv_parse_name(argv[i]);
 			if ( args->inv == -2 ) { err_printf("Unknown invariant: '%s'\n", argv[i]); return 0; }
 			args->inv_set = 1;
+		} else if ( strcmp(argv[i], "--phi-dir") == 0 ) {
+			if ( ++i >= argc ) { err_printf("--phi-dir requires a value\n"); return 0; }
+			phi_dir_set(argv[i]);
 		} else if ( strcmp(argv[i], "--P") == 0 ) {
 			if ( ++i >= argc ) { err_printf("--P requires a value\n"); return 0; }
 			if ( args->num_P >= MAX_P_VALUES ) { err_printf("Too many --P values (max %d)\n", MAX_P_VALUES); return 0; }

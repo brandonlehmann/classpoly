@@ -74,6 +74,13 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|ARM64")
     )
 endif()
 
+# Compile-time default for modular polynomial directory
+set(CLASSPOLY_PHI_DIR "${CMAKE_INSTALL_PREFIX}/share/classpoly/phi_files"
+    CACHE STRING "Default directory for modular polynomial files")
+target_compile_definitions(classpoly PRIVATE
+    CLASSPOLY_DEFAULT_PHI_DIR="${CLASSPOLY_PHI_DIR}"
+)
+
 # Link ff_poly statically (brings in GMP and math library transitively)
 target_link_libraries(classpoly PRIVATE ff_poly)
 
@@ -116,3 +123,18 @@ set_target_properties(test_classpoly PROPERTIES
 add_test(NAME classpoly_correctness
     COMMAND test_classpoly ${CMAKE_SOURCE_DIR}/tests/data
 )
+
+# --- install targets ---
+install(TARGETS classpoly RUNTIME DESTINATION bin)
+
+# Install modular polynomial files by extracting tarballs at install time
+install(CODE "
+    file(MAKE_DIRECTORY \"${CLASSPOLY_PHI_DIR}\")
+    execute_process(
+        COMMAND sh -c \"ls '${CMAKE_SOURCE_DIR}/phi_polys'/*.tar.gz | xargs -P 4 -I {} tar xzf {} -C '${CLASSPOLY_PHI_DIR}'\"
+        RESULT_VARIABLE _phi_result)
+    if(NOT _phi_result EQUAL 0)
+        message(FATAL_ERROR \"Failed to extract modular polynomials\")
+    endif()
+    message(STATUS \"Extracted modular polynomials to ${CLASSPOLY_PHI_DIR}\")
+")

@@ -15,23 +15,37 @@ Based on the algorithms described in:
 sudo apt install libgmp-dev        # Ubuntu/Debian
 # or: brew install gmp              # macOS
 
-# 2. Extract modular polynomials to $HOME/phi_files/
-mkdir -p "$HOME/phi_files"
-for f in phi_polys/*.tar.gz; do tar xzf "$f" -C "$HOME/phi_files"; done
-
-# 3. Build
+# 2. Build and install
 mkdir build && cd build
 cmake ..
 make -j$(nproc)
+sudo make install   # installs binary and extracts modular polynomials
 
-# 4. Run
-./classpoly --D 167995
+# 3. Run
+classpoly --D 167995
+```
+
+`make install` places the binary in `<prefix>/bin/` and extracts the modular polynomial files to `<prefix>/share/classpoly/phi_files/` (default prefix: `/usr/local`).
+
+To install to a custom location:
+
+```bash
+cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/.local
+make -j$(nproc) && make install
+```
+
+To skip installation and extract the modular polynomials manually instead:
+
+```bash
+mkdir -p "$HOME/phi_files"
+for f in phi_polys/*.tar.gz; do tar xzf "$f" -C "$HOME/phi_files"; done
+./classpoly --D 167995    # run from build directory
 ```
 
 ## Prerequisites
 
 - **GMP** (version 6 or later) — <https://gmplib.org> (on Ubuntu: `libgmp-dev`)
-- **Modular polynomials** — included in the `phi_polys/` directory (~1.1 GB across 160 archives). These are the modular polynomial files from <https://math.mit.edu/~drew/phi_polys.tar>. They are extracted automatically by `make install`, or can be extracted manually (see Quick Start above).
+- **Modular polynomials** — included in the `phi_polys/` directory (~1.1 GB across 160 archives), sourced from Andrew Sutherland's distribution at <https://math.mit.edu/~drew/phi_polys.tar>. Extracted automatically by `make install`.
 - **64-bit OS** (Linux or macOS, x86_64 or aarch64/Apple Silicon)
 - **CMake** 3.16 or later
 
@@ -43,7 +57,7 @@ make -j$(nproc)
 mkdir build && cd build
 cmake ..
 make -j$(nproc)
-make install        # installs binary and extracts phi_polys to prefix
+make install
 ```
 
 ## Usage
@@ -60,18 +74,20 @@ classpoly -h | --help
 | `--D <value>` | **Required.** Imaginary quadratic discriminant (positive values auto-negated) |
 | `--inv <name\|code>` | Class invariant (see table below; default: auto-pick best for D) |
 | `--P <prime>` | Prime modulus for reduction (repeatable; omit for computation over Z) |
-| `--phi-dir <path>` | Directory containing modular polynomial files (`phi_*.txt`) |
+| `--phi-dir <path>` | Directory containing modular polynomial files (`phi_*.txt`). Overrides all other search paths |
 | `-j <N>` | Number of parallel workers (requires at least one `--P`; max 2 `--P` in parallel mode) |
 | `-v <level>` | Verbosity: -1=quiet, 0=normal, 1=info, 2=debug (default: auto based on \|D\|) |
 | `-h`, `--help` | Show help message |
 
 `--P` accepts arithmetic expressions: `2^127-1`, `2^255-19`, `M31` (Mersenne), etc.
 
+**Modular polynomial search order:** `--phi-dir` flag > `CLASSPOLY_PHI_DIR` environment variable > compile-time install prefix > `$HOME/phi_files`.
+
 ### Output files
 
 Output filenames are deterministic:
-- Over **Z**: `H_D<|D|>.coeffs`
-- Mod **P**: `H_D<|D|>_p<P>.coeffs` (one file per `--P`)
+- Over **Z**: `D<|D|>.coeffs`
+- Mod **P**: `D<|D|>_p<P>.coeffs` (one file per `--P`)
 
 ### Examples
 

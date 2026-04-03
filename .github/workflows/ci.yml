@@ -1,0 +1,75 @@
+name: CI Build Tests
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [published]
+  schedule:
+    - cron: '30 3 * * 0'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ── Linux gcc-11 ──────────────────────────────────────────
+          - { os: ubuntu-latest, cc: gcc-11,   cxx: g++-11,     name: gcc-11 }
+          # ── Linux gcc-12 ──────────────────────────────────────────
+          - { os: ubuntu-latest, cc: gcc-12,   cxx: g++-12,     name: gcc-12 }
+          # ── Linux clang-14 ────────────────────────────────────────
+          - { os: ubuntu-latest, cc: clang-14, cxx: clang++-14, name: clang-14 }
+          # ── Linux clang-15 ────────────────────────────────────────
+          - { os: ubuntu-latest, cc: clang-15, cxx: clang++-15, name: clang-15 }
+          # ── macOS Homebrew clang (ARM64) ──────────────────────────
+          - { os: macos-latest, cc: /opt/homebrew/opt/llvm/bin/clang, cxx: /opt/homebrew/opt/llvm/bin/clang++, name: clang }
+          # ── macOS AppleClang (ARM64) ──────────────────────────────
+          - { os: macos-latest, name: AppleClang }
+
+    name: ${{ matrix.os }} / ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Compiler & GMP (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgmp-dev ${{ matrix.cc }}
+          if [[ "${{ matrix.cxx }}" != *"clang"* ]]; then sudo apt-get install -y ${{ matrix.cxx }}; fi
+
+      - name: Install LLVM & GMP (macOS Homebrew clang)
+        if: matrix.os == 'macos-latest' && matrix.name == 'clang'
+        run: |
+          brew install llvm gmp || brew upgrade llvm gmp
+
+      - name: Install GMP (macOS AppleClang)
+        if: matrix.os == 'macos-latest' && matrix.name == 'AppleClang'
+        run: |
+          brew install gmp || brew upgrade gmp
+
+      - name: Extract phi files
+        run: |
+          mkdir -p phi_files
+          for f in phi_polys/*.tar.gz; do tar xzf "$f" -C phi_files; done
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: cmake -S . -B build -DCLASSPOLY_PHI_DIR="${{ github.workspace }}/phi_files"
+
+      - name: Build
+        run: cmake --build build --config Release -j
+
+      - name: Resolve test executable path
+        id: exe
+        shell: bash
+        run: echo "tests=./build/test_classpoly" >> "$GITHUB_OUTPUT"
+
+      - name: Tests
+        shell: bash
+        env:
+          CLASSPOLY_PHI_DIR: ${{ github.workspace }}/phi_files
+        run: ${{ steps.exe.outputs.tests }} ${{ github.workspace }}/tests/data
